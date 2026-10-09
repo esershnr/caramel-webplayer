@@ -1,0 +1,15 @@
+import './styles/playlist.css';
+import { EspPlaylistElement } from './element.js';
+import { EspPlaylistPanelElement } from './panel.js';
+
+/** Registers <esp-playlist> and <esp-playlist-panel>. Idempotent; a no-op without a DOM (SSR). */
+export function defineEspPlaylist(
+  tag: string = EspPlaylistElement.tagName,
+  panelTag: string = EspPlaylistPanelElement.tagName,
+): void {
+  if (typeof window === 'undefined' || typeof customElements === 'undefined') return;
+  if (!customElements.get(tag)) customElements.define(tag, EspPlaylistElement);
+  if (!customElements.get(panelTag)) customElements.define(panelTag, EspPlaylistPanelElement);
+}
+
+defineEspPlaylist();
