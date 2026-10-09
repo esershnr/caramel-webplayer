@@ -7,6 +7,8 @@ import { applyUid, parseOpenTag, sanitizeUid, splitContainer } from './template-
 export interface EspVideoSkinProps {
   /** The media element, for example `<video src="..." playsInline />`. */
   children: ReactNode;
+  /** Id of the `<video-player>` element, for panels that use `for`/`playerId`. */
+  id?: string | undefined;
   /** Title shown in the top bar. Forwarded to the player. */
   title?: string | undefined;
   poster?: string | undefined;
@@ -23,7 +25,7 @@ export interface EspVideoSkinProps {
  * App Router. Renders custom elements; registration happens in the browser
  * only so server rendering and hydration stay clean.
  */
-export function EspVideoSkin({ children, title, poster, lang, className, style, extras }: EspVideoSkinProps) {
+export function EspVideoSkin({ children, id, title, poster, lang, className, style, extras }: EspVideoSkinProps) {
   const uid = sanitizeUid(useId());
   // The media mounts only after the player and skin elements are registered.
   // Otherwise the media element connects before <video-player> upgrades and
@@ -48,7 +50,7 @@ export function EspVideoSkin({ children, title, poster, lang, className, style, 
   const containerClass = [attrs['class'], className].filter(Boolean).join(' ');
 
   const player = (
-    <video-player content-title={title} poster={poster} style={style}>
+    <video-player id={id} content-title={title} poster={poster} style={style}>
       <media-container class={containerClass} data-theme={attrs['data-theme']} data-preset={attrs['data-preset']}>
         {ready ? children : null}
         <div style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: inner }} />
@@ -66,6 +68,7 @@ declare module 'react' {
     interface IntrinsicElements {
       'video-player': {
         children?: import('react').ReactNode;
+        id?: string | undefined;
         'content-title'?: string | undefined;
         poster?: string | undefined;
         style?: import('react').CSSProperties | undefined;
