@@ -1,0 +1,35 @@
+/*
+ * Preset: Catppuccin. Dark = Mocha, light = Latte (https://catppuccin.com).
+ * Import after tokens.css (or scope it, see README "Theming").
+ *
+ * Mocha: base #1E1E2E, mantle/surface0 #313244, surface1 #45475A, text #CDD6F4,
+ *        subtext1 #BAC2DE, overlay1 #9399B2, peach #FAB387.
+ * Latte: base #EFF1F5, mantle #E6E9EF, crust #DCE0E8, text #4C4F69,
+ *        subtext1 #5C5F77, overlay1 #6C6F85, peach darkened to #C2470A for
+ *        4.4:1 on base (Latte's own peach #FE640B is decorative only).
+ *
+ * Contrast (WCAG, computed):
+ *   mocha  text/bg 11.3  text/surface 8.7  text/raised 6.3
+ *          muted/bg 9.3  muted/surface 7.1  muted/raised 5.2
+ *          accent-text/surface 7.1  primary/raised 5.2  border/raised 3.2
+ *          solid-contrast/solid 9.3
+ *   latte  text/bg 7.1  text/surface 6.6  text/raised 6.0
+ *          muted/bg 5.5  muted/surface 5.1  muted/raised 4.7
+ *          accent-text/surface 5.4  primary/raised 3.8 (indicator)  border/raised 3.7
+ *          solid-contrast/solid 5.0
+ * Targets: text 4.5:1, icons and borders 3:1. All pass.
+ */
+:root {
+  --esp-bg: light-dark(#eff1f5, #1e1e2e);
+  --esp-surface: light-dark(#e6e9ef, #313244);
+  --esp-raised: light-dark(#dce0e8, #45475a);
+  --esp-divider: light-dark(#bcc0cc, #585b70);
+  --esp-border: light-dark(#6c6f85, #9399b2);
+  --esp-text: light-dark(#4c4f69, #cdd6f4);
+  --esp-muted: light-dark(#5c5f77, #bac2de);
+  --esp-primary: light-dark(#c2470a, #fab387);
+  --esp-solid: light-dark(#c2470a, #fab387);
+  --esp-solid-contrast: light-dark(#ffffff, #1e1e2e);
+  --esp-accent: light-dark(#fe640b, #fab387);
+  --esp-accent-text: light-dark(#a53b06, #fab387);
+}

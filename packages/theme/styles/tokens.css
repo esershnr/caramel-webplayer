@@ -15,10 +15,6 @@
   --esp-bg: light-dark(#fbf7f0, #141414);
   --esp-surface: light-dark(#ece5da, #2d2d2d);
   --esp-raised: light-dark(#faf7f2, #242424);
-  --esp-raised-hover: light-dark(
-    color-mix(in srgb, #faf7f2, #5e3310 8%),
-    color-mix(in srgb, #242424, white 8%)
-  );
   --esp-divider: light-dark(#d2c4b0, #454545);
   --esp-border: light-dark(#8a5f36, #8a8a8a);
 
@@ -28,33 +24,33 @@
 
   /* Indicator: selection, focus ring, active chapter marker */
   --esp-primary: light-dark(#5e3310, #c9945c);
-  --esp-primary-hover: light-dark(
-    color-mix(in srgb, #5e3310, black 20%),
-    color-mix(in srgb, #c9945c, white 15%)
-  );
-  --esp-primary-contrast: light-dark(#ece5da, #141414);
 
   /* Solid fill: buttons, active list item */
   --esp-solid: light-dark(#5e3310, #8a5a2b);
-  --esp-solid-hover: light-dark(
-    color-mix(in srgb, #5e3310, black 20%),
-    color-mix(in srgb, #8a5a2b, white 10%)
-  );
-  --esp-solid-contrast: light-dark(#ece5da, #ffffff);
 
   /* Caramel accent: decoration only (progress fill, lines). Never for text. */
   --esp-accent: #c9945c;
   /* Readable caramel for text and icons */
   --esp-accent-text: light-dark(#653d19, #d9ae7e);
 
-  /* Overlay layer on top of the video. Theme independent: stays dark. */
+  /* Derived roles. Everything below follows the main tokens above, so a site
+     that overrides only the main tokens gets matching hovers and contrasts.
+     Mixing with --esp-text darkens in light mode and lightens in dark mode. */
+  --esp-raised-hover: color-mix(in srgb, var(--esp-raised), var(--esp-text) 8%);
+  --esp-primary-hover: color-mix(in srgb, var(--esp-primary), var(--esp-text) 15%);
+  --esp-primary-contrast: light-dark(var(--esp-surface), var(--esp-bg));
+  --esp-solid-hover: color-mix(in srgb, var(--esp-solid), var(--esp-text) 15%);
+  --esp-solid-contrast: light-dark(var(--esp-surface), var(--esp-text));
+
+  /* Overlay layer on top of the video. Theme independent: stays dark so the
+     controls read on any frame. Only the accent follows the palette. */
   --esp-overlay-scrim: color-mix(in srgb, black 35%, transparent);
   --esp-overlay-surface: color-mix(in srgb, black 55%, transparent);
   --esp-overlay-surface-strong: color-mix(in srgb, black 80%, transparent);
   --esp-overlay-text: #ffffff;
-  --esp-overlay-accent: #d9ae7e;
-  /* Text placed ON overlay-accent (badges): 9.1:1 against it */
-  --esp-overlay-on-accent: #1a1208;
+  --esp-overlay-accent: color-mix(in srgb, var(--esp-accent), white 25%);
+  /* Text placed ON overlay-accent (badges) */
+  --esp-overlay-on-accent: color-mix(in srgb, var(--esp-accent), black 85%);
   --esp-overlay-border: color-mix(in srgb, white 24%, transparent);
 
   /* Focus ring: 2px solid primary, 2px offset */

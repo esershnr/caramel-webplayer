@@ -80,12 +80,123 @@ pnpm --filter @esersahiner/gen-thumbs start -- video.mp4 --interval 2 --columns 
 Under Git Bash prefix the command with `MSYS_NO_PATHCONV=1` so `--base-url /thumbs`
 is not rewritten to a Windows path.
 
-### Theme
+## Theming / Renkleri değiştirme
 
-Tokens live on `:root` and use `light-dark()`. Put `.esp-theme` on the elements
-that should follow the scheme (panels, page body). `prefers-color-scheme` is the
-default; `data-theme="light|dark"` or `.dark` / `.light` on `<html>` (or any
-ancestor) wins. Controls over the video always stay dark (overlay roles).
+Every color is a CSS custom property on `:root`, declared once with
+`light-dark(light, dark)`. Override the main tokens and every hover, contrast
+and overlay derivative follows (they are `color-mix()` expressions over the
+main tokens, see `packages/theme/styles/tokens.css`).
+
+TR: Renkler `--esp-*` değişkenleridir; yalnız ana token'ları ezmeniz yeterlidir,
+hover ve türevler kendiliğinden uyar. Override'lar `tokens.css`'ten SONRA
+yüklenmelidir.
+
+### Main tokens
+
+| Token | Role | Light (latte) | Dark (bitter) |
+| --- | --- | --- | --- |
+| `--esp-bg` | page background | `#fbf7f0` | `#141414` |
+| `--esp-surface` | panel (playlist, chapters, settings menu, preview card) | `#ece5da` | `#2d2d2d` |
+| `--esp-raised` | box inside a panel, list row | `#faf7f2` | `#242424` |
+| `--esp-divider` | separators (decorative) | `#d2c4b0` | `#454545` |
+| `--esp-border` | interactive edge (3:1 or better) | `#8a5f36` | `#8a8a8a` |
+| `--esp-text` | body text | `#2a1606` | `#ffffff` |
+| `--esp-muted` | secondary text | `#553821` | `#b8b0a6` |
+| `--esp-primary` | indicator: selection, focus ring, active marker | `#5e3310` | `#c9945c` |
+| `--esp-solid` | filled button, active item | `#5e3310` | `#8a5a2b` |
+| `--esp-accent` | decoration only: progress fill, lines, badges. Never text. | `#c9945c` | `#c9945c` |
+| `--esp-accent-text` | readable accent for text and icons | `#653d19` | `#d9ae7e` |
+
+Derived (override only if you need to): `--esp-raised-hover`, `--esp-primary-hover`,
+`--esp-primary-contrast`, `--esp-solid-hover`, `--esp-solid-contrast`,
+`--esp-overlay-accent`, `--esp-overlay-on-accent`, `--esp-quality-badge-bg`,
+`--esp-quality-badge-text`, `--esp-segment-*`. Non-color tokens: radii
+(`--esp-radius-panel/box/chip`), motion (`--esp-ease-*`, `--esp-duration-*`),
+fonts (`--esp-font-heading/body`), focus ring (`--esp-focus-ring/offset`).
+
+### Example 1: change one color
+
+```css
+/* after tokens.css */
+:root {
+  --esp-accent: #2f80ed;
+}
+```
+
+The progress fill, segment markers, the quality badge and the overlay accent all
+follow.
+
+### Example 2: separate light and dark values
+
+```css
+:root {
+  --esp-primary: light-dark(#1d4ed8, #93c5fd);
+  --esp-solid: light-dark(#1d4ed8, #1e40af);
+}
+```
+
+### Example 3: a preset
+
+```ts
+import '@esersahiner/player-theme/tokens.css';
+import '@esersahiner/player-theme/presets/catppuccin-mocha.css'; // or presets/neutral.css
+```
+
+Presets override the main tokens only and document their contrast ratios in
+the file header.
+
+### Load order and scoped themes
+
+Overrides must come after `tokens.css` (same specificity, later wins). To theme
+one player differently on the same page, scope the override to a wrapper; the
+tokens inherit, so the wrapper's values win inside it:
+
+```css
+.player-mocha {
+  --esp-bg: light-dark(#eff1f5, #1e1e2e);
+  --esp-surface: light-dark(#e6e9ef, #313244);
+  --esp-accent: #fab387;
+  /* ... */
+}
+```
+
+```html
+<div class="esp-theme">… default player …</div>
+<div class="esp-theme player-mocha">… Catppuccin player …</div>
+```
+
+### Scheme selection
+
+Put `.esp-theme` on the elements that should follow the scheme (panels, page
+body, or a wrapper). Precedence: a local `data-theme="light|dark"` on that
+element or an ancestor, then `data-theme` / `.dark` / `.light` on `<html>`,
+then `prefers-color-scheme`. `watchTheme()` from `@esersahiner/player-theme`
+reports changes to JavaScript.
+
+### Controls over the video stay dark
+
+Everything drawn on top of the frame (control bar, skip button, tooltips) uses
+the `--esp-overlay-*` roles and does not follow the page theme: video frames
+can be bright or dark at any moment, and a dark frosted bar keeps white text
+and the caramel accent readable on both. Only the panels outside the frame and
+the settings menu / preview card switch with the page.
+
+### Contrast responsibility
+
+When you change colors, keep these pairs (WCAG):
+
+| Pair | Minimum |
+| --- | --- |
+| `--esp-text` on bg / surface / raised | 4.5:1 (aim 7:1) |
+| `--esp-muted` on bg / surface / raised | 4.5:1 |
+| `--esp-accent-text` on surface / raised | 4.5:1 |
+| `--esp-solid-contrast` on `--esp-solid` | 4.5:1 |
+| `--esp-primary` on surface / raised (indicator, ring) | 3:1 |
+| `--esp-border` on surface / raised | 3:1 |
+| `--esp-quality-badge-text` on `--esp-quality-badge-bg` | 4.5:1 |
+
+`--esp-accent` is decorative and has no contrast requirement, which is why it
+must not be used for text.
 
 ## Development
 
