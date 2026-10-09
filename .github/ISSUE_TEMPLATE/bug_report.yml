@@ -1,0 +1,84 @@
+name: Bug report
+description: Something does not work as documented.
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Please search existing issues first. Security problems go to
+        [private vulnerability reporting](https://github.com/esershnr/caramel-webplayer/security/advisories/new).
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      multiple: true
+      options:
+        - '@esershnr/caramel-webplayer'
+        - '@esershnr/caramel-theme'
+        - '@esershnr/caramel-icons'
+        - '@esershnr/caramel-skin'
+        - '@esershnr/caramel-skip-segments'
+        - '@esershnr/caramel-chapters'
+        - '@esershnr/caramel-playlist'
+        - 'scripts (gen-thumbs, encode-hls)'
+        - 'docs or examples'
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      placeholder: '0.1.0'
+    validations:
+      required: true
+  - type: input
+    id: videojs
+    attributes:
+      label: '@videojs/html version'
+      placeholder: '10.0.1'
+  - type: dropdown
+    id: setup
+    attributes:
+      label: Setup
+      multiple: true
+      options:
+        - Plain HTML / custom elements
+        - React
+        - Next.js App Router
+        - Other framework
+  - type: input
+    id: environment
+    attributes:
+      label: Browser and OS
+      placeholder: 'Chrome 141 on Windows 11, Safari 26 on iOS'
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: Include console errors if there are any.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: A minimal page, a StackBlitz or CodeSandbox link, or numbered steps. Mention the media type (MP4, HLS).
+      placeholder: |
+        1. Register the elements with ...
+        2. Play the video and ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshots or recordings
+      description: Helpful for visual issues. Mention the theme (light, dark).

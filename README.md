@@ -1,10 +1,24 @@
 # Caramel Webplayer
 
+[![npm](https://img.shields.io/npm/v/@esershnr/caramel-webplayer?label=npm)](https://www.npmjs.com/package/@esershnr/caramel-webplayer)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![CI](https://github.com/esershnr/caramel-webplayer/actions/workflows/ci.yml/badge.svg)](https://github.com/esershnr/caramel-webplayer/actions/workflows/ci.yml)
+
 A themed Video.js 10 player, built for esersahiner.com: skin with morphing
 Lucide icons, skip intro / recap / outro / sponsor, chapter list, playlist with
 resume. Built on `@videojs/html` custom elements with thin React wrappers
 (`'use client'`, elements registered in the browser only, so the Next.js App
 Router stays SSR clean).
+
+Contents: [Quick start](#quick-start), [Packages](#packages),
+[Modular install](#modular-install), [Theming](#theming--renkleri-değiştirme),
+[Development](#development), [Contributing](#contributing), [License](#license).
+
+TR: Caramel Webplayer, esersahiner.com için yapılmış temalı bir Video.js 10
+oynatıcısıdır: morf eden Lucide ikonlu skin, intro / özet / kapanış / sponsor
+atlama, bölüm listesi ve kaldığı yerden devam eden oynatma listesi. Tek paket
+(`@esershnr/caramel-webplayer`) her şeyi getirir; renkler `--caramel-*` CSS
+değişkenleriyle değişir. Katkı rehberi ve belgeler İngilizcedir.
 
 ## Quick start
 
@@ -46,17 +60,17 @@ only need some of them (see "Modular install").
 
 ## Packages
 
-| Package | Purpose |
-| --- | --- |
-| `@esershnr/caramel-webplayer` | Everything below in one install: re-exports, `/define` (all elements), `/react` (all wrappers), `/webplayer.css` (tokens + full skin CSS) |
-| `@esershnr/caramel-theme` | `--caramel-*` design tokens (latte / bitter palette, motion, radii, typography), `resolveTheme`, `watchTheme` |
-| `@esershnr/caramel-icons` | Lucide icon registry, `iconToSvg`, `<caramel-morph-icon>` (Morphicons spring morphing driven by `data-*` attributes) |
-| `@esershnr/caramel-skin` | Video.js 10 default video skin source (shadcn copy) themed with caramel tokens and Lucide icons; `mountSkin`, `<CaramelVideoSkin>` |
-| `@esershnr/caramel-skip-segments` | `<caramel-skip-segments>`: skip intro / recap / outro / sponsor button, auto-skip per type, timeline markers; `<SkipSegments>` for React |
-| `@esershnr/caramel-chapters` | `<caramel-chapters-panel>`: chapter list outside the video, fed by the player's chapters track; `<ChaptersPanel>` |
-| `@esershnr/caramel-playlist` | `PlaylistModel`, `<caramel-playlist>` controller (title, poster, media, tracks and segments per item, resume via localStorage, auto advance) and `<caramel-playlist-panel>`; `<Playlist>`, `<PlaylistPanel>` |
-| `@esershnr/caramel-gen-thumbs` | `caramel-gen-thumbs`: ffmpeg sprite sheets plus a `#xywh=` WebVTT storyboard (`scripts/gen-thumbs/README.md`) |
-| `@esershnr/caramel-encode-hls` | `caramel-encode-hls`: `media/<slug>` (video, SRT, meta.yaml) to publish-ready `out/<slug>` (byte-range HLS, poster, thumbnails, chapters, subtitles, manifest). Guide: `scripts/encode-hls/README.md` |
+| Package | npm | Purpose |
+| --- | --- | --- |
+| `@esershnr/caramel-webplayer` | [![npm](https://img.shields.io/npm/v/@esershnr/caramel-webplayer?label=)](https://www.npmjs.com/package/@esershnr/caramel-webplayer) | Everything below in one install: re-exports, `/define` (all elements), `/react` (all wrappers), `/webplayer.css` (tokens + full skin CSS) |
+| `@esershnr/caramel-theme` | [![npm](https://img.shields.io/npm/v/@esershnr/caramel-theme?label=)](https://www.npmjs.com/package/@esershnr/caramel-theme) | `--caramel-*` design tokens (latte / bitter palette, motion, radii, typography), `resolveTheme`, `watchTheme` |
+| `@esershnr/caramel-icons` | [![npm](https://img.shields.io/npm/v/@esershnr/caramel-icons?label=)](https://www.npmjs.com/package/@esershnr/caramel-icons) | Lucide icon registry, `iconToSvg`, `<caramel-morph-icon>` (Morphicons spring morphing driven by `data-*` attributes) |
+| `@esershnr/caramel-skin` | [![npm](https://img.shields.io/npm/v/@esershnr/caramel-skin?label=)](https://www.npmjs.com/package/@esershnr/caramel-skin) | Video.js 10 default video skin source (shadcn copy) themed with caramel tokens and Lucide icons; `mountSkin`, `<CaramelVideoSkin>` |
+| `@esershnr/caramel-skip-segments` | [![npm](https://img.shields.io/npm/v/@esershnr/caramel-skip-segments?label=)](https://www.npmjs.com/package/@esershnr/caramel-skip-segments) | `<caramel-skip-segments>`: skip intro / recap / outro / sponsor button, auto-skip per type, timeline markers; `<SkipSegments>` for React |
+| `@esershnr/caramel-chapters` | [![npm](https://img.shields.io/npm/v/@esershnr/caramel-chapters?label=)](https://www.npmjs.com/package/@esershnr/caramel-chapters) | `<caramel-chapters-panel>`: chapter list outside the video, fed by the player's chapters track; `<ChaptersPanel>` |
+| `@esershnr/caramel-playlist` | [![npm](https://img.shields.io/npm/v/@esershnr/caramel-playlist?label=)](https://www.npmjs.com/package/@esershnr/caramel-playlist) | `PlaylistModel`, `<caramel-playlist>` controller (title, poster, media, tracks and segments per item, resume via localStorage, auto advance) and `<caramel-playlist-panel>`; `<Playlist>`, `<PlaylistPanel>` |
+| `@esershnr/caramel-gen-thumbs` | not published (`scripts/`) | `caramel-gen-thumbs`: ffmpeg sprite sheets plus a `#xywh=` WebVTT storyboard (`scripts/gen-thumbs/README.md`) |
+| `@esershnr/caramel-encode-hls` | not published (`scripts/`) | `caramel-encode-hls`: `media/<slug>` (video, SRT, meta.yaml) to publish-ready `out/<slug>` (byte-range HLS, poster, thumbnails, chapters, subtitles, manifest). Guide: `scripts/encode-hls/README.md` |
 
 ## Modular install
 
@@ -286,7 +300,8 @@ must not be used for text.
 
 ```sh
 pnpm install
-pnpm test            # Vitest, pure logic only
+pnpm lint            # Biome lint (pnpm format:check / pnpm format for formatting)
+pnpm test            # Vitest, pure logic plus a few happy-dom tests
 pnpm typecheck
 pnpm build           # dist/ for every package (needed before `vite build` in examples)
 pnpm dev:vanilla     # http://localhost:5173  (?theme=light|dark)
@@ -304,6 +319,14 @@ node tools/shots.mjs shots   # dev servers must be running
 The skin template (`packages/skin/src/template.ts`) is generated from
 `skin.html` by `pnpm --filter @esershnr/caramel-skin build:template`; run it
 after editing `skin.html`.
+
+## Contributing
+
+Bug reports, fixes and ideas are welcome. Start with
+[CONTRIBUTING.md](CONTRIBUTING.md) (setup, checks, commit format, changesets)
+and [docs/package-playbook.md](docs/package-playbook.md) (how packages are
+built). Please follow the [Code of Conduct](CODE_OF_CONDUCT.md) and report
+security problems privately as described in [SECURITY.md](SECURITY.md).
 
 ## License
 
