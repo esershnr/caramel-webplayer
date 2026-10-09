@@ -64,6 +64,13 @@ pnpm dev:vanilla     # http://localhost:5173  (?theme=light|dark)
 pnpm dev:react       # http://localhost:5174
 ```
 
+Open-state screenshots (settings menu, every submenu, volume popover, timeline
+preview; both demos, both themes) with the installed Edge:
+
+```sh
+node tools/shots.mjs shots   # dev servers must be running
+```
+
 The skin template (`packages/skin/src/template.ts`) is generated from
 `skin.html` by `pnpm --filter @esersahiner/player-skin build:template`; run it
 after editing `skin.html`.
