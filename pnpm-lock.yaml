@@ -257,6 +257,46 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3(@types/node@26.6.4)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1))
 
+  packages/webplayer:
+    dependencies:
+      '@esershnr/caramel-chapters':
+        specifier: workspace:*
+        version: link:../chapters
+      '@esershnr/caramel-icons':
+        specifier: workspace:*
+        version: link:../icons
+      '@esershnr/caramel-playlist':
+        specifier: workspace:*
+        version: link:../playlist
+      '@esershnr/caramel-skin':
+        specifier: workspace:*
+        version: link:../skin
+      '@esershnr/caramel-skip-segments':
+        specifier: workspace:*
+        version: link:../skip-segments
+      '@esershnr/caramel-theme':
+        specifier: workspace:*
+        version: link:../theme
+      react-dom:
+        specifier: '>=19'
+        version: 19.3.0(react@19.3.0)
+    devDependencies:
+      '@types/react':
+        specifier: ^19.1.0
+        version: 19.3.0
+      '@videojs/html':
+        specifier: 10.0.1
+        version: 10.0.1(react@19.3.0)
+      react:
+        specifier: ^19.2.0
+        version: 19.3.0
+      typescript:
+        specifier: ^5.9.0
+        version: 5.9.3
+      vitest:
+        specifier: ^5.0.3
+        version: 5.0.3(@types/node@26.6.4)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1))
+
   scripts/encode-hls:
     dependencies:
       '@esershnr/caramel-gen-thumbs':

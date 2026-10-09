@@ -1,0 +1,7 @@
+/*
+ * Caramel Webplayer: theme tokens and the complete skin stylesheet in one
+ * import. The other packages' styles (skip segments, chapters, playlist) load
+ * with their elements from `@esershnr/caramel-webplayer/define`.
+ */
+@import '@esershnr/caramel-theme/tokens.css';
+@import '@esershnr/caramel-skin/all.css';

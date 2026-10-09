@@ -1,13 +1,54 @@
-# esersahiner web player
+# Caramel Webplayer
 
-Custom Video.js 10 player packages for esersahiner.com. Built on `@videojs/html`
-custom elements with thin React wrappers (`'use client'`, elements registered in
-the browser only, so the Next.js App Router stays SSR clean).
+A themed Video.js 10 player, built for esersahiner.com: skin with morphing
+Lucide icons, skip intro / recap / outro / sponsor, chapter list, playlist with
+resume. Built on `@videojs/html` custom elements with thin React wrappers
+(`'use client'`, elements registered in the browser only, so the Next.js App
+Router stays SSR clean).
+
+## Quick start
+
+One package brings everything:
+
+```sh
+npm install @esershnr/caramel-webplayer @videojs/html
+```
+
+```ts
+import '@esershnr/caramel-webplayer/webplayer.css'; // tokens + skin, up front
+import '@esershnr/caramel-webplayer/define'; // registers every element
+import { mountSkin } from '@esershnr/caramel-webplayer';
+
+const player = document.querySelector('video-player')!;
+const video = Object.assign(document.createElement('video'), { src: '/video.mp4', playsInline: true });
+const skip = document.createElement('esp-skip-segments');
+skip.setAttribute('segments', JSON.stringify([{ start: 0, end: 30, type: 'intro' }]));
+mountSkin(player, { media: video, extras: [skip] });
+```
+
+React (Next.js App Router included):
+
+```tsx
+'use client';
+import '@esershnr/caramel-webplayer/webplayer.css';
+import { EspVideoSkin, SkipSegments, ChaptersPanel } from '@esershnr/caramel-webplayer/react';
+
+<EspVideoSkin id="player" lang="tr" extras={<SkipSegments segments={[{ start: 0, end: 30, type: 'intro' }]} />}>
+  <video src="/video.mp4" playsInline />
+</EspVideoSkin>
+<ChaptersPanel playerId="player" />
+```
+
+`@esershnr/caramel-webplayer` re-exports all packages below (the two
+`findActiveIndex` helpers as `findActiveSegmentIndex` and
+`findActiveChapterIndex`). Install the packages one by one instead when you
+only need some of them (see "Modular install").
 
 ## Packages
 
 | Package | Purpose |
 | --- | --- |
+| `@esershnr/caramel-webplayer` | Everything below in one install: re-exports, `/define` (all elements), `/react` (all wrappers), `/webplayer.css` (tokens + full skin CSS) |
 | `@esershnr/caramel-theme` | `--esp-*` design tokens (latte / bitter palette, motion, radii, typography), `resolveTheme`, `watchTheme` |
 | `@esershnr/caramel-icons` | Lucide icon registry, `iconToSvg`, `<esp-morph-icon>` (Morphicons spring morphing driven by `data-*` attributes) |
 | `@esershnr/caramel-skin` | Video.js 10 default video skin source (shadcn copy) themed with esp tokens and Lucide icons; `mountSkin`, `<EspVideoSkin>` |
@@ -17,7 +58,13 @@ the browser only, so the Next.js App Router stays SSR clean).
 | `@esershnr/caramel-gen-thumbs` | `esp-gen-thumbs`: ffmpeg sprite sheets plus a `#xywh=` WebVTT storyboard (`scripts/gen-thumbs/README.md`) |
 | `@esershnr/caramel-encode-hls` | `esp-encode-hls`: `media/<slug>` (video, SRT, meta.yaml) to publish-ready `out/<slug>` (byte-range HLS, poster, thumbnails, chapters, subtitles, manifest). Guide: `scripts/encode-hls/README.md` |
 
-## Usage
+## Modular install
+
+Pick only the packages you need:
+
+```sh
+npm install @esershnr/caramel-skin @esershnr/caramel-skip-segments @videojs/html
+```
 
 ### HTML
 
