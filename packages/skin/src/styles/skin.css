@@ -13,13 +13,6 @@
  */
 @import '@esersahiner/player-theme/tokens.css';
 
-/* Let the pointer position interpolate so previews follow the cursor softly. */
-@property --media-slider-pointer {
-  syntax: '<percentage>';
-  inherits: true;
-  initial-value: 0%;
-}
-
 @layer components {
   .media-skin.esp-skin {
     /* Typography */
@@ -56,9 +49,6 @@
     --media-duration-menu: var(--esp-duration-enter);
     --media-duration-slider: var(--esp-duration-fill);
     --media-hidden-offset: calc(var(--media-spacing) * 2);
-
-    /* Soft pointer follow for the hover dot, preview card and chapter title */
-    --esp-pointer-follow: 25ms;
   }
 
   /* ------------------------------------------------------------------ */
@@ -126,14 +116,14 @@
     transition-timing-function: var(--esp-ease-fill);
   }
 
-  /* Pointer position interpolates on the slider itself; everything that reads
-     --media-slider-pointer (preview, chapter title, drag thumb) follows along. */
+  /* The pointer position (--media-slider-pointer) is not registered and not
+     transitioned: the hover dot, preview card and drag thumb sit exactly
+     under the cursor, with no delay. */
   .esp-skin .media-time-slider {
     /* Fill (and the thumb riding on it) animates only inside the seek window
        that seek-motion.ts opens; playback progress is never interpolated. */
     --esp-seek-motion: 0ms;
     transition:
-      --media-slider-pointer var(--esp-pointer-follow) linear,
       --media-slider-fill var(--esp-seek-motion) var(--esp-ease-fill),
       --media-slider-buffer var(--esp-duration-fill) var(--esp-ease-fill);
   }
@@ -143,7 +133,6 @@
   }
 
   .esp-skin .media-time-slider[data-dragging] {
-    --esp-pointer-follow: 10ms;
     --esp-seek-motion: 0ms;
   }
 
@@ -469,9 +458,3 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .media-skin.esp-skin,
-  .media-skin.esp-skin .media-time-slider[data-dragging] {
-    --esp-pointer-follow: 0ms;
-  }
-}
