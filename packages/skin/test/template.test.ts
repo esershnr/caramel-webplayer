@@ -14,7 +14,8 @@ describe('skin template', () => {
     expect(SKIN_TEMPLATE).toContain('esp-icon esp-icon-chevron');
     expect(SKIN_TEMPLATE).toContain('esp-icon esp-icon-cast');
     expect(SKIN_TEMPLATE).toMatch(/<media-menu [^>]*class="[^"]*media-menu-popup[^"]*esp-theme/);
-    expect(SKIN_TEMPLATE).toMatch(/<media-slider-thumbnail [^>]*esp-theme/);
+    expect(SKIN_TEMPLATE).toMatch(/<div class="media-slider-preview-content esp-preview-card esp-theme">/);
+    expect(SKIN_TEMPLATE).toMatch(/<media-slider-preview [^>]*overflow="clamp"/);
   });
 
   it('contains only placeholder ids', () => {

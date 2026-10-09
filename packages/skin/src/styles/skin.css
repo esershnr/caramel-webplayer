@@ -173,29 +173,81 @@
     border-color: var(--esp-divider);
   }
 
-  /* Timeline preview card: thumbnail frame and the chapter / time chip */
-  .esp-skin .media-slider-thumbnail.esp-theme {
+  /* Timeline preview card (YouTube layout): thumbnail on top, below it one
+     row with the pointer time and the chapter title. The card is the single
+     positioned element; the thumbnail and the label are static children. */
+  .esp-skin .esp-preview-card {
     --media-popover: var(--esp-surface);
     --media-popover-foreground: var(--esp-text);
     --media-surface-border: var(--esp-divider);
     --media-shadow-surface-inset: 0 0 #0000;
     --media-backdrop-filter-surface: none;
+    bottom: calc(100% + var(--media-slider-preview-offset));
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: calc(var(--media-spacing) * 1.5);
+    max-width: var(--media-slider-preview-max-width);
+    pointer-events: none;
+    text-shadow: none;
+    font-family: var(--esp-font-body);
+  }
+
+  .esp-skin .esp-preview-card .media-slider-thumbnail {
+    position: static;
+    translate: none;
+    scale: none;
+    opacity: 1;
+    filter: none;
+    transition: none;
+    max-width: 100%;
     background-color: var(--esp-surface);
   }
 
-  .esp-skin .media-time-slider-preview-content.esp-theme {
+  .esp-skin .esp-preview-card .media-slider-thumbnail[data-hidden] {
+    display: none;
+  }
+
+  .esp-skin .esp-preview-label {
+    display: flex;
+    align-items: baseline;
+    gap: 0.45em;
+    max-width: 100%;
     padding: calc(var(--media-spacing) * 1) calc(var(--media-spacing) * 2.5);
     border-radius: var(--esp-radius-chip);
     background: var(--esp-surface);
     color: var(--esp-text);
     box-shadow: 0 0 0 1px var(--esp-divider);
-    text-shadow: none;
-    font-family: var(--esp-font-body);
+    white-space: nowrap;
+    overflow: hidden;
+    font-variant-numeric: tabular-nums;
   }
 
-  .esp-skin .media-time-slider-preview-content.esp-theme .media-time-slider-chapter-title {
+  .esp-skin .esp-preview-time {
+    flex: none;
+    position: static;
+  }
+
+  .esp-skin .esp-preview-sep {
+    flex: none;
+    color: var(--esp-muted);
+  }
+
+  .esp-skin .esp-preview-title {
+    min-width: 0;
+    padding-inline: 0;
+    max-width: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
     color: var(--esp-accent-text);
     font-weight: 600;
+  }
+
+  /* No chapter under the pointer: only the time, no separator. */
+  .esp-skin .esp-preview-label:has(.esp-preview-title:empty) .esp-preview-sep,
+  .esp-skin .esp-preview-title:empty {
+    display: none;
   }
 
   /* ------------------------------------------------------------------ */

@@ -79,17 +79,20 @@
 </media-time-slider-chapters>
 <media-slider-thumb class="media-slider-thumb media-time-slider-thumb">
 </media-slider-thumb>
-<media-slider-preview class="media-slider-preview" overflow="visible">
-<media-slider-thumbnail class="media-slider-preview-content media-popup-surface media-slider-thumbnail esp-theme">
+<media-slider-preview class="media-slider-preview" overflow="clamp">
+<div class="media-slider-preview-content esp-preview-card esp-theme">
+<media-slider-thumbnail class="media-popup-surface media-slider-thumbnail esp-preview-thumbnail">
 <img alt="" aria-hidden="true" decoding="async" class="media-slider-thumbnail-image">
 <media-icon name="spinner" class="media-slider-thumbnail-spinner-icon">
 </media-icon>
 </media-slider-thumbnail>
-<div class="media-slider-preview-content media-time-slider-preview-content esp-theme">
-<media-time-slider-chapter-title class="media-time-slider-chapter-title">
-</media-time-slider-chapter-title>
-<media-slider-value class="media-time-slider-value" type="pointer">
+<div class="esp-preview-label">
+<media-slider-value class="media-time-slider-value esp-preview-time" type="pointer">
 </media-slider-value>
+<span class="esp-preview-sep" aria-hidden="true">·</span>
+<media-time-slider-chapter-title class="media-time-slider-chapter-title esp-preview-title">
+</media-time-slider-chapter-title>
+</div>
 </div>
 </media-slider-preview>
 </media-time-slider>
