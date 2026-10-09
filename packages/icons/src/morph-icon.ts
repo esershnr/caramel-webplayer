@@ -1,38 +1,44 @@
 import { createMorph, type Morph, type MorphOptions } from 'morphicons/dom';
 import type { SpringPreset } from 'morphicons';
 import { getIcon, type IconNode } from './icons.js';
-import { iconMapFromOnOff, parseIconMap, pickIcon, type IconMap } from './map.js';
+import { parseIconRules, pickIcon, rulesFromOnOff, watchedAttributes, type IconRule } from './map.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
 /**
  * <esp-morph-icon>
  *
- * A stroke icon that morphs between Lucide shapes when an attribute on its
- * parent (or a `target` selector) changes. Designed to sit inside Video.js 10
+ * A stroke icon that morphs between Lucide shapes when attributes on its
+ * parent (or a `target` ancestor) change. Designed to sit inside Video.js 10
  * buttons, which reflect state as data attributes:
  *
  *   <media-play-button>
- *     <esp-morph-icon watch="data-paused" on="play" off="pause"></esp-morph-icon>
+ *     <esp-morph-icon map="data-ended:restart,data-paused:play,*:pause"></esp-morph-icon>
  *   </media-play-button>
  *
  *   <media-mute-button>
- *     <esp-morph-icon watch="data-volume-level"
- *       map="off:volume-off,low:volume-low,*:volume-high"></esp-morph-icon>
+ *     <esp-morph-icon map="data-muted:volume-off,data-volume-level=low:volume-low,*:volume-high"></esp-morph-icon>
  *   </media-mute-button>
  *
- * Attributes: watch, on, off, map, target (CSS selector resolved with
- * closest()), spring (smooth|snappy|bouncy), icon (static, no watching).
+ * Attributes:
+ *   map     rules, see map.ts (first match wins, `*` is the fallback)
+ *   watch / on / off   shorthand for a single boolean attribute
+ *   target  CSS selector resolved with closest(); default is the parent
+ *   spring  smooth | snappy | bouncy (default: a light overshoot)
+ *   icon    static icon name, no watching
+ *
  * Reduced motion follows the OS setting: morphs become instant swaps.
  */
 export class EspMorphIconElement extends HTMLElement {
   static readonly tagName = 'esp-morph-icon';
-  static readonly observedAttributes = ['watch', 'on', 'off', 'map', 'target', 'spring', 'icon'];
+  static readonly observedAttributes = ['map', 'watch', 'on', 'off', 'target', 'spring', 'icon'];
 
   #path: SVGPathElement | null = null;
   #morph: Morph | null = null;
   #observer: MutationObserver | null = null;
   #observedTarget: Element | null = null;
+  #observedAttrs = '';
+  #rules: IconRule[] = [];
   #current: string | null = null;
 
   connectedCallback(): void {
@@ -41,9 +47,7 @@ export class EspMorphIconElement extends HTMLElement {
   }
 
   disconnectedCallback(): void {
-    this.#observer?.disconnect();
-    this.#observer = null;
-    this.#observedTarget = null;
+    this.#unobserve();
     this.#morph?.destroy();
     this.#morph = null;
     this.#current = null;
@@ -54,10 +58,16 @@ export class EspMorphIconElement extends HTMLElement {
     this.#bind();
   }
 
+  /** Name of the icon currently shown. */
+  get current(): string | null {
+    return this.#current;
+  }
+
   /** Morph to a registry icon or raw IconNode by hand. */
   morphTo(icon: string | IconNode, spring?: SpringPreset | MorphOptions): void {
     const node = typeof icon === 'string' ? getIcon(icon) : icon;
     if (!node) return;
+    this.#current = typeof icon === 'string' ? icon : null;
     this.#ensureSvg();
     if (!this.#morph) {
       this.#morph = createMorph(this.#path!, node, { reducedMotion: 'user' });
@@ -89,10 +99,10 @@ export class EspMorphIconElement extends HTMLElement {
     this.#path = path;
   }
 
-  #map(): IconMap {
+  #readRules(): IconRule[] {
     const map = this.getAttribute('map');
-    if (map) return parseIconMap(map);
-    return iconMapFromOnOff(this.getAttribute('on'), this.getAttribute('off'));
+    if (map) return parseIconRules(map);
+    return rulesFromOnOff(this.getAttribute('watch'), this.getAttribute('on'), this.getAttribute('off'));
   }
 
   #resolveTarget(): Element | null {
@@ -103,22 +113,26 @@ export class EspMorphIconElement extends HTMLElement {
 
   #bind(): void {
     const staticIcon = this.getAttribute('icon');
-    const watch = this.getAttribute('watch');
+    this.#rules = staticIcon ? [] : this.#readRules();
+    const attrs = watchedAttributes(this.#rules);
 
-    if (staticIcon || !watch) {
+    if (staticIcon || attrs.length === 0) {
       this.#unobserve();
-      if (staticIcon) this.#apply(staticIcon, false);
+      const icon = staticIcon ?? pickIcon(this.#rules, () => null);
+      if (icon) this.#apply(icon, false);
       return;
     }
 
     const target = this.#resolveTarget();
     if (!target) return;
 
-    if (target !== this.#observedTarget) {
+    const key = attrs.join(' ');
+    if (target !== this.#observedTarget || key !== this.#observedAttrs) {
       this.#unobserve();
       this.#observer = new MutationObserver(() => this.#sync(true));
-      this.#observer.observe(target, { attributes: true, attributeFilter: [watch] });
+      this.#observer.observe(target, { attributes: true, attributeFilter: attrs });
       this.#observedTarget = target;
+      this.#observedAttrs = key;
     }
     this.#sync(false);
   }
@@ -127,13 +141,13 @@ export class EspMorphIconElement extends HTMLElement {
     this.#observer?.disconnect();
     this.#observer = null;
     this.#observedTarget = null;
+    this.#observedAttrs = '';
   }
 
   #sync(animate: boolean): void {
-    const watch = this.getAttribute('watch');
     const target = this.#observedTarget;
-    if (!watch || !target) return;
-    const icon = pickIcon(this.#map(), target.getAttribute(watch));
+    if (!target) return;
+    const icon = pickIcon(this.#rules, (attr) => target.getAttribute(attr));
     if (icon) this.#apply(icon, animate);
   }
 

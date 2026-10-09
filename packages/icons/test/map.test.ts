@@ -1,39 +1,55 @@
 import { describe, expect, it } from 'vitest';
-import { iconMapFromOnOff, parseIconMap, pickIcon } from '../src/map.js';
+import { parseIconRules, pickIcon, rulesFromOnOff, watchedAttributes } from '../src/map.js';
 
-describe('parseIconMap', () => {
-  it('parses value pairs, wildcard and absent key', () => {
-    const map = parseIconMap('off:volume-off, low:volume-low ,*:volume-high,:pause');
-    expect(map.values.get('off')).toBe('volume-off');
-    expect(map.values.get('low')).toBe('volume-low');
-    expect(map.any).toBe('volume-high');
-    expect(map.absent).toBe('pause');
+const attrs = (state: Record<string, string>) => (name: string) => state[name] ?? null;
+
+describe('parseIconRules', () => {
+  it('parses presence, equality and wildcard rules in order', () => {
+    const rules = parseIconRules('data-ended:restart, data-volume-level=low:volume-low ,*:volume-high');
+    expect(rules).toEqual([
+      { attr: 'data-ended', value: null, icon: 'restart' },
+      { attr: 'data-volume-level', value: 'low', icon: 'volume-low' },
+      { attr: null, value: null, icon: 'volume-high' },
+    ]);
   });
 
   it('ignores malformed entries', () => {
-    const map = parseIconMap('nocolon,,high:,:');
-    expect(map.values.size).toBe(0);
-    expect(map.any).toBeNull();
-    expect(map.absent).toBeNull();
+    expect(parseIconRules('nocolon,,high:,:x,')).toEqual([]);
+    expect(parseIconRules(undefined)).toEqual([]);
   });
 });
 
 describe('pickIcon', () => {
-  it('prefers exact value, then wildcard', () => {
-    const map = parseIconMap('off:volume-off,*:volume-high');
-    expect(pickIcon(map, 'off')).toBe('volume-off');
-    expect(pickIcon(map, 'medium')).toBe('volume-high');
+  const play = parseIconRules('data-ended:restart,data-paused:play,*:pause');
+
+  it('returns the first matching rule', () => {
+    expect(pickIcon(play, attrs({ 'data-ended': '', 'data-paused': '' }))).toBe('restart');
+    expect(pickIcon(play, attrs({ 'data-paused': '' }))).toBe('play');
+    expect(pickIcon(play, attrs({}))).toBe('pause');
   });
 
-  it('uses the absent icon for a missing attribute', () => {
-    const map = iconMapFromOnOff('play', 'pause');
-    expect(pickIcon(map, null)).toBe('pause');
-    expect(pickIcon(map, '')).toBe('play');
-    expect(pickIcon(map, 'anything')).toBe('play');
+  it('matches attribute values exactly', () => {
+    const mute = parseIconRules('data-muted:volume-off,data-volume-level=low:volume-low,*:volume-high');
+    expect(pickIcon(mute, attrs({ 'data-volume-level': 'low' }))).toBe('volume-low');
+    expect(pickIcon(mute, attrs({ 'data-volume-level': 'high' }))).toBe('volume-high');
+    expect(pickIcon(mute, attrs({ 'data-muted': '', 'data-volume-level': 'low' }))).toBe('volume-off');
   });
 
-  it('returns undefined when nothing matches', () => {
-    expect(pickIcon(parseIconMap('a:x'), null)).toBeUndefined();
-    expect(pickIcon(parseIconMap('a:x'), 'b')).toBeUndefined();
+  it('returns undefined without a fallback', () => {
+    expect(pickIcon(parseIconRules('a:x'), attrs({}))).toBeUndefined();
+  });
+});
+
+describe('rulesFromOnOff and watchedAttributes', () => {
+  it('builds the shorthand rules', () => {
+    const rules = rulesFromOnOff('data-paused', 'play', 'pause');
+    expect(pickIcon(rules, attrs({ 'data-paused': '' }))).toBe('play');
+    expect(pickIcon(rules, attrs({}))).toBe('pause');
+    expect(watchedAttributes(rules)).toEqual(['data-paused']);
+  });
+
+  it('lists distinct watched attributes in order', () => {
+    const rules = parseIconRules('data-muted:a,data-volume-level=low:b,data-muted:c,*:d');
+    expect(watchedAttributes(rules)).toEqual(['data-muted', 'data-volume-level']);
   });
 });
