@@ -505,15 +505,16 @@ export class EspPlaylistElement extends Base {
     const old = findMedia(container);
     const tag = mediaTagFor(item);
     const tracks = buildTracks(item, this.#currentLang());
+    const src = resolveMediaSrc(item.src, tag);
 
     if (old && old.localName === tag) {
-      const sameSrc = old.getAttribute('src') === item.src;
+      const sameSrc = old.getAttribute('src') === src;
       const oldTracks = Array.from(old.children).filter((child) => child.localName === 'track');
       if (!sameSrc || !tracksEqual(oldTracks, tracks)) {
         for (const track of oldTracks) track.remove();
         old.append(...tracks);
       }
-      if (!sameSrc) old.setAttribute('src', item.src);
+      if (!sameSrc) old.setAttribute('src', src);
       return;
     }
 
@@ -530,7 +531,7 @@ export class EspPlaylistElement extends Base {
       if (value !== null) media.setAttribute(name, value);
     }
     media.append(...tracks);
-    media.setAttribute('src', item.src);
+    media.setAttribute('src', src);
     this.#ownMedia = media;
     // Insert at the same position first so the player sees a media element at all times.
     old.before(media);
@@ -659,6 +660,19 @@ export interface TrackSpec {
   srclang?: string | undefined;
   label?: string | undefined;
   default: boolean;
+}
+
+/**
+ * The HLS engine resolves playlist URIs against the source URL and rejects a
+ * relative one ("Invalid base URL"), so HLS sources become absolute here.
+ */
+export function resolveMediaSrc(src: string, tag: 'video' | 'hls-video'): string {
+  if (tag !== 'hls-video' || typeof document === 'undefined') return src;
+  try {
+    return new URL(src, document.baseURI).href;
+  } catch {
+    return src;
+  }
 }
 
 /** Track specs for an item, in the order they are appended: chapters, thumbnails, subtitles. */

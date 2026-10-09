@@ -34,7 +34,7 @@ mountSkin(player, { media, extras: [skip, playlist], uid: 'demo' });
 
 // encode-hls output, when present: `pnpm --filter @esersahiner/encode-hls start -- media/<slug> --base-url ...`
 // The Vite plugin serves repo `out/` under /out/ with Range support.
-void loadManifest('/out/openwrt-rehber/manifest.json', '/out/openwrt-rehber/').then((item) => {
+void loadManifest('/out/openwrt-rehber/manifest.json', `${location.origin}/out/openwrt-rehber/`).then((item) => {
   if (item) playlist.items = [...PLAYLIST, item];
 });
 

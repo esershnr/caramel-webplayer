@@ -198,7 +198,9 @@ export async function encode(options: EncodeOptions): Promise<EncodeResult> {
     columns: 10,
     out: path.join(outDir, 'thumbs'),
     name: 'sprite',
-    baseUrl: url('thumbs'),
+    // Sprite URLs stay relative to thumbnails.vtt, so the same files work from
+    // the CDN and from a local dev server.
+    baseUrl: undefined,
     ffmpeg,
     ffprobe,
   });

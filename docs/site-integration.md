@@ -76,6 +76,7 @@ export function VideoPage({ lang }: { lang: 'tr' | 'en' }) {
 (client tarafında). JSX tipi için `declare module 'react'` bloğu
 `examples/react/src/App.tsx` içinde örnektir.
 
+- HLS `src` mutlak URL olmalı (motor göreli URL'yi `Invalid base URL` ile reddeder); playlist denetleyicisi göreli verileni `document.baseURI` ile mutlaklaştırır, manifest zaten mutlak yazar.
 - Dil: `lang` prop'u hem player etiketlerini (`<media-i18n>`) hem bölüm track'ini
   (`chapters: { tr, en }`) seçer; `<html lang>` değişince otomatik takip eder.
 - Tema: site zaten `.dark` sınıfını `<html>`'e koyuyor; `.esp-theme` kapsamı bunu okur.

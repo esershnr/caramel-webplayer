@@ -42,7 +42,7 @@ export function App() {
   // encode-hls output, when present (served from repo out/ by the Vite plugin).
   useEffect(() => {
     let cancelled = false;
-    void loadManifest('/out/openwrt-rehber/manifest.json', '/out/openwrt-rehber/').then((item) => {
+    void loadManifest('/out/openwrt-rehber/manifest.json', `${location.origin}/out/openwrt-rehber/`).then((item) => {
       if (item && !cancelled) setItems([...PLAYLIST, item]);
     });
     return () => {
@@ -86,7 +86,7 @@ export function App() {
         <h1 className="esp-heading">Player demo (React)</h1>
         <div className="demo-theme" role="group" aria-label="Tema">
           {(['light', 'dark', 'system'] as const).map((c) => (
-            <button key={c} type="button" aria-pressed={choice === c} onClick={() => setChoice(c)}>
+            <button key={c} type="button" data-theme-choice={c} aria-pressed={choice === c} onClick={() => setChoice(c)}>
               {c === 'light' ? 'Açık' : c === 'dark' ? 'Koyu' : 'Sistem'}
             </button>
           ))}
@@ -94,7 +94,7 @@ export function App() {
         </div>
         <div className="demo-theme" role="group" aria-label="Dil">
           {(['tr', 'en'] as const).map((l) => (
-            <button key={l} type="button" aria-pressed={lang === l} onClick={() => setLang(l)}>
+            <button key={l} type="button" data-lang={l} aria-pressed={lang === l} onClick={() => setLang(l)}>
               {l.toUpperCase()}
             </button>
           ))}
