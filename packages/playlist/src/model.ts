@@ -165,6 +165,14 @@ export function normalizeItems(input: unknown): PlaylistItem[] {
     };
     if (typeof value['poster'] === 'string') item.poster = value['poster'];
     if (typeof value['chapters'] === 'string') item.chapters = value['chapters'];
+    else if (value['chapters'] && typeof value['chapters'] === 'object' && !Array.isArray(value['chapters'])) {
+      const map: Record<string, string> = {};
+      for (const [lang, url] of Object.entries(value['chapters'] as Record<string, unknown>)) {
+        if (typeof url === 'string' && url) map[lang] = url;
+      }
+      if (Object.keys(map).length) item.chapters = map;
+    }
+    if (value['type'] === 'hls' || value['type'] === 'video') item.type = value['type'];
     if (typeof value['thumbnails'] === 'string') item.thumbnails = value['thumbnails'];
     if (Array.isArray(value['subtitles'])) {
       const subtitles = value['subtitles'].filter(

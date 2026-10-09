@@ -11,7 +11,7 @@ import {
   type ResumeEntry,
   type ResumeStorage,
 } from './resume.js';
-import { mediaTagFor, type PlaylistItem, type PlaylistSubtitle } from './types.js';
+import { chaptersUrlFor, mediaTagFor, type PlaylistItem, type PlaylistSubtitle } from './types.js';
 
 /** HTMLElement stand-in so the module can be imported during SSR. */
 const Base: typeof UIElement =
@@ -124,6 +124,8 @@ export class EspPlaylistElement extends Base {
   /** What is currently applied to `#player`. */
   #appliedKey: string | null = null;
   #pendingSegments: unknown[] | null = null;
+  #langObserver: MutationObserver | null = null;
+  #appliedLang: string | null = null;
   #appliedItem: PlaylistItem | null = null;
   #appliedIndex = -1;
   /** Media element this controller inserted last (created or replacement). */
@@ -224,6 +226,7 @@ export class EspPlaylistElement extends Base {
 
   override connectedCallback(): void {
     super.connectedCallback();
+    this.#observeLang();
     this.#unsubscribeModel ??= this.#model.subscribe(() => this.requestUpdate());
     this.#lookupRetries = 0;
     this.#readAttributes();
@@ -232,6 +235,8 @@ export class EspPlaylistElement extends Base {
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
+    this.#langObserver?.disconnect();
+    this.#langObserver = null;
     this.#unsubscribeModel?.();
     this.#unsubscribeModel = null;
     this.#detachPlayer();
@@ -464,12 +469,42 @@ export class EspPlaylistElement extends Base {
     skip.segments = segments;
   }
 
+  /** Language the chapters track follows: nearest `lang`, then `<html lang>`. */
+  #currentLang(): string | null {
+    const lang = this.closest('[lang]')?.getAttribute('lang') || document.documentElement.lang || null;
+    this.#appliedLang = lang;
+    return lang;
+  }
+
+  /** Swaps the chapters track when the page language changes (per-language chapters only). */
+  #observeLang(): void {
+    if (this.#langObserver || typeof MutationObserver === 'undefined') return;
+    this.#langObserver = new MutationObserver(() => {
+      const item = this.#appliedItem;
+      const player = this.#player;
+      if (!item || !player || typeof item.chapters !== 'object') return;
+      const previous = this.#appliedLang;
+      const next = this.closest('[lang]')?.getAttribute('lang') || document.documentElement.lang || null;
+      if (next === previous) return;
+      const container = player.querySelector('media-container');
+      const media = container ? findMedia(container) : null;
+      if (!media) return;
+      const tracks = buildTracks(item, this.#currentLang());
+      for (const track of Array.from(media.children)) if (track.localName === 'track') track.remove();
+      media.append(...tracks);
+    });
+    const targets = new Set<Element>([document.documentElement]);
+    const scoped = this.closest('[lang]');
+    if (scoped) targets.add(scoped);
+    for (const target of targets) this.#langObserver.observe(target, { attributes: true, attributeFilter: ['lang'] });
+  }
+
   #applyMedia(player: PlayerLike, item: PlaylistItem): void {
     const container = player.querySelector('media-container');
     if (!container) return;
     const old = findMedia(container);
     const tag = mediaTagFor(item);
-    const tracks = buildTracks(item);
+    const tracks = buildTracks(item, this.#currentLang());
 
     if (old && old.localName === tag) {
       const sameSrc = old.getAttribute('src') === item.src;
@@ -627,9 +662,10 @@ export interface TrackSpec {
 }
 
 /** Track specs for an item, in the order they are appended: chapters, thumbnails, subtitles. */
-export function trackSpecsFor(item: PlaylistItem): TrackSpec[] {
+export function trackSpecsFor(item: PlaylistItem, lang?: string | null): TrackSpec[] {
   const specs: TrackSpec[] = [];
-  if (item.chapters) specs.push({ kind: 'chapters', src: item.chapters, default: true });
+  const chapters = chaptersUrlFor(item, lang);
+  if (chapters) specs.push({ kind: 'chapters', src: chapters, default: true });
   if (item.thumbnails) specs.push({ kind: 'metadata', src: item.thumbnails, label: 'thumbnails', default: true });
   for (const sub of item.subtitles ?? []) specs.push(subtitleSpec(sub));
   return specs;
@@ -639,8 +675,8 @@ function subtitleSpec(sub: PlaylistSubtitle): TrackSpec {
   return { kind: 'subtitles', src: sub.src, srclang: sub.srclang, label: sub.label, default: sub.default === true };
 }
 
-function buildTracks(item: PlaylistItem): HTMLTrackElement[] {
-  return trackSpecsFor(item).map((spec) => {
+function buildTracks(item: PlaylistItem, lang?: string | null): HTMLTrackElement[] {
+  return trackSpecsFor(item, lang).map((spec) => {
     const track = document.createElement('track');
     track.setAttribute('kind', spec.kind);
     track.setAttribute('src', spec.src);

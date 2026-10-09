@@ -36,9 +36,19 @@ export interface PlaylistItem {
   title: string;
   /** MP4 or HLS (`.m3u8`) URL. */
   src: string;
+  /**
+   * Media kind. `hls` renders `<hls-video>`, `video` a plain `<video>`.
+   * Defaults to a guess from the URL (`.m3u8` means HLS).
+   */
+  type?: 'hls' | 'video' | undefined;
   poster?: string | undefined;
-  /** WebVTT chapters URL. */
-  chapters?: string | undefined;
+  /**
+   * WebVTT chapters URL, or one URL per language (`{ tr: '...', en: '...' }`).
+   * With a map the controller picks the player's current language (nearest
+   * `lang` attribute, then `<html lang>`), falling back to `en`, then the
+   * first entry, and swaps the track when the language changes.
+   */
+  chapters?: string | Record<string, string> | undefined;
   /** WebVTT storyboard URL (`#xywh=` sprite cues). */
   thumbnails?: string | undefined;
   subtitles?: PlaylistSubtitle[] | undefined;
@@ -47,7 +57,25 @@ export interface PlaylistItem {
   duration?: number | undefined;
 }
 
-/** Media element tag for an item. */
-export function mediaTagFor(item: Pick<PlaylistItem, 'src'>): 'video' | 'hls-video' {
+/** Media element tag for an item: explicit `type` first, then the URL. */
+export function mediaTagFor(item: Pick<PlaylistItem, 'src' | 'type'>): 'video' | 'hls-video' {
+  if (item.type === 'hls') return 'hls-video';
+  if (item.type === 'video') return 'video';
   return /\.m3u8(\?|#|$)/i.test(item.src) ? 'hls-video' : 'video';
+}
+
+/** Resolves the chapters URL for a language, or null when the item has none. */
+export function chaptersUrlFor(item: Pick<PlaylistItem, 'chapters'>, lang: string | null | undefined): string | null {
+  const chapters = item.chapters;
+  if (!chapters) return null;
+  if (typeof chapters === 'string') return chapters;
+  const wanted = (lang ?? '').toLowerCase();
+  const base = wanted.split('-')[0] ?? '';
+  const keys = Object.keys(chapters);
+  const match =
+    keys.find((k) => k.toLowerCase() === wanted) ??
+    keys.find((k) => k.toLowerCase().split('-')[0] === base) ??
+    keys.find((k) => k.toLowerCase() === 'en') ??
+    keys[0];
+  return match ? (chapters[match] ?? null) : null;
 }
