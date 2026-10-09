@@ -7,6 +7,7 @@ import type { Segment, SkipEventDetail } from '@esersahiner/player-skip-segments
 import type { PlaylistItem } from '@esersahiner/player-playlist';
 import { watchTheme, type Theme } from '@esersahiner/player-theme';
 import { PLAYLIST } from '../../vanilla/src/playlist-data';
+import { loadManifest } from '../../vanilla/src/manifest';
 
 type Choice = 'light' | 'dark' | 'system';
 
@@ -36,6 +37,18 @@ export function App() {
   const [resolved, setResolved] = useState<Theme>('light');
   const [lang, setLang] = useState<'tr' | 'en'>('tr');
   const [log, setLog] = useState<string[]>([]);
+  const [items, setItems] = useState<PlaylistItem[]>(PLAYLIST);
+
+  // encode-hls output, when present (served from repo out/ by the Vite plugin).
+  useEffect(() => {
+    let cancelled = false;
+    void loadManifest('/out/openwrt-rehber/manifest.json', '/out/openwrt-rehber/').then((item) => {
+      if (item && !cancelled) setItems([...PLAYLIST, item]);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => watchTheme(setResolved), []);
 
@@ -58,7 +71,7 @@ export function App() {
   );
   const onEnter = useCallback((segment: Segment) => push(`enter ${segment.type}`), [push]);
   const onPlaylistChange = useCallback(
-    ({ item, index }: { item: PlaylistItem; index: number }) => push(`playlist ${index + 1}/${PLAYLIST.length} ${item.title}`),
+    ({ item, index }: { item: PlaylistItem; index: number }) => push(`playlist ${index + 1} ${item.title}`),
     [push],
   );
   const onPlaylistEnded = useCallback(() => push('playlist ended'), [push]);
@@ -99,7 +112,7 @@ export function App() {
                 <SkipSegments segments={NO_SEGMENTS} autoSkip={['recap']} onSkip={onSkip} onSegmentEnter={onEnter} />
                 <Playlist
                   id="playlist"
-                  items={PLAYLIST}
+                  items={items}
                   listId="demo-react"
                   onChange={onPlaylistChange}
                   onEnded={onPlaylistEnded}

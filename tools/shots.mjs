@@ -134,6 +134,53 @@ for (const base of urls) {
       await shot('chapter-select');
     }
 
+    // Encoded item (encode-hls output or the R2 copy): the last playlist entry
+    // when more than the three demo clips are listed. Exercises byte-range HLS,
+    // the quality menu, per-language chapters, subtitles, skip and fullscreen.
+    const items = page.locator('esp-playlist-panel li button');
+    if ((await items.count()) > 3) {
+      await items.last().click();
+      await page.waitForTimeout(3500);
+      await shot('encoded-idle');
+      await hoverPreview('encoded-preview');
+      await trigger.click();
+      await page.waitForTimeout(450);
+      const quality = page.locator(ITEM_SELECTOR).first();
+      await quality.click();
+      await page.waitForTimeout(450);
+      await shot('encoded-quality');
+      await closeMenus();
+      // Subtitles: pick the first real track in the captions submenu.
+      await trigger.click();
+      await page.waitForTimeout(450);
+      const captions = page.locator(ITEM_SELECTOR).last();
+      await captions.click();
+      await page.waitForTimeout(450);
+      const track = page.locator('.media-menu-content[data-submenu] .media-menu-radio-item').nth(1);
+      if (await track.count()) {
+        await track.click();
+        await page.waitForTimeout(300);
+      }
+      await closeMenus();
+      await page.locator('.media-play-button').click();
+      await page.waitForTimeout(6500);
+      await page.locator('.media-play-button').click();
+      await page.waitForTimeout(400);
+      await shot('encoded-subtitles');
+      // Chapters follow the page language.
+      await page.locator('[data-lang="en"]').click();
+      await page.waitForTimeout(1200);
+      await shot('encoded-chapters-en');
+      await page.locator('[data-lang="tr"]').click();
+      await page.waitForTimeout(600);
+      // Fullscreen.
+      await page.locator('.media-fullscreen-button').click();
+      await page.waitForTimeout(900);
+      await shot('encoded-fullscreen');
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(500);
+    }
+
     report.push({ tag, theme, errors });
     await context.close();
   }
