@@ -9,6 +9,8 @@ Requires `ffmpeg` on PATH (`ffprobe` is used when present, from the same
 install). Install with `winget install Gyan.FFmpeg`, `brew install ffmpeg` or
 `sudo apt install ffmpeg`.
 
+> Git Bash (MSYS) rewrites `--base-url /thumbs` into a Windows path. Prefix the command with `MSYS_NO_PATHCONV=1` or pass `--base-url //thumbs`.
+
 ## Usage
 
 ```sh
