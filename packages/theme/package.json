@@ -1,0 +1,28 @@
+{
+  "name": "@esersahiner/player-theme",
+  "version": "0.1.0",
+  "description": "esersahiner.com design tokens (--esp-*) for the web player: light/dark palette, motion, typography",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": ["*.css"],
+  "files": ["dist", "styles"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./tokens.css": "./styles/tokens.css",
+    "./fonts.css": "./styles/fonts.css",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "vitest": "^5.0.3"
+  }
+}

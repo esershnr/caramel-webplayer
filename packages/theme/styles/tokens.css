@@ -1,0 +1,135 @@
+/*
+ * esersahiner.com player tokens (--esp-*).
+ * Source of truth for colors: esersahiner-next-js/lib/theme.js (latte D3 / bitter).
+ *
+ * Every color is declared once with light-dark(); the active scheme is decided
+ * on the `.esp-theme` scope so the host page's own color-scheme is left alone.
+ * Precedence: data-theme="light|dark" or .light/.dark on <html> (or any
+ * ancestor) wins, otherwise prefers-color-scheme.
+ *
+ * Host pages override any token by redefining it on :root or an ancestor.
+ */
+
+:root {
+  /* Surfaces (outside the video frame: playlist, chapter list, menus, cards) */
+  --esp-bg: light-dark(#fbf7f0, #141414);
+  --esp-surface: light-dark(#ece5da, #2d2d2d);
+  --esp-raised: light-dark(#faf7f2, #242424);
+  --esp-raised-hover: light-dark(
+    color-mix(in srgb, #faf7f2, #5e3310 8%),
+    color-mix(in srgb, #242424, white 8%)
+  );
+  --esp-divider: light-dark(#d2c4b0, #454545);
+  --esp-border: light-dark(#8a5f36, #8a8a8a);
+
+  /* Text */
+  --esp-text: light-dark(#2a1606, #ffffff);
+  --esp-muted: light-dark(#553821, #b8b0a6);
+
+  /* Indicator: selection, focus ring, active chapter marker */
+  --esp-primary: light-dark(#5e3310, #c9945c);
+  --esp-primary-hover: light-dark(
+    color-mix(in srgb, #5e3310, black 20%),
+    color-mix(in srgb, #c9945c, white 15%)
+  );
+  --esp-primary-contrast: light-dark(#ece5da, #141414);
+
+  /* Solid fill: buttons, active list item */
+  --esp-solid: light-dark(#5e3310, #8a5a2b);
+  --esp-solid-hover: light-dark(
+    color-mix(in srgb, #5e3310, black 20%),
+    color-mix(in srgb, #8a5a2b, white 10%)
+  );
+  --esp-solid-contrast: light-dark(#ece5da, #ffffff);
+
+  /* Caramel accent: decoration only (progress fill, lines). Never for text. */
+  --esp-accent: #c9945c;
+  /* Readable caramel for text and icons */
+  --esp-accent-text: light-dark(#653d19, #d9ae7e);
+
+  /* Overlay layer on top of the video. Theme independent: stays dark. */
+  --esp-overlay-scrim: color-mix(in srgb, black 35%, transparent);
+  --esp-overlay-surface: color-mix(in srgb, black 55%, transparent);
+  --esp-overlay-surface-strong: color-mix(in srgb, black 80%, transparent);
+  --esp-overlay-text: #ffffff;
+  --esp-overlay-accent: #d9ae7e;
+  --esp-overlay-border: color-mix(in srgb, white 24%, transparent);
+
+  /* Focus ring: 2px solid primary, 2px offset */
+  --esp-focus-ring: 2px solid var(--esp-primary);
+  --esp-focus-offset: 2px;
+
+  /* Corners: panel 24 -> inner box 16 -> chip pill */
+  --esp-radius-panel: 24px;
+  --esp-radius-box: 16px;
+  --esp-radius-chip: 9999px;
+
+  /* Typography. Host fonts win when it sets --font-heading / --font-body. */
+  --esp-font-heading: var(--font-heading, 'Montserrat', ui-sans-serif, system-ui, sans-serif);
+  --esp-font-body: var(--font-body, 'Quicksand', ui-sans-serif, system-ui, sans-serif);
+
+  /* Motion language */
+  --esp-ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --esp-ease-fill: cubic-bezier(0.65, 0, 0.35, 1);
+  --esp-ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --esp-duration-instant: 100ms;
+  --esp-duration-fast: 180ms;
+  --esp-duration-enter: 360ms;
+  --esp-duration-fill: 500ms;
+  --esp-duration-controls: 320ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --esp-duration-instant: 0ms;
+    --esp-duration-fast: 0ms;
+    --esp-duration-enter: 0ms;
+    --esp-duration-fill: 0ms;
+    --esp-duration-controls: 0ms;
+    /* Springs become a plain ease so nothing overshoots */
+    --esp-ease-spring: ease-out;
+  }
+}
+
+/* Scheme resolution scope. Put .esp-theme on player wrappers and panels. */
+.esp-theme {
+  color-scheme: light;
+  color: var(--esp-text);
+  font-family: var(--esp-font-body);
+}
+
+@media (prefers-color-scheme: dark) {
+  .esp-theme {
+    color-scheme: dark;
+  }
+}
+
+/* Explicit host or local choice beats the OS preference. */
+:root[data-theme='light'] .esp-theme,
+:root.light .esp-theme,
+[data-theme='light'] .esp-theme,
+.esp-theme[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] .esp-theme,
+:root.dark .esp-theme,
+[data-theme='dark'] .esp-theme,
+.esp-theme[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+/* Utilities shared by every package */
+.esp-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.esp-heading {
+  font-family: var(--esp-font-heading);
+  font-weight: 600;
+}
+
+.esp-focusable:focus-visible {
+  outline: var(--esp-focus-ring);
+  outline-offset: var(--esp-focus-offset);
+}

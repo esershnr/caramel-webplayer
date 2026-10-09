@@ -1,0 +1,5 @@
+/*
+ * Optional webfont loading. Import only when the host page does not already
+ * provide Montserrat and Quicksand (for example through next/font).
+ */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Quicksand:wght@400..700&display=swap');
