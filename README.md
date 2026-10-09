@@ -12,6 +12,9 @@ the browser only, so the Next.js App Router stays SSR clean).
 | `@esersahiner/player-icons` | Lucide icon registry, `iconToSvg`, `<esp-morph-icon>` (Morphicons spring morphing driven by `data-*` attributes) |
 | `@esersahiner/player-skin` | Video.js 10 default video skin source (shadcn copy) themed with esp tokens and Lucide icons; `mountSkin`, `<EspVideoSkin>` |
 | `@esersahiner/player-skip-segments` | `<esp-skip-segments>`: skip intro / recap / outro / sponsor button, auto-skip per type, timeline markers; `<SkipSegments>` for React |
+| `@esersahiner/player-chapters` | `<esp-chapters-panel>`: chapter list outside the video, fed by the player's chapters track; `<ChaptersPanel>` |
+| `@esersahiner/player-playlist` | `PlaylistModel`, `<esp-playlist>` controller (title, poster, media, tracks and segments per item, resume via localStorage, auto advance) and `<esp-playlist-panel>`; `<Playlist>`, `<PlaylistPanel>` |
+| `@esersahiner/gen-thumbs` | `esp-gen-thumbs`: ffmpeg sprite sheets plus a `#xywh=` WebVTT storyboard (`scripts/gen-thumbs/README.md`) |
 
 ## Usage
 
@@ -35,16 +38,46 @@ Wrap the player in `<media-i18n lang="tr">` (or set `lang` on an ancestor) for
 Turkish labels. Chapters come from `<track kind="chapters" default>`, timeline
 thumbnails from `<track kind="metadata" label="thumbnails" default>`.
 
+With a playlist the media element starts empty and the controller fills in
+everything per item (see `packages/playlist/src/types.ts` for the contract):
+
+```ts
+import '@esersahiner/player-chapters/define';
+import '@esersahiner/player-playlist/define';
+import '@videojs/html/media/hls-video'; // for .m3u8 items
+
+const playlist = document.createElement('esp-playlist');
+playlist.id = 'playlist';
+playlist.items = items; // PlaylistItem[]
+mountSkin(player, { media: document.createElement('hls-video'), extras: [skip, playlist] });
+```
+
+```html
+<esp-chapters-panel for="player"></esp-chapters-panel>
+<esp-playlist-panel for="playlist"></esp-playlist-panel>
+```
+
 ### React
 
 ```tsx
 import { EspVideoSkin } from '@esersahiner/player-skin/react';
 import { SkipSegments } from '@esersahiner/player-skip-segments/react';
 
-<EspVideoSkin lang="tr" title="..." extras={<SkipSegments segments={segments} autoSkip={['recap']} />}>
-  <video src={src} playsInline />
+<EspVideoSkin id="player" lang="tr" extras={<><SkipSegments segments={[]} autoSkip={['recap']} /><Playlist id="playlist" items={items} /></>}>
+  <hls-video playsinline="" crossorigin="anonymous" />
 </EspVideoSkin>
+<ChaptersPanel playerId="player" />
+<PlaylistPanel for="playlist" />
 ```
+
+### Thumbnails
+
+```sh
+pnpm --filter @esersahiner/gen-thumbs start -- video.mp4 --interval 2 --columns 6 --out public/thumbs --name bike --base-url /thumbs
+```
+
+Under Git Bash prefix the command with `MSYS_NO_PATHCONV=1` so `--base-url /thumbs`
+is not rewritten to a Windows path.
 
 ### Theme
 
@@ -65,7 +98,8 @@ pnpm dev:react       # http://localhost:5174
 ```
 
 Open-state screenshots (settings menu, every submenu, volume popover, timeline
-preview; both demos, both themes) with the installed Edge:
+preview, playlist next item, chapter select; both demos, both themes) with the
+installed Edge:
 
 ```sh
 node tools/shots.mjs shots   # dev servers must be running
