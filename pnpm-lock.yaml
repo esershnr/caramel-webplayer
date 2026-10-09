@@ -20,9 +20,15 @@ importers:
 
   examples/react:
     dependencies:
+      '@esersahiner/player-chapters':
+        specifier: workspace:*
+        version: link:../../packages/chapters
       '@esersahiner/player-icons':
         specifier: workspace:*
         version: link:../../packages/icons
+      '@esersahiner/player-playlist':
+        specifier: workspace:*
+        version: link:../../packages/playlist
       '@esersahiner/player-skin':
         specifier: workspace:*
         version: link:../../packages/skin
@@ -60,9 +66,15 @@ importers:
 
   examples/vanilla:
     dependencies:
+      '@esersahiner/player-chapters':
+        specifier: workspace:*
+        version: link:../../packages/chapters
       '@esersahiner/player-icons':
         specifier: workspace:*
         version: link:../../packages/icons
+      '@esersahiner/player-playlist':
+        specifier: workspace:*
+        version: link:../../packages/playlist
       '@esersahiner/player-skin':
         specifier: workspace:*
         version: link:../../packages/skin
@@ -83,6 +95,31 @@ importers:
         specifier: ^8.3.0
         version: 8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(tsx@4.23.15)
 
+  packages/chapters:
+    dependencies:
+      '@esersahiner/player-icons':
+        specifier: workspace:*
+        version: link:../icons
+      '@esersahiner/player-theme':
+        specifier: workspace:*
+        version: link:../theme
+      '@videojs/html':
+        specifier: 10.0.1
+        version: 10.0.1(react@19.3.0)
+    devDependencies:
+      '@types/react':
+        specifier: ^19.1.0
+        version: 19.3.0
+      react:
+        specifier: ^19.2.0
+        version: 19.3.0
+      typescript:
+        specifier: ^5.9.0
+        version: 5.9.3
+      vitest:
+        specifier: ^5.0.3
+        version: 5.0.3(@types/node@26.6.4)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(tsx@4.23.15))
+
   packages/icons:
     dependencies:
       lucide:
@@ -91,6 +128,34 @@ importers:
       morphicons:
         specifier: ^1.7.1
         version: 1.7.1(react@19.3.0)
+    devDependencies:
+      '@types/react':
+        specifier: ^19.1.0
+        version: 19.3.0
+      react:
+        specifier: ^19.2.0
+        version: 19.3.0
+      typescript:
+        specifier: ^5.9.0
+        version: 5.9.3
+      vitest:
+        specifier: ^5.0.3
+        version: 5.0.3(@types/node@26.6.4)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(tsx@4.23.15))
+
+  packages/playlist:
+    dependencies:
+      '@esersahiner/player-icons':
+        specifier: workspace:*
+        version: link:../icons
+      '@esersahiner/player-skip-segments':
+        specifier: workspace:*
+        version: link:../skip-segments
+      '@esersahiner/player-theme':
+        specifier: workspace:*
+        version: link:../theme
+      '@videojs/html':
+        specifier: 10.0.1
+        version: 10.0.1(react@19.3.0)
     devDependencies:
       '@types/react':
         specifier: ^19.1.0
@@ -162,7 +227,29 @@ importers:
         version: 5.0.3(@types/node@26.6.4)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(tsx@4.23.15))
 
   packages/theme:
+    dependencies:
+      '@fontsource-variable/montserrat':
+        specifier: ^5.3.0
+        version: 5.3.0
+      '@fontsource-variable/quicksand':
+        specifier: ^5.3.0
+        version: 5.3.0
     devDependencies:
+      typescript:
+        specifier: ^5.9.0
+        version: 5.9.3
+      vitest:
+        specifier: ^5.0.3
+        version: 5.0.3(@types/node@26.6.4)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(tsx@4.23.15))
+
+  scripts/gen-thumbs:
+    devDependencies:
+      '@types/node':
+        specifier: ^26.6.0
+        version: 26.6.4
+      tsx:
+        specifier: ^4.23.0
+        version: 4.23.15
       typescript:
         specifier: ^5.9.0
         version: 5.9.3
@@ -327,6 +414,12 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@fontsource-variable/montserrat@5.3.0':
+    resolution: {integrity: sha512-7PaZoxaxrWLAyrhO46v65An9LhUhfkTExWLhfbywYZCnZEgg/W1rEHnlNmZKjNZ3nJTVYyicqxlJt10z/26yTA==}
+
+  '@fontsource-variable/quicksand@5.3.0':
+    resolution: {integrity: sha512-EMyoXnGC0uIbjyHDB01MTJoQuODsMo7Q/4XLEwN97YJEeV1WIVFI0QBiW2exGnxvhnMHb+IwQ9E5QZDgGMWCHw==}
 
   '@jridgewell/resolve-uri@3.1.2':
     resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
@@ -974,6 +1067,10 @@ snapshots:
 
   '@esbuild/win32-x64@0.28.2':
     optional: true
+
+  '@fontsource-variable/montserrat@5.3.0': {}
+
+  '@fontsource-variable/quicksand@5.3.0': {}
 
   '@jridgewell/resolve-uri@3.1.2': {}
 

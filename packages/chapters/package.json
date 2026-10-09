@@ -1,0 +1,59 @@
+{
+  "name": "@esersahiner/player-chapters",
+  "version": "0.1.0",
+  "description": "Chapter list panel for Video.js 10, fed by the player's chapters track",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "*.css",
+    "./src/define.ts",
+    "./dist/define.js"
+  ],
+  "files": [
+    "dist",
+    "src/styles"
+  ],
+  "exports": {
+    ".": {
+      "development": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./define": {
+      "development": "./src/define.ts",
+      "types": "./dist/define.d.ts",
+      "default": "./dist/define.js"
+    },
+    "./react": {
+      "development": "./src/react.tsx",
+      "types": "./dist/react.d.ts",
+      "default": "./dist/react.js"
+    },
+    "./chapters.css": "./src/styles/chapters.css",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node -e \"require('node:fs').cpSync('src/styles','dist/styles',{recursive:true})\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@esersahiner/player-icons": "workspace:*",
+    "@esersahiner/player-theme": "workspace:*",
+    "@videojs/html": "10.0.1"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "react": "^19.2.0",
+    "typescript": "^5.9.0",
+    "vitest": "^5.0.3"
+  }
+}
