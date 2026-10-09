@@ -1,3 +1,9 @@
+/*
+ * Derived from the Video.js 10 default video skin (https://videojs.org).
+ * Copyright 2025-present Video.js contributors. Licensed under the Apache
+ * License, Version 2.0 (see LICENSE-APACHE in this package).
+ * Modified by Eser Şahiner, 2026 (element imports and esp overrides).
+ */
 import '../styles/video/base.css';
 import './skin.css';
 import '@videojs/html/i18n';

@@ -257,3 +257,10 @@ node tools/shots.mjs shots   # dev servers must be running
 The skin template (`packages/skin/src/template.ts`) is generated from
 `skin.html` by `pnpm --filter @esersahiner/player-skin build:template`; run it
 after editing `skin.html`.
+
+## License
+
+MIT, Copyright (c) 2026 Eser Şahiner (see `LICENSE`). `@esersahiner/player-skin`
+is `MIT AND Apache-2.0`: it contains files derived from the Video.js 10 default
+video skin (Apache License 2.0, `packages/skin/LICENSE-APACHE`). Lucide icon data
+(ISC, partly MIT via Feather) and Morphicons (MIT) are credited in `NOTICE`.
