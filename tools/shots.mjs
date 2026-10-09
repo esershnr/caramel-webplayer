@@ -156,16 +156,19 @@ for (const base of urls) {
       const captions = page.locator(ITEM_SELECTOR).last();
       await captions.click();
       await page.waitForTimeout(450);
-      const track = page.locator('.media-menu-content[data-submenu] .media-menu-radio-item').nth(1);
+      // Scoped to the captions group: the quality group's hidden radios match the generic class too.
+      const track = page.locator('media-captions-radio-group .media-menu-radio-item').nth(1);
       if (await track.count()) {
         await track.click();
         await page.waitForTimeout(300);
       }
       await closeMenus();
-      await page.locator('.media-play-button').click();
+      // The controls bar hides on inactivity, so drive playback through the store.
+      await page.evaluate(() => document.querySelector('video-player').store.play());
       await page.waitForTimeout(6500);
-      await page.locator('.media-play-button').click();
-      await page.waitForTimeout(400);
+      await page.evaluate(() => document.querySelector('video-player').store.pause());
+      await page.locator('media-container').hover();
+      await page.waitForTimeout(500);
       await shot('encoded-subtitles');
       // Chapters follow the page language.
       await page.locator('[data-lang="en"]').click();
@@ -173,7 +176,9 @@ for (const base of urls) {
       await shot('encoded-chapters-en');
       await page.locator('[data-lang="tr"]').click();
       await page.waitForTimeout(600);
-      // Fullscreen.
+      // Fullscreen (hover first so the controls bar is visible).
+      await page.locator('media-container').hover();
+      await page.waitForTimeout(400);
       await page.locator('.media-fullscreen-button').click();
       await page.waitForTimeout(900);
       await shot('encoded-fullscreen');
