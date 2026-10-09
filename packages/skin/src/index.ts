@@ -41,7 +41,7 @@ export function renderSkinHtml(mediaHtml: string, uid = 'esp-player'): string {
   return before + mediaHtml + after;
 }
 export { EspTimeDisplayElement, readTimeDisplayMode, writeTimeDisplayMode, registerTimeDisplayI18n, TIME_DISPLAY_STORAGE_KEY, type TimeDisplayMode } from './time-display.js';
-export { installSeekMotion, SEEK_MOTION_ATTR } from './seek-motion.js';
+export { installSeekMotion, isTrackClick, trackPercent, SEEK_MOTION_ATTR, SEEK_TARGET_VAR, type TrackPress } from './seek-motion.js';
 export { EspQualityBadgeElement, qualityLabel } from './quality-badge.js';
 export { EspPreviewSizeElement, previewTileWidth, tileWidthFromCue, PREVIEW_NATURAL_WIDTH_VAR } from './preview-size.js';
 export { EspQualityRadioGroupElement, orderQualityValues, QUALITY_AUTO_VALUE, type RenditionLike } from './quality-order.js';

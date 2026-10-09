@@ -120,16 +120,21 @@
      transitioned: the hover dot, preview card and drag thumb sit exactly
      under the cursor, with no delay. */
   .esp-skin .media-time-slider {
-    /* Fill (and the thumb riding on it) animates only inside the seek window
-       that seek-motion.ts opens; playback progress is never interpolated. */
+    /* Fill (and the thumb riding on it) animates only inside the click-to-seek
+       window that seek-motion.ts opens; playback progress and every other
+       jump are never interpolated. */
     --esp-seek-motion: 0ms;
     transition:
       --media-slider-fill var(--esp-seek-motion) var(--esp-ease-fill),
       --media-slider-buffer var(--esp-duration-fill) var(--esp-ease-fill);
   }
 
+  /* Click-to-seek glide: the fill is pinned to the clicked point for the whole
+     move, so the timeupdate / seeking values Video.js keeps writing inline
+     cannot retarget it halfway. !important is what beats the inline value. */
   .esp-skin .media-time-slider[data-esp-seek] {
     --esp-seek-motion: var(--esp-duration-fill);
+    --media-slider-fill: var(--esp-seek-target) !important;
   }
 
   .esp-skin .media-time-slider[data-dragging] {
