@@ -1,4 +1,4 @@
-import type { PlaylistItem } from '@esersahiner/player-playlist';
+import type { PlaylistItem } from '@esershnr/caramel-playlist';
 
 const BIKE = 'BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM';
 const SECOND = '601n4w1fq88NJiVpzvrQQeQfNnnjjfKMIN7dCGAEarTs';

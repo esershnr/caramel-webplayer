@@ -17,7 +17,7 @@ let counter = 0;
 
 /**
  * Renders the skin into a `<video-player>` element and places the media
- * inside it. Register the elements first with `import '@esersahiner/player-skin/define'`.
+ * inside it. Register the elements first with `import '@esershnr/caramel-skin/define'`.
  *
  *   const player = document.querySelector('video-player');
  *   const video = Object.assign(document.createElement('video'), { src });

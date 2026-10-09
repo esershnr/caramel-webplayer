@@ -1,5 +1,5 @@
 {
-  "name": "@esersahiner/example-vanilla",
+  "name": "@esershnr/caramel-example-vanilla",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,12 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@esersahiner/player-chapters": "workspace:*",
-    "@esersahiner/player-icons": "workspace:*",
-    "@esersahiner/player-playlist": "workspace:*",
-    "@esersahiner/player-skin": "workspace:*",
-    "@esersahiner/player-skip-segments": "workspace:*",
-    "@esersahiner/player-theme": "workspace:*",
+    "@esershnr/caramel-chapters": "workspace:*",
+    "@esershnr/caramel-icons": "workspace:*",
+    "@esershnr/caramel-playlist": "workspace:*",
+    "@esershnr/caramel-skin": "workspace:*",
+    "@esershnr/caramel-skip-segments": "workspace:*",
+    "@esershnr/caramel-theme": "workspace:*",
     "@videojs/html": "10.0.1"
   },
   "devDependencies": {

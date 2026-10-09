@@ -8,12 +8,12 @@
  *   several players can share a page.
  * - The media placeholder comment becomes `<!--esp:media-->`.
  *
- * Run with: pnpm --filter @esersahiner/player-skin build:template
+ * Run with: pnpm --filter @esershnr/caramel-skin build:template
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { getIcon, iconToSvg } from '@esersahiner/player-icons';
+import { getIcon, iconToSvg } from '@esershnr/caramel-icons';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const source = resolve(root, 'src/components/videojs/video/skin.html');

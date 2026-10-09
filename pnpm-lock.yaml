@@ -20,22 +20,22 @@ importers:
 
   examples/react:
     dependencies:
-      '@esersahiner/player-chapters':
+      '@esershnr/caramel-chapters':
         specifier: workspace:*
         version: link:../../packages/chapters
-      '@esersahiner/player-icons':
+      '@esershnr/caramel-icons':
         specifier: workspace:*
         version: link:../../packages/icons
-      '@esersahiner/player-playlist':
+      '@esershnr/caramel-playlist':
         specifier: workspace:*
         version: link:../../packages/playlist
-      '@esersahiner/player-skin':
+      '@esershnr/caramel-skin':
         specifier: workspace:*
         version: link:../../packages/skin
-      '@esersahiner/player-skip-segments':
+      '@esershnr/caramel-skip-segments':
         specifier: workspace:*
         version: link:../../packages/skip-segments
-      '@esersahiner/player-theme':
+      '@esershnr/caramel-theme':
         specifier: workspace:*
         version: link:../../packages/theme
       '@videojs/html':
@@ -66,22 +66,22 @@ importers:
 
   examples/vanilla:
     dependencies:
-      '@esersahiner/player-chapters':
+      '@esershnr/caramel-chapters':
         specifier: workspace:*
         version: link:../../packages/chapters
-      '@esersahiner/player-icons':
+      '@esershnr/caramel-icons':
         specifier: workspace:*
         version: link:../../packages/icons
-      '@esersahiner/player-playlist':
+      '@esershnr/caramel-playlist':
         specifier: workspace:*
         version: link:../../packages/playlist
-      '@esersahiner/player-skin':
+      '@esershnr/caramel-skin':
         specifier: workspace:*
         version: link:../../packages/skin
-      '@esersahiner/player-skip-segments':
+      '@esershnr/caramel-skip-segments':
         specifier: workspace:*
         version: link:../../packages/skip-segments
-      '@esersahiner/player-theme':
+      '@esershnr/caramel-theme':
         specifier: workspace:*
         version: link:../../packages/theme
       '@videojs/html':
@@ -97,10 +97,10 @@ importers:
 
   packages/chapters:
     dependencies:
-      '@esersahiner/player-icons':
+      '@esershnr/caramel-icons':
         specifier: workspace:*
         version: link:../icons
-      '@esersahiner/player-theme':
+      '@esershnr/caramel-theme':
         specifier: workspace:*
         version: link:../theme
       react-dom:
@@ -150,13 +150,13 @@ importers:
 
   packages/playlist:
     dependencies:
-      '@esersahiner/player-icons':
+      '@esershnr/caramel-icons':
         specifier: workspace:*
         version: link:../icons
-      '@esersahiner/player-skip-segments':
+      '@esershnr/caramel-skip-segments':
         specifier: workspace:*
         version: link:../skip-segments
-      '@esersahiner/player-theme':
+      '@esershnr/caramel-theme':
         specifier: workspace:*
         version: link:../theme
       react-dom:
@@ -181,10 +181,10 @@ importers:
 
   packages/skin:
     dependencies:
-      '@esersahiner/player-icons':
+      '@esershnr/caramel-icons':
         specifier: workspace:*
         version: link:../icons
-      '@esersahiner/player-theme':
+      '@esershnr/caramel-theme':
         specifier: workspace:*
         version: link:../theme
       react-dom:
@@ -215,10 +215,10 @@ importers:
 
   packages/skip-segments:
     dependencies:
-      '@esersahiner/player-icons':
+      '@esershnr/caramel-icons':
         specifier: workspace:*
         version: link:../icons
-      '@esersahiner/player-theme':
+      '@esershnr/caramel-theme':
         specifier: workspace:*
         version: link:../theme
       react-dom:
@@ -259,7 +259,7 @@ importers:
 
   scripts/encode-hls:
     dependencies:
-      '@esersahiner/gen-thumbs':
+      '@esershnr/caramel-gen-thumbs':
         specifier: workspace:*
         version: link:../gen-thumbs
       yaml:

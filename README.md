@@ -8,24 +8,24 @@ the browser only, so the Next.js App Router stays SSR clean).
 
 | Package | Purpose |
 | --- | --- |
-| `@esersahiner/player-theme` | `--esp-*` design tokens (latte / bitter palette, motion, radii, typography), `resolveTheme`, `watchTheme` |
-| `@esersahiner/player-icons` | Lucide icon registry, `iconToSvg`, `<esp-morph-icon>` (Morphicons spring morphing driven by `data-*` attributes) |
-| `@esersahiner/player-skin` | Video.js 10 default video skin source (shadcn copy) themed with esp tokens and Lucide icons; `mountSkin`, `<EspVideoSkin>` |
-| `@esersahiner/player-skip-segments` | `<esp-skip-segments>`: skip intro / recap / outro / sponsor button, auto-skip per type, timeline markers; `<SkipSegments>` for React |
-| `@esersahiner/player-chapters` | `<esp-chapters-panel>`: chapter list outside the video, fed by the player's chapters track; `<ChaptersPanel>` |
-| `@esersahiner/player-playlist` | `PlaylistModel`, `<esp-playlist>` controller (title, poster, media, tracks and segments per item, resume via localStorage, auto advance) and `<esp-playlist-panel>`; `<Playlist>`, `<PlaylistPanel>` |
-| `@esersahiner/gen-thumbs` | `esp-gen-thumbs`: ffmpeg sprite sheets plus a `#xywh=` WebVTT storyboard (`scripts/gen-thumbs/README.md`) |
-| `@esersahiner/encode-hls` | `esp-encode-hls`: `media/<slug>` (video, SRT, meta.yaml) to publish-ready `out/<slug>` (byte-range HLS, poster, thumbnails, chapters, subtitles, manifest). Guide: `scripts/encode-hls/README.md` |
+| `@esershnr/caramel-theme` | `--esp-*` design tokens (latte / bitter palette, motion, radii, typography), `resolveTheme`, `watchTheme` |
+| `@esershnr/caramel-icons` | Lucide icon registry, `iconToSvg`, `<esp-morph-icon>` (Morphicons spring morphing driven by `data-*` attributes) |
+| `@esershnr/caramel-skin` | Video.js 10 default video skin source (shadcn copy) themed with esp tokens and Lucide icons; `mountSkin`, `<EspVideoSkin>` |
+| `@esershnr/caramel-skip-segments` | `<esp-skip-segments>`: skip intro / recap / outro / sponsor button, auto-skip per type, timeline markers; `<SkipSegments>` for React |
+| `@esershnr/caramel-chapters` | `<esp-chapters-panel>`: chapter list outside the video, fed by the player's chapters track; `<ChaptersPanel>` |
+| `@esershnr/caramel-playlist` | `PlaylistModel`, `<esp-playlist>` controller (title, poster, media, tracks and segments per item, resume via localStorage, auto advance) and `<esp-playlist-panel>`; `<Playlist>`, `<PlaylistPanel>` |
+| `@esershnr/caramel-gen-thumbs` | `esp-gen-thumbs`: ffmpeg sprite sheets plus a `#xywh=` WebVTT storyboard (`scripts/gen-thumbs/README.md`) |
+| `@esershnr/caramel-encode-hls` | `esp-encode-hls`: `media/<slug>` (video, SRT, meta.yaml) to publish-ready `out/<slug>` (byte-range HLS, poster, thumbnails, chapters, subtitles, manifest). Guide: `scripts/encode-hls/README.md` |
 
 ## Usage
 
 ### HTML
 
 ```ts
-import '@esersahiner/player-theme/tokens.css';
-import '@esersahiner/player-skin/define';
-import '@esersahiner/player-skip-segments/define';
-import { mountSkin } from '@esersahiner/player-skin';
+import '@esershnr/caramel-theme/tokens.css';
+import '@esershnr/caramel-skin/define';
+import '@esershnr/caramel-skip-segments/define';
+import { mountSkin } from '@esershnr/caramel-skin';
 
 const player = document.querySelector('video-player');
 const video = Object.assign(document.createElement('video'), { src, playsInline: true });
@@ -43,8 +43,8 @@ With a playlist the media element starts empty and the controller fills in
 everything per item (see `packages/playlist/src/types.ts` for the contract):
 
 ```ts
-import '@esersahiner/player-chapters/define';
-import '@esersahiner/player-playlist/define';
+import '@esershnr/caramel-chapters/define';
+import '@esershnr/caramel-playlist/define';
 import '@videojs/html/media/hls-video'; // for .m3u8 items
 
 const playlist = document.createElement('esp-playlist');
@@ -61,8 +61,8 @@ mountSkin(player, { media: document.createElement('hls-video'), extras: [skip, p
 ### React
 
 ```tsx
-import { EspVideoSkin } from '@esersahiner/player-skin/react';
-import { SkipSegments } from '@esersahiner/player-skip-segments/react';
+import { EspVideoSkin } from '@esershnr/caramel-skin/react';
+import { SkipSegments } from '@esershnr/caramel-skip-segments/react';
 
 <EspVideoSkin id="player" lang="tr" extras={<><SkipSegments segments={[]} autoSkip={['recap']} /><Playlist id="playlist" items={items} /></>}>
   <hls-video playsinline="" crossorigin="anonymous" />
@@ -74,7 +74,7 @@ import { SkipSegments } from '@esersahiner/player-skip-segments/react';
 ### Thumbnails
 
 ```sh
-pnpm --filter @esersahiner/gen-thumbs start -- video.mp4 --interval 2 --columns 6 --out public/thumbs --name bike --base-url /thumbs
+pnpm --filter @esershnr/caramel-gen-thumbs start -- video.mp4 --interval 2 --columns 6 --out public/thumbs --name bike --base-url /thumbs
 ```
 
 Under Git Bash prefix the command with `MSYS_NO_PATHCONV=1` so `--base-url /thumbs`
@@ -151,8 +151,8 @@ segment bands have their own tokens (below).
 ### Example 3: a preset
 
 ```ts
-import '@esersahiner/player-theme/tokens.css';
-import '@esersahiner/player-theme/presets/catppuccin-mocha.css'; // or presets/neutral.css
+import '@esershnr/caramel-theme/tokens.css';
+import '@esershnr/caramel-theme/presets/catppuccin-mocha.css'; // or presets/neutral.css
 ```
 
 Presets override the main tokens only and document their contrast ratios in
@@ -183,7 +183,7 @@ tokens inherit, so the wrapper's values win inside it:
 Put `.esp-theme` on the elements that should follow the scheme (panels, page
 body, or a wrapper). Precedence: a local `data-theme="light|dark"` on that
 element or an ancestor, then `data-theme` / `.dark` / `.light` on `<html>`,
-then `prefers-color-scheme`. `watchTheme()` from `@esersahiner/player-theme`
+then `prefers-color-scheme`. `watchTheme()` from `@esershnr/caramel-theme`
 reports changes to JavaScript.
 
 ### Timeline segment bands
@@ -255,12 +255,12 @@ node tools/shots.mjs shots   # dev servers must be running
 ```
 
 The skin template (`packages/skin/src/template.ts`) is generated from
-`skin.html` by `pnpm --filter @esersahiner/player-skin build:template`; run it
+`skin.html` by `pnpm --filter @esershnr/caramel-skin build:template`; run it
 after editing `skin.html`.
 
 ## License
 
-MIT, Copyright (c) 2026 Eser Şahiner (see `LICENSE`). `@esersahiner/player-skin`
+MIT, Copyright (c) 2026 Eser Şahiner (see `LICENSE`). `@esershnr/caramel-skin`
 is `MIT AND Apache-2.0`: it contains files derived from the Video.js 10 default
 video skin (Apache License 2.0, `packages/skin/LICENSE-APACHE`). Lucide icon data
 (ISC, partly MIT via Feather) and Morphicons (MIT) are credited in `NOTICE`.

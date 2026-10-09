@@ -37,7 +37,7 @@ ve hiçbir şey üretmeden durur.
 ## 2. Komut
 
 ```sh
-pnpm --filter @esersahiner/encode-hls start -- media/openwrt-rehber --base-url https://cdn.esersahiner.com/videos/openwrt-rehber/v1/
+pnpm --filter @esershnr/caramel-encode-hls start -- media/openwrt-rehber --base-url https://cdn.esersahiner.com/videos/openwrt-rehber/v1/
 ```
 
 ffmpeg ve ffprobe PATH'te olmalı (`winget install Gyan.FFmpeg`). Yoksa komut

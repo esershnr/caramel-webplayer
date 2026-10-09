@@ -8,7 +8,7 @@ import {
   selectTime,
   type PropertyValues,
 } from '@videojs/html';
-import { createIconElement, icons } from '@esersahiner/player-icons';
+import { createIconElement, icons } from '@esershnr/caramel-icons';
 import { SEGMENT_DEFAULTS, SEGMENT_KEYS, SKIP_DEFAULTS, SKIP_KEYS, registerSkipSegmentsI18n } from './i18n.js';
 import { SkipModel } from './model.js';
 import { parseAutoSkip, segmentAtRatio, segmentGeometry, type AutoSkipConfig, type Segment } from './segments.js';

@@ -1,14 +1,14 @@
-import '@esersahiner/player-theme/tokens.css';
-import '@esersahiner/player-theme/fonts.css';
-import '@esersahiner/player-skin/define';
-import '@esersahiner/player-skip-segments/define';
-import '@esersahiner/player-chapters/define';
-import '@esersahiner/player-playlist/define';
+import '@esershnr/caramel-theme/tokens.css';
+import '@esershnr/caramel-theme/fonts.css';
+import '@esershnr/caramel-skin/define';
+import '@esershnr/caramel-skip-segments/define';
+import '@esershnr/caramel-chapters/define';
+import '@esershnr/caramel-playlist/define';
 import '@videojs/html/media/hls-video';
-import { mountSkin } from '@esersahiner/player-skin';
-import { watchTheme } from '@esersahiner/player-theme';
-import type { Segment, SkipEventDetail } from '@esersahiner/player-skip-segments';
-import type { PlaylistItem } from '@esersahiner/player-playlist';
+import { mountSkin } from '@esershnr/caramel-skin';
+import { watchTheme } from '@esershnr/caramel-theme';
+import type { Segment, SkipEventDetail } from '@esershnr/caramel-skip-segments';
+import type { PlaylistItem } from '@esershnr/caramel-playlist';
 import { PLAYLIST } from './playlist-data';
 import { loadManifest } from './manifest';
 
@@ -32,7 +32,7 @@ playlist.items = PLAYLIST;
 
 mountSkin(player, { media, extras: [skip, playlist], uid: 'demo' });
 
-// encode-hls output, when present: `pnpm --filter @esersahiner/encode-hls start -- media/<slug> --base-url ...`
+// encode-hls output, when present: `pnpm --filter @esershnr/caramel-encode-hls start -- media/<slug> --base-url ...`
 // The Vite plugin serves repo `out/` under /out/ with Range support.
 const R2_MANIFEST = 'https://cdn.esersahiner.com/videos/openwrt-rehber/v1/manifest.json';
 void Promise.all([

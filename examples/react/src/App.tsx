@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
-import { EspVideoSkin } from '@esersahiner/player-skin/react';
-import { SkipSegments } from '@esersahiner/player-skip-segments/react';
-import { ChaptersPanel } from '@esersahiner/player-chapters/react';
-import { Playlist, PlaylistPanel } from '@esersahiner/player-playlist/react';
-import type { Segment, SkipEventDetail } from '@esersahiner/player-skip-segments';
-import type { PlaylistItem } from '@esersahiner/player-playlist';
-import { watchTheme, type Theme } from '@esersahiner/player-theme';
+import { EspVideoSkin } from '@esershnr/caramel-skin/react';
+import { SkipSegments } from '@esershnr/caramel-skip-segments/react';
+import { ChaptersPanel } from '@esershnr/caramel-chapters/react';
+import { Playlist, PlaylistPanel } from '@esershnr/caramel-playlist/react';
+import type { Segment, SkipEventDetail } from '@esershnr/caramel-skip-segments';
+import type { PlaylistItem } from '@esershnr/caramel-playlist';
+import { watchTheme, type Theme } from '@esershnr/caramel-theme';
 import { PLAYLIST } from '../../vanilla/src/playlist-data';
 import { loadManifest } from '../../vanilla/src/manifest';
 

@@ -1,4 +1,4 @@
-import type { Segment } from '@esersahiner/player-skip-segments';
+import type { Segment } from '@esershnr/caramel-skip-segments';
 
 /** Subtitle track attached to a playlist item. */
 export interface PlaylistSubtitle {

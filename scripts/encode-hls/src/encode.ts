@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { generateThumbnails, probeDuration, ffprobeFor, run } from '@esersahiner/gen-thumbs';
+import { generateThumbnails, probeDuration, ffprobeFor, run } from '@esershnr/caramel-gen-thumbs';
 import { chaptersToVtt } from './chapters.js';
 import { buildLadder, type Ladder, type SourceInfo, type Variant } from './ladder.js';
 import { parseMeta, type Meta } from './meta.js';

@@ -1,9 +1,9 @@
 /*
  * <esp-skip-segments> styles. Overlay roles only: the button sits on the video
  * and stays dark in both themes. Band colors are the --esp-segment-* tokens
- * from @esersahiner/player-theme (contrast table in tokens.css).
+ * from @esershnr/caramel-theme (contrast table in tokens.css).
  */
-@import '@esersahiner/player-theme/tokens.css';
+@import '@esershnr/caramel-theme/tokens.css';
 
 esp-skip-segments {
   position: absolute;

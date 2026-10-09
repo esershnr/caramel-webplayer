@@ -1,4 +1,4 @@
-import { scrollIntoContainer } from '@esersahiner/player-theme';
+import { scrollIntoContainer } from '@esershnr/caramel-theme';
 import { selectTextTrack, selectTime } from '@videojs/html';
 import { onI18nRegistryChange, type Translator } from '@videojs/html/i18n';
 import { cuesEqual, findActiveIndex, formatTime, nextIndex, type ChapterCue } from './chapters.js';

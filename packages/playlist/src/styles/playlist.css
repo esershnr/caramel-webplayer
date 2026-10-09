@@ -3,7 +3,7 @@
  * video and follows the page theme through the .esp-theme scope it carries.
  * Plain, unlayered rules scoped by the element tags. Only --esp-* tokens.
  */
-@import '@esersahiner/player-theme/tokens.css';
+@import '@esershnr/caramel-theme/tokens.css';
 
 /* The controller renders nothing. */
 esp-playlist {

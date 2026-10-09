@@ -1,5 +1,5 @@
 {
-  "name": "@esersahiner/player-skin",
+  "name": "@esershnr/caramel-skin",
   "version": "0.1.0",
   "description": "Video.js 10 video skin with Lucide morphing icons, theme tokens, quality badge, seek indicator and preview card",
   "keywords": [
@@ -64,8 +64,8 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@esersahiner/player-icons": "workspace:*",
-    "@esersahiner/player-theme": "workspace:*"
+    "@esershnr/caramel-icons": "workspace:*",
+    "@esershnr/caramel-theme": "workspace:*"
   },
   "peerDependencies": {
     "@videojs/html": "10.0.x",

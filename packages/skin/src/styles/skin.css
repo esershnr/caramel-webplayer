@@ -11,7 +11,7 @@
  * menu and the timeline preview card carry the `.esp-theme` scope class in the
  * template, so the --esp-* tokens resolve to the light or dark palette there.
  */
-@import '@esersahiner/player-theme/tokens.css';
+@import '@esershnr/caramel-theme/tokens.css';
 
 @layer components {
   .media-skin.esp-skin {
@@ -403,7 +403,7 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Previous / next (from @esersahiner/player-playlist). The element only
+  /* Previous / next (from @esershnr/caramel-playlist). The element only
      shows itself when the player has an <esp-playlist>; without the playlist
      package it never upgrades and stays out of the layout. */
   .esp-skin esp-playlist-nav:not(:defined),

@@ -1,4 +1,4 @@
-import type { PlaylistItem } from '@esersahiner/player-playlist';
+import type { PlaylistItem } from '@esershnr/caramel-playlist';
 
 /**
  * Loads an encode-hls manifest and optionally rewrites its absolute URLs to a

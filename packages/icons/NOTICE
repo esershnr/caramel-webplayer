@@ -1,4 +1,4 @@
-@esersahiner/player-icons
+@esershnr/caramel-icons
 Copyright (c) 2026 Eser Şahiner
 
 This package uses third-party material:
@@ -6,8 +6,8 @@ This package uses third-party material:
 ================================================================================
 Lucide (https://lucide.dev), lucide 1.54.0, ISC License; some icons derived
 from Feather, MIT License. Icon path data is inlined into dist/template.js of
-@esersahiner/player-skin and read at runtime from the lucide package by
-@esersahiner/player-icons. Original license:
+@esershnr/caramel-skin and read at runtime from the lucide package by
+@esershnr/caramel-icons. Original license:
 
 ISC License
 
@@ -55,7 +55,7 @@ SOFTWARE.
 
 ================================================================================
 Morphicons (https://www.morphicons.com), morphicons 1.7.1, MIT License. Used
-as a runtime dependency of @esersahiner/player-icons for icon morphing.
+as a runtime dependency of @esershnr/caramel-icons for icon morphing.
 Original license:
 
 MIT License

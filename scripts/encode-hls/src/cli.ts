@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { parseArgs } from 'node:util';
-import { CommandError, MissingBinaryError } from '@esersahiner/gen-thumbs';
+import { CommandError, MissingBinaryError } from '@esershnr/caramel-gen-thumbs';
 import { encode } from './encode.js';
 import { MetaError } from './meta.js';
 

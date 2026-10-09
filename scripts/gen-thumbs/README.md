@@ -1,4 +1,4 @@
-# @esersahiner/gen-thumbs
+# @esershnr/caramel-gen-thumbs
 
 Generate timeline thumbnail sprite sheets and a WebVTT storyboard with ffmpeg.
 The output is consumed by Video.js 10's `<media-slider-thumbnail>` (and by the
@@ -15,7 +15,7 @@ install). Install with `winget install Gyan.FFmpeg`, `brew install ffmpeg` or
 
 ```sh
 # from the repo
-pnpm --filter @esersahiner/gen-thumbs start -- <input> [options]
+pnpm --filter @esershnr/caramel-gen-thumbs start -- <input> [options]
 
 # after a build (bin esp-gen-thumbs)
 esp-gen-thumbs ./movie.mp4 --interval 5 --width 320 --out ./public/thumbs
@@ -75,7 +75,7 @@ Use it in a player:
 
 ## Programmatic API
 
-`import { generateThumbnails, buildLayout, layoutToVtt } from '@esersahiner/gen-thumbs'`.
+`import { generateThumbnails, buildLayout, layoutToVtt } from '@esershnr/caramel-gen-thumbs'`.
 `buildLayout` and the `vtt` helpers are pure and need no ffmpeg;
 `generateThumbnails(options)` runs the whole pipeline and returns the layout,
 sprite paths and VTT path.

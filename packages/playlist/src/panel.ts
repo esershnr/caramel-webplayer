@@ -1,7 +1,7 @@
-import { scrollIntoContainer } from '@esersahiner/player-theme';
+import { scrollIntoContainer } from '@esershnr/caramel-theme';
 import { UIElement, type PropertyValues } from '@videojs/html';
 import type { Translator } from '@videojs/html/i18n';
-import { createIconElement, icons } from '@esersahiner/player-icons';
+import { createIconElement, icons } from '@esershnr/caramel-icons';
 import type { EspPlaylistElement } from './element.js';
 import { formatDuration } from './format.js';
 import { PLAYLIST_DEFAULTS, PLAYLIST_KEYS, createPlaylistTranslator, registerPlaylistI18n } from './i18n.js';

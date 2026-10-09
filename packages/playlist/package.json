@@ -1,5 +1,5 @@
 {
-  "name": "@esersahiner/player-playlist",
+  "name": "@esershnr/caramel-playlist",
   "version": "0.1.0",
   "description": "Playlist for Video.js 10: queue model, previous / next, autoplay next, resume, list panel",
   "keywords": [
@@ -59,9 +59,9 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@esersahiner/player-icons": "workspace:*",
-    "@esersahiner/player-skip-segments": "workspace:*",
-    "@esersahiner/player-theme": "workspace:*"
+    "@esershnr/caramel-icons": "workspace:*",
+    "@esershnr/caramel-skip-segments": "workspace:*",
+    "@esershnr/caramel-theme": "workspace:*"
   },
   "peerDependencies": {
     "@videojs/html": "10.0.x",

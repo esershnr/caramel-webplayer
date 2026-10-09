@@ -1,18 +1,18 @@
-# @esersahiner/player-theme
+# @esershnr/caramel-theme
 
 Design tokens for the esersahiner Video.js 10 player: `--esp-*` custom
 properties for the light (latte) and dark (bitter) palette, timeline segment
 colors, motion, radii and typography, plus Catppuccin and neutral presets.
 
 ```sh
-npm install @esersahiner/player-theme
+npm install @esershnr/caramel-theme
 ```
 
 ```ts
-import '@esersahiner/player-theme/tokens.css';
-import '@esersahiner/player-theme/fonts.css'; // optional: Montserrat + Quicksand
-import '@esersahiner/player-theme/presets/neutral.css'; // optional preset
-import { watchTheme } from '@esersahiner/player-theme';
+import '@esershnr/caramel-theme/tokens.css';
+import '@esershnr/caramel-theme/fonts.css'; // optional: Montserrat + Quicksand
+import '@esershnr/caramel-theme/presets/neutral.css'; // optional preset
+import { watchTheme } from '@esershnr/caramel-theme';
 
 const stop = watchTheme((scheme) => console.log(scheme)); // 'light' | 'dark'
 ```

@@ -1,4 +1,4 @@
-# @esersahiner/player-skin
+# @esershnr/caramel-skin
 
 The Video.js 10 default video skin, themed with `--esp-*` tokens and Lucide
 morphing icons: clickable time counter, quality badge and sorted quality menu,
@@ -6,15 +6,15 @@ timeline preview card, signed seek indicator, Space to play / pause from any
 control.
 
 ```sh
-npm install @esersahiner/player-skin @videojs/html
+npm install @esershnr/caramel-skin @videojs/html
 ```
 
 `@videojs/html` 10.0.x is a peer dependency. `react` / `react-dom` >= 19 are
 optional peers for the React wrapper.
 
 ```ts
-import '@esersahiner/player-skin/define'; // registers elements, loads the CSS
-import { mountSkin } from '@esersahiner/player-skin';
+import '@esershnr/caramel-skin/define'; // registers elements, loads the CSS
+import { mountSkin } from '@esershnr/caramel-skin';
 
 const player = document.querySelector('video-player')!;
 const video = Object.assign(document.createElement('video'), { src: '/video.mp4', playsInline: true });
@@ -30,7 +30,7 @@ mountSkin(player, { media: video });
 React (`'use client'`, elements register in the browser only):
 
 ```tsx
-import { EspVideoSkin } from '@esersahiner/player-skin/react';
+import { EspVideoSkin } from '@esershnr/caramel-skin/react';
 
 <EspVideoSkin id="player" lang="tr">
   <video src="/video.mp4" playsInline />

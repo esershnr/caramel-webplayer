@@ -8,14 +8,14 @@ eklerken yapılacaklar.
 npm'den 0.1.0 sürümleri:
 
 ```sh
-npm install @esersahiner/player-theme@0.1.0 @esersahiner/player-skin@0.1.0 \
-  @esersahiner/player-skip-segments@0.1.0 @esersahiner/player-chapters@0.1.0 \
-  @esersahiner/player-playlist@0.1.0 @videojs/html@10.0.1
+npm install @esershnr/caramel-theme@0.1.0 @esershnr/caramel-skin@0.1.0 \
+  @esershnr/caramel-skip-segments@0.1.0 @esershnr/caramel-chapters@0.1.0 \
+  @esershnr/caramel-playlist@0.1.0 @videojs/html@10.0.1
 ```
 
 `@videojs/html` (10.0.x) peer dependency'dir, bu yüzden açıkça kurulur. `react` ve
 `react-dom` (>= 19) isteğe bağlı peer'lerdir; sitede zaten var.
-`@esersahiner/player-icons` skin'in bağımlılığı olarak kendiliğinden gelir.
+`@esershnr/caramel-icons` skin'in bağımlılığı olarak kendiliğinden gelir.
 
 Yayınlanan paketlerde `exports` yalnız `dist/`'i gösterir. Next.js (webpack ve
 Turbopack) dev modunda `development` koşulunu ETKİNLEŞTİRİR; bu yüzden paketler
@@ -45,7 +45,7 @@ Tema token'ları global CSS'e bir kez:
 
 ```ts
 // app/layout.tsx (veya globals.css üzerinden @import)
-import '@esersahiner/player-theme/tokens.css';
+import '@esershnr/caramel-theme/tokens.css';
 // Fontlar next/font ile --font-heading / --font-body olarak zaten geliyor; fonts.css gerekmez.
 ```
 
@@ -55,12 +55,12 @@ yalnız tarayıcıda kaydeder, sunucu render'ı temiz kalır):
 ```tsx
 'use client';
 import { useEffect, useState } from 'react';
-import { EspVideoSkin } from '@esersahiner/player-skin/react';
-import { SkipSegments } from '@esersahiner/player-skip-segments/react';
-import { ChaptersPanel } from '@esersahiner/player-chapters/react';
-import { Playlist, PlaylistPanel } from '@esersahiner/player-playlist/react';
-import type { PlaylistItem } from '@esersahiner/player-playlist';
-import '@esersahiner/player-skin/skin.css';
+import { EspVideoSkin } from '@esershnr/caramel-skin/react';
+import { SkipSegments } from '@esershnr/caramel-skip-segments/react';
+import { ChaptersPanel } from '@esershnr/caramel-chapters/react';
+import { Playlist, PlaylistPanel } from '@esershnr/caramel-playlist/react';
+import type { PlaylistItem } from '@esershnr/caramel-playlist';
+import '@esershnr/caramel-skin/skin.css';
 
 const MANIFEST = 'https://cdn.esersahiner.com/videos/openwrt-rehber/v1/manifest.json';
 

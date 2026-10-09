@@ -8,7 +8,7 @@
  *   --esp-chapters-padding      panel padding (default 1rem)
  *   --esp-chapters-gap          space between items (default 0.375rem)
  */
-@import '@esersahiner/player-theme/tokens.css';
+@import '@esershnr/caramel-theme/tokens.css';
 
 esp-chapters-panel {
   display: block;

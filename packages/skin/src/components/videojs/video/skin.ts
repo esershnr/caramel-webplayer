@@ -68,4 +68,4 @@ import '@videojs/html/ui/seek-indicator-value';
 // esersahiner theme and motion overrides (layer: components)
 import '../../../styles/skin.css';
 // Lucide morphing icons used by the buttons; static icons are inlined in the template
-import '@esersahiner/player-icons/define';
+import '@esershnr/caramel-icons/define';

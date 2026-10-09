@@ -1,5 +1,5 @@
 {
-  "name": "@esersahiner/encode-hls",
+  "name": "@esershnr/caramel-encode-hls",
   "version": "0.1.0",
   "private": true,
   "description": "Turn media/<slug> (source video, SRT subtitles, meta.yaml) into publish-ready HLS, poster, thumbnails, chapters, subtitles and a playlist manifest",
@@ -26,7 +26,7 @@
     "start": "node --conditions=esp-source --import tsx src/cli.ts"
   },
   "dependencies": {
-    "@esersahiner/gen-thumbs": "workspace:*",
+    "@esershnr/caramel-gen-thumbs": "workspace:*",
     "yaml": "^2.9.0"
   },
   "devDependencies": {

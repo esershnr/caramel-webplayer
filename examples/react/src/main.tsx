@@ -1,5 +1,5 @@
-import '@esersahiner/player-theme/tokens.css';
-import '@esersahiner/player-theme/fonts.css';
+import '@esershnr/caramel-theme/tokens.css';
+import '@esershnr/caramel-theme/fonts.css';
 import '../../vanilla/src/demo.css';
 import '@videojs/html/media/hls-video';
 import { StrictMode } from 'react';

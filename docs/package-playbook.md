@@ -113,7 +113,7 @@ Reference: `packages/theme/styles/tokens.css`.
 
 ## 5. Icons
 
-- Data lives in `@esersahiner/player-icons` (`packages/icons/src/icons.ts:37`). Build DOM
+- Data lives in `@esershnr/caramel-icons` (`packages/icons/src/icons.ts:37`). Build DOM
   with `createIconElement(icons['skip-forward'])` or markup with `iconToSvg(node, { className })`
   (`packages/icons/src/svg.ts:34, 54`). The returned `<svg>` is the sized box: size it with
   your own class, never with `width/height: 100%` on a generic `.esp-icon` selector.
@@ -121,7 +121,7 @@ Reference: `packages/theme/styles/tokens.css`.
   (`packages/skin/src/styles/skin.css:88-101`); cast, airplay, pip, captions-off, speech are
   0.88, settings, speed, restart 1.06. Reuse those factors when you place the same glyphs.
 - Morphing buttons use `<esp-morph-icon map="attr:icon,*:fallback">` from
-  `@esersahiner/player-icons/define` (`packages/icons/src/morph-icon.ts:8-30`).
+  `@esershnr/caramel-icons/define` (`packages/icons/src/morph-icon.ts:8-30`).
 
 ## 6. i18n (TR default, EN)
 

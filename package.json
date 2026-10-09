@@ -1,5 +1,5 @@
 {
-  "name": "esersahiner-webplayer",
+  "name": "caramel-webplayer",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,12 +9,12 @@
     "node": ">=22"
   },
   "scripts": {
-    "build": "pnpm -r --filter \"@esersahiner/player-*\" --filter \"@esersahiner/gen-thumbs\" --filter \"@esersahiner/encode-hls\" run build",
+    "build": "pnpm -r --filter \"@esershnr/caramel-*\" --filter \"@esershnr/caramel-gen-thumbs\" --filter \"@esershnr/caramel-encode-hls\" run build",
     "typecheck": "pnpm -r run typecheck",
     "test": "vitest run",
     "test:watch": "vitest",
-    "dev:vanilla": "pnpm --filter @esersahiner/example-vanilla dev",
-    "dev:react": "pnpm --filter @esersahiner/example-react dev"
+    "dev:vanilla": "pnpm --filter @esershnr/caramel-example-vanilla dev",
+    "dev:react": "pnpm --filter @esershnr/caramel-example-react dev"
   },
   "devDependencies": {
     "playwright": "1.64.0",

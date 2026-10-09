@@ -1,15 +1,15 @@
-# @esersahiner/player-chapters
+# @esershnr/caramel-chapters
 
 A chapter list panel for Video.js 10 that lives outside the video, fed by the
 player's `<track kind="chapters">`. Highlights the current chapter and seeks on
 click; keyboard friendly.
 
 ```sh
-npm install @esersahiner/player-chapters @videojs/html
+npm install @esershnr/caramel-chapters @videojs/html
 ```
 
 ```ts
-import '@esersahiner/player-chapters/define'; // registers the element, loads the CSS
+import '@esershnr/caramel-chapters/define'; // registers the element, loads the CSS
 ```
 
 ```html
@@ -20,7 +20,7 @@ import '@esersahiner/player-chapters/define'; // registers the element, loads th
 React:
 
 ```tsx
-import { ChaptersPanel } from '@esersahiner/player-chapters/react';
+import { ChaptersPanel } from '@esershnr/caramel-chapters/react';
 
 <ChaptersPanel playerId="player" onChapterSelect={(detail) => console.log(detail)} />
 ```
