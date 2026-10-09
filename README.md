@@ -15,6 +15,7 @@ the browser only, so the Next.js App Router stays SSR clean).
 | `@esersahiner/player-chapters` | `<esp-chapters-panel>`: chapter list outside the video, fed by the player's chapters track; `<ChaptersPanel>` |
 | `@esersahiner/player-playlist` | `PlaylistModel`, `<esp-playlist>` controller (title, poster, media, tracks and segments per item, resume via localStorage, auto advance) and `<esp-playlist-panel>`; `<Playlist>`, `<PlaylistPanel>` |
 | `@esersahiner/gen-thumbs` | `esp-gen-thumbs`: ffmpeg sprite sheets plus a `#xywh=` WebVTT storyboard (`scripts/gen-thumbs/README.md`) |
+| `@esersahiner/encode-hls` | `esp-encode-hls`: `media/<slug>` (video, SRT, meta.yaml) to publish-ready `out/<slug>` (byte-range HLS, poster, thumbnails, chapters, subtitles, manifest). Guide: `scripts/encode-hls/README.md` |
 
 ## Usage
 
