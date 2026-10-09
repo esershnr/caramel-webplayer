@@ -13,6 +13,7 @@
     "@esersahiner/player-skin": "workspace:*",
     "@esersahiner/player-skip-segments": "workspace:*",
     "@esersahiner/player-theme": "workspace:*",
+    "@videojs/html": "10.0.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

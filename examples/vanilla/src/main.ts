@@ -1,12 +1,13 @@
 import '@esersahiner/player-theme/tokens.css';
 import '@esersahiner/player-theme/fonts.css';
 import '@esersahiner/player-skin/define';
+import '@videojs/html/media/hls-video';
 import '@esersahiner/player-skip-segments/define';
 import { mountSkin } from '@esersahiner/player-skin';
 import { watchTheme } from '@esersahiner/player-theme';
 import type { Segment, SkipEventDetail } from '@esersahiner/player-skip-segments';
 
-const MEDIA = 'https://stream.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM/highest.mp4';
+const MEDIA = 'https://stream.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM.m3u8';
 const POSTER = 'https://image.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM/thumbnail.jpg';
 const STORYBOARD = 'https://image.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM/storyboard.vtt';
 
@@ -22,11 +23,12 @@ const player = document.querySelector<HTMLElement>('#player')!;
 player.setAttribute('content-title', 'Demo: segmentler, bölümler, önizleme');
 player.setAttribute('poster', POSTER);
 
-const video = document.createElement('video');
-video.src = MEDIA;
-video.playsInline = true;
-video.crossOrigin = 'anonymous';
-video.preload = 'metadata';
+// HLS media so the quality and audio submenus have entries to show.
+const video = document.createElement('hls-video');
+video.setAttribute('src', MEDIA);
+video.setAttribute('playsinline', '');
+video.setAttribute('crossorigin', 'anonymous');
+video.setAttribute('preload', 'metadata');
 
 const chapters = document.createElement('track');
 chapters.kind = 'chapters';
@@ -40,7 +42,19 @@ thumbnails.label = 'thumbnails';
 thumbnails.src = STORYBOARD;
 thumbnails.default = true;
 
-video.append(chapters, thumbnails);
+const subsTr = document.createElement('track');
+subsTr.kind = 'subtitles';
+subsTr.src = '/subs-tr.vtt';
+subsTr.srclang = 'tr';
+subsTr.label = 'Türkçe';
+
+const subsEn = document.createElement('track');
+subsEn.kind = 'subtitles';
+subsEn.src = '/subs-en.vtt';
+subsEn.srclang = 'en';
+subsEn.label = 'English';
+
+video.append(chapters, thumbnails, subsTr, subsEn);
 
 const skip = document.createElement('esp-skip-segments');
 skip.setAttribute('segments', JSON.stringify(SEGMENTS));

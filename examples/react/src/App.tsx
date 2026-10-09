@@ -4,7 +4,7 @@ import { SkipSegments } from '@esersahiner/player-skip-segments/react';
 import type { Segment, SkipEventDetail } from '@esersahiner/player-skip-segments';
 import { watchTheme, type Theme } from '@esersahiner/player-theme';
 
-const MEDIA = 'https://stream.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM/highest.mp4';
+const MEDIA = 'https://stream.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM.m3u8';
 const POSTER = 'https://image.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM/thumbnail.jpg';
 const STORYBOARD = 'https://image.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM/storyboard.vtt';
 
@@ -18,6 +18,21 @@ const SEGMENTS: Segment[] = [
 type Choice = 'light' | 'dark' | 'system';
 
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+
+declare module 'react' {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace JSX {
+    interface IntrinsicElements {
+      'hls-video': {
+        children?: import('react').ReactNode;
+        src?: string | undefined;
+        playsinline?: string | undefined;
+        crossorigin?: string | undefined;
+        preload?: string | undefined;
+      };
+    }
+  }
+}
 
 export function App() {
   const [choice, setChoice] = useState<Choice>(() => {
@@ -94,10 +109,12 @@ export function App() {
             />
           }
         >
-          <video src={MEDIA} playsInline crossOrigin="anonymous" preload="metadata">
+          <hls-video src={MEDIA} playsinline="" crossorigin="anonymous" preload="metadata">
             <track kind="chapters" src="/chapters.vtt" srcLang="tr" default />
             <track kind="metadata" label="thumbnails" src={STORYBOARD} default />
-          </video>
+            <track kind="subtitles" src="/subs-tr.vtt" srcLang="tr" label="Türkçe" />
+            <track kind="subtitles" src="/subs-en.vtt" srcLang="en" label="English" />
+          </hls-video>
         </EspVideoSkin>
 
         <aside className="demo-panel">

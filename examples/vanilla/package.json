@@ -12,7 +12,8 @@
     "@esersahiner/player-icons": "workspace:*",
     "@esersahiner/player-skin": "workspace:*",
     "@esersahiner/player-skip-segments": "workspace:*",
-    "@esersahiner/player-theme": "workspace:*"
+    "@esersahiner/player-theme": "workspace:*",
+    "@videojs/html": "10.0.1"
   },
   "devDependencies": {
     "typescript": "^5.9.0",
