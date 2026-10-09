@@ -1,0 +1,30 @@
+# @esersahiner/player-chapters
+
+A chapter list panel for Video.js 10 that lives outside the video, fed by the
+player's `<track kind="chapters">`. Highlights the current chapter and seeks on
+click; keyboard friendly.
+
+```sh
+npm install @esersahiner/player-chapters @videojs/html
+```
+
+```ts
+import '@esersahiner/player-chapters/define'; // registers the element, loads the CSS
+```
+
+```html
+<video-player id="player">…</video-player>
+<esp-chapters-panel for="player"></esp-chapters-panel>
+```
+
+React:
+
+```tsx
+import { ChaptersPanel } from '@esersahiner/player-chapters/react';
+
+<ChaptersPanel playerId="player" onChapterSelect={(detail) => console.log(detail)} />
+```
+
+More: [root README](../../README.md).
+
+MIT License, Copyright (c) 2026 Eser Şahiner.
