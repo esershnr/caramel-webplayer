@@ -1,0 +1,37 @@
+{
+  "name": "@esersahiner/encode-hls",
+  "version": "0.1.0",
+  "description": "Turn media/<slug> (source video, SRT subtitles, meta.yaml) into publish-ready HLS, poster, thumbnails, chapters, subtitles and a playlist manifest",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "esp-encode-hls": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "development": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "start": "node --conditions=development --import tsx src/cli.ts"
+  },
+  "dependencies": {
+    "@esersahiner/gen-thumbs": "workspace:*",
+    "yaml": "^2.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.0",
+    "tsx": "^4.23.0",
+    "typescript": "^5.9.0",
+    "vitest": "^5.0.3"
+  }
+}
