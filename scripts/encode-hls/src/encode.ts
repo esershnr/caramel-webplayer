@@ -194,7 +194,7 @@ export async function encode(options: EncodeOptions): Promise<EncodeResult> {
   const thumbs = await generateThumbnails({
     input: source,
     interval: options.thumbInterval ?? 10,
-    width: 240,
+    width: 320,
     columns: 10,
     out: path.join(outDir, 'thumbs'),
     name: 'sprite',

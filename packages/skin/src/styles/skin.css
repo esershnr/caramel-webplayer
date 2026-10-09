@@ -186,7 +186,22 @@
 
   /* Timeline preview card (YouTube layout): thumbnail on top, below it one
      row with the pointer time and the chapter title. The card is the single
-     positioned element; the thumbnail and the label are static children. */
+     positioned element; the thumbnail and the label are static children.
+
+     Width: --esp-preview-width when the host sets it, otherwise the sprite
+     tile's own width (<esp-preview-size> reads it from the VTT #xywh), otherwise
+     240px; never wider than the player. The thumbnail fills the card and the
+     label row matches it. The width is set on <media-slider-preview> too, so
+     Video.js clamps the card at the timeline edges with its real size.
+
+     Video.js scales the thumbnail to its computed max-width / max-height and
+     parses them with parseFloat, so they must resolve to pixels (a `100%`
+     reads as 100px and shrinks the tile). */
+  .esp-skin .media-time-slider .media-slider-preview {
+    --esp-preview-card-width: min(var(--esp-preview-width, var(--esp-preview-natural-width, 240px)), 100cqi);
+    min-width: var(--esp-preview-card-width);
+  }
+
   .esp-skin .esp-preview-card {
     --media-popover: var(--esp-surface);
     --media-popover-foreground: var(--esp-text);
@@ -197,9 +212,10 @@
     left: 50%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     gap: calc(var(--media-spacing) * 1.5);
-    max-width: var(--media-slider-preview-max-width);
+    width: var(--esp-preview-card-width);
+    max-width: none;
     pointer-events: none;
     text-shadow: none;
     font-family: var(--esp-font-body);
@@ -207,13 +223,21 @@
 
   .esp-skin .esp-preview-card .media-slider-thumbnail {
     position: static;
+    align-self: center;
     translate: none;
     scale: none;
     opacity: 1;
     filter: none;
     transition: none;
-    max-width: 100%;
+    min-width: 0;
+    min-height: 0;
+    max-width: var(--esp-preview-card-width);
+    max-height: none;
     background-color: var(--esp-surface);
+  }
+
+  .esp-skin .esp-preview-card .media-slider-thumbnail[data-loading] {
+    width: var(--esp-preview-card-width);
   }
 
   .esp-skin .esp-preview-card .media-slider-thumbnail[data-hidden] {
@@ -223,8 +247,11 @@
   .esp-skin .esp-preview-label {
     display: flex;
     align-items: baseline;
+    justify-content: center;
     gap: 0.45em;
-    max-width: 100%;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
     padding: calc(var(--media-spacing) * 1) calc(var(--media-spacing) * 2.5);
     border-radius: var(--esp-radius-chip);
     background: var(--esp-surface);

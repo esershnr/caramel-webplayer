@@ -93,6 +93,14 @@ komutu `--base-url .../v2/` ile çalıştır ve yeni klasöre yükle. CDN dosyal
 1 yıl önbellekliyor; `v1/` altındaki bir dosyayı üzerine yazsan bile ziyaretçiler
 eskisini görmeye devam eder. Sitede sadece manifest yolunu `v2/` yaparsın.
 
+Önizleme küçük resimleri 320px genişliğinde üretilir (player'daki önizleme
+kartı bu genişliği aynen kullanır, büyütmez). Mevcut `v1/` çıktısı 240px'tir ve
+öyle kalır. Kare genişliğini değiştirmek yeniden encode ister (en azından
+`--skip-video` ile) ve yeni çıktı `v2/` gibi yeni bir klasöre yüklenmelidir:
+aynı yoldaki sprite'ları üzerine yazmak CDN önbelleği yüzünden işe yaramaz.
+Yalnız kartı küçültmek / büyütmek için encode gerekmez: `--esp-preview-width`
+token'ı yeter (büyütürsen resim bulanıklaşır).
+
 ## 5. R2 CORS kuralı
 
 R2 paneli > bucket > Settings > CORS Policy. Mevcut kurallara şu girdiyi EKLE

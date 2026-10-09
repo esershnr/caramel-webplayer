@@ -9,10 +9,11 @@ import '@videojs/html/i18n/locales/en/register';
 import { installSeekMotion } from './seek-motion.js';
 import { EspTimeDisplayElement } from './time-display.js';
 import { EspQualityBadgeElement } from './quality-badge.js';
+import { EspPreviewSizeElement } from './preview-size.js';
 
 if (typeof document !== 'undefined') {
   installSeekMotion();
-  for (const Element of [EspTimeDisplayElement, EspQualityBadgeElement]) {
+  for (const Element of [EspTimeDisplayElement, EspQualityBadgeElement, EspPreviewSizeElement]) {
     if (!customElements.get(Element.tagName)) customElements.define(Element.tagName, Element);
   }
 }

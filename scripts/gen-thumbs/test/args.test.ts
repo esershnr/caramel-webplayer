@@ -9,7 +9,7 @@ describe('parseCliArgs', () => {
       options: {
         input: 'video.mp4',
         interval: DEFAULTS.interval,
-        width: 240,
+        width: 320,
         columns: 10,
         quality: 4,
         maxFrames: 100,

@@ -37,7 +37,7 @@ const FRAME_RE = /^frame-(\d{5,})\.jpg$/;
 
 export async function generateThumbnails(options: GenerateOptions): Promise<GenerateResult> {
   const interval = options.interval ?? 5;
-  const width = options.width ?? 240;
+  const width = options.width ?? 320;
   const columns = options.columns ?? 10;
   const quality = options.quality ?? 4;
   const maxFrames = options.maxFrames ?? 100;

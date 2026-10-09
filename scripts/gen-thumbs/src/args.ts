@@ -19,7 +19,7 @@ export type ParsedArgs = { kind: 'help' } | { kind: 'run'; options: CliOptions }
 
 export const DEFAULTS = {
   interval: 5,
-  width: 240,
+  width: 320,
   columns: 10,
   quality: 4,
   maxFrames: 100,

@@ -18,7 +18,7 @@ install). Install with `winget install Gyan.FFmpeg`, `brew install ffmpeg` or
 pnpm --filter @esersahiner/gen-thumbs start -- <input> [options]
 
 # after a build (bin esp-gen-thumbs)
-esp-gen-thumbs ./movie.mp4 --interval 5 --width 240 --out ./public/thumbs
+esp-gen-thumbs ./movie.mp4 --interval 5 --width 320 --out ./public/thumbs
 esp-gen-thumbs https://example.com/stream.m3u8 --base-url https://cdn.example.com/thumbs
 ```
 
@@ -29,7 +29,7 @@ esp-gen-thumbs https://example.com/stream.m3u8 --base-url https://cdn.example.co
 | Option | Default | Meaning |
 | --- | --- | --- |
 | `--interval <sec>` | `5` | Seconds between thumbnails |
-| `--width <px>` | `240` | Thumbnail width; height keeps the aspect ratio and is even |
+| `--width <px>` | `320` | Thumbnail width; height keeps the aspect ratio and is even. The player's preview card uses this width as is (no upscaling) |
 | `--columns <n>` | `10` | Cells per sprite row |
 | `--quality <1-31>` | `4` | JPEG quality (`-q:v`), lower is better |
 | `--max-frames <n>` | `100` | Frames per sprite sheet; more frames produce `sprite-2.jpg`, ... |

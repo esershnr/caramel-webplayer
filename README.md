@@ -80,6 +80,13 @@ pnpm --filter @esersahiner/gen-thumbs start -- video.mp4 --interval 2 --columns 
 Under Git Bash prefix the command with `MSYS_NO_PATHCONV=1` so `--base-url /thumbs`
 is not rewritten to a Windows path.
 
+Tiles default to 320px wide (`--width`). The timeline preview card takes the
+tile width from the VTT `#xywh` fragment and shows it 1:1, so the card is as
+wide as one tile; set `--esp-preview-width` to force another width (larger
+values upscale). Changing the tile width of a published video means
+re-encoding and uploading to a new version folder (`v2/`), see
+`scripts/encode-hls/README.md`.
+
 ## Theming / Renkleri değiştirme
 
 Every color is a CSS custom property on `:root`, declared once with
@@ -112,7 +119,9 @@ Derived (override only if you need to): `--esp-raised-hover`, `--esp-primary-hov
 `--esp-overlay-accent`, `--esp-overlay-on-accent`, `--esp-quality-badge-bg`,
 `--esp-quality-badge-text`, `--esp-segment-*`. Non-color tokens: radii
 (`--esp-radius-panel/box/chip`), motion (`--esp-ease-*`, `--esp-duration-*`),
-fonts (`--esp-font-heading/body`), focus ring (`--esp-focus-ring/offset`).
+fonts (`--esp-font-heading/body`), focus ring (`--esp-focus-ring/offset`),
+timeline preview card width (`--esp-preview-width`, unset by default: the
+sprite tile width, or 240px without thumbnails).
 
 ### Example 1: change one color
 
