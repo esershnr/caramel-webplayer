@@ -1,3 +1,4 @@
+import { scrollIntoContainer } from '@esersahiner/player-theme';
 import { UIElement, type PropertyValues } from '@videojs/html';
 import type { Translator } from '@videojs/html/i18n';
 import { createIconElement, icons } from '@esersahiner/player-icons';
@@ -124,7 +125,11 @@ export class EspPlaylistPanelElement extends Base {
     if (!candidate) candidate = this.closest('esp-playlist');
 
     if (candidate && typeof candidate.subscribe !== 'function') {
-      this.#waitForDefinition('esp-playlist');
+      // Not upgraded yet: wait once for the definition. Already defined means
+      // the target is not an <esp-playlist>; do not retry.
+      if (typeof customElements !== 'undefined' && !customElements.get('esp-playlist')) {
+        this.#waitForDefinition('esp-playlist');
+      }
       candidate = null;
     }
     if (candidate === this.#controller) return;
@@ -190,8 +195,8 @@ export class EspPlaylistPanelElement extends Base {
 
     const nav = document.createElement('div');
     nav.className = 'esp-playlist-nav';
-    const prev = this.#navButton('skip-back', 'esp-playlist-prev', signal, () => this.#controller?.previous());
-    const next = this.#navButton('skip-forward', 'esp-playlist-next', signal, () => this.#controller?.next());
+    const prev = this.#navButton('skip-back', 'esp-playlist-prev', () => this.#controller?.previous());
+    const next = this.#navButton('skip-forward', 'esp-playlist-next', () => this.#controller?.next());
     nav.append(prev, next);
 
     const scroll = document.createElement('div');
@@ -200,7 +205,8 @@ export class EspPlaylistPanelElement extends Base {
     list.className = 'esp-playlist-list';
     list.setAttribute('role', 'list');
     list.setAttribute('aria-labelledby', heading.id);
-    list.addEventListener('keydown', (event) => this.#onListKeydown(event), { signal });
+    // Own-child listeners live with the element: no abort signal (reconnect safe).
+    list.addEventListener('keydown', (event) => this.#onListKeydown(event));
     list.addEventListener(
       'click',
       (event) => {
@@ -209,7 +215,6 @@ export class EspPlaylistPanelElement extends Base {
         const index = Number(button.dataset['index']);
         if (Number.isInteger(index)) this.#controller?.select(index);
       },
-      { signal },
     );
     const empty = document.createElement('p');
     empty.className = 'esp-playlist-empty';
@@ -226,7 +231,7 @@ export class EspPlaylistPanelElement extends Base {
     this.replaceChildren(heading, nav, scroll);
   }
 
-  #navButton(icon: 'skip-back' | 'skip-forward', className: string, signal: AbortSignal, action: () => void) {
+  #navButton(icon: 'skip-back' | 'skip-forward', className: string, action: () => void) {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = `esp-playlist-nav-button ${className}`;
@@ -234,7 +239,7 @@ export class EspPlaylistPanelElement extends Base {
     box.className = 'esp-playlist-nav-icon';
     box.append(createIconElement(icons[icon]));
     button.append(box);
-    button.addEventListener('click', action, { signal });
+    button.addEventListener('click', action);
     return button;
   }
 
@@ -300,9 +305,12 @@ export class EspPlaylistPanelElement extends Base {
 
     if (index === this.#renderedIndex) return;
     this.#renderedIndex = index;
-    this.#focusIndex = index >= 0 ? index : items.length > 0 ? 0 : -1;
     this.#applyActive(index);
-    this.#applyRoving();
+    // Keep the user's keyboard position while the list has focus.
+    if (!this.#listEl?.contains(document.activeElement)) {
+      this.#focusIndex = index >= 0 ? index : items.length > 0 ? 0 : -1;
+      this.#applyRoving();
+    }
     this.#scrollActiveIntoView(index);
   }
 
@@ -380,10 +388,9 @@ export class EspPlaylistPanelElement extends Base {
 
   #scrollActiveIntoView(index: number): void {
     const button = this.#buttons()[index];
-    if (!button || typeof button.scrollIntoView !== 'function') return;
-    const reduced =
-      typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    button.scrollIntoView({ block: 'nearest', behavior: reduced ? 'instant' : 'smooth' });
+    const scroll = this.#scrollEl;
+    if (!button || !scroll) return;
+    scrollIntoContainer(scroll, button);
   }
 
   #onListKeydown(event: KeyboardEvent): void {

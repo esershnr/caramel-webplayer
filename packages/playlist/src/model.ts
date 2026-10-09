@@ -1,4 +1,4 @@
-import type { PlaylistItem } from './types.js';
+import type { PlaylistItem, PlaylistSubtitle } from './types.js';
 
 export interface PlaylistModelOptions {
   /** Wrap from the last item to the first (and back). Default false. */
@@ -166,7 +166,17 @@ export function normalizeItems(input: unknown): PlaylistItem[] {
     if (typeof value['poster'] === 'string') item.poster = value['poster'];
     if (typeof value['chapters'] === 'string') item.chapters = value['chapters'];
     if (typeof value['thumbnails'] === 'string') item.thumbnails = value['thumbnails'];
-    if (Array.isArray(value['subtitles'])) item.subtitles = value['subtitles'] as PlaylistItem['subtitles'];
+    if (Array.isArray(value['subtitles'])) {
+      const subtitles = value['subtitles'].filter(
+        (sub): sub is PlaylistSubtitle =>
+          !!sub &&
+          typeof sub === 'object' &&
+          typeof (sub as PlaylistSubtitle).src === 'string' &&
+          typeof (sub as PlaylistSubtitle).srclang === 'string' &&
+          typeof (sub as PlaylistSubtitle).label === 'string',
+      );
+      if (subtitles.length) item.subtitles = subtitles;
+    }
     if (Array.isArray(value['segments'])) item.segments = value['segments'] as PlaylistItem['segments'];
     if (typeof value['duration'] === 'number' && Number.isFinite(value['duration'])) item.duration = value['duration'];
     items.push(item);

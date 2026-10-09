@@ -42,6 +42,21 @@ const MEDIA_TAGS: ReadonlySet<string> = new Set(['video', 'hls-video']);
 const COPIED_MEDIA_ATTRIBUTES = ['playsinline', 'crossorigin', 'preload'] as const;
 /** Frames to wait for a `for` target that is not in the document yet. */
 const LOOKUP_RETRIES = 30;
+let warnedHls = false;
+
+function parseJson(value: string): unknown {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return [];
+  }
+}
+
+/** Boolean attribute semantics for property writes: `''` counts as true. */
+function toBoolean(value: unknown): boolean {
+  return value === '' || value === true || value === 'true';
+}
+
 
 function noop(): void {}
 
@@ -108,6 +123,7 @@ export class EspPlaylistElement extends Base {
 
   /** What is currently applied to `#player`. */
   #appliedKey: string | null = null;
+  #pendingSegments: unknown[] | null = null;
   #appliedItem: PlaylistItem | null = null;
   #appliedIndex = -1;
   /** Media element this controller inserted last (created or replacement). */
@@ -132,7 +148,9 @@ export class EspPlaylistElement extends Base {
 
   set items(value: unknown) {
     this.#itemsJson = null;
-    this.#setItems(normalizeItems(value));
+    // React 19 assigns the JSON attribute value as a property once the element
+    // is upgraded, so a string is parsed here too.
+    this.#setItems(normalizeItems(typeof value === 'string' ? parseJson(value) : value));
   }
 
   get index(): number {
@@ -156,7 +174,7 @@ export class EspPlaylistElement extends Base {
   }
 
   set loop(value: boolean) {
-    this.#model.loop = value;
+    this.#model.loop = toBoolean(value);
   }
 
   get autoAdvance(): boolean {
@@ -164,7 +182,7 @@ export class EspPlaylistElement extends Base {
   }
 
   set autoAdvance(value: boolean) {
-    this.#model.autoAdvance = value;
+    this.#model.autoAdvance = toBoolean(value);
   }
 
   get listId(): string {
@@ -181,6 +199,7 @@ export class EspPlaylistElement extends Base {
   }
 
   set resume(value: boolean) {
+    value = toBoolean(value);
     this.#resume = value;
     this.#storage = value ? (this.#storage ?? createLocalStorage()) : null;
   }
@@ -313,8 +332,11 @@ export class EspPlaylistElement extends Base {
     if (!candidate) candidate = this.closest('video-player') as PlayerLike | null;
 
     if (candidate && !candidate.store) {
-      // Found the element, but it has not upgraded yet. Retry after definition.
-      this.#waitForDefinition('video-player');
+      // Not upgraded yet: wait once for the definition. Already defined means
+      // the target is not a <video-player>; do not retry.
+      if (typeof customElements !== 'undefined' && !customElements.get('video-player')) {
+        this.#waitForDefinition('video-player');
+      }
       candidate = null;
     }
 
@@ -381,12 +403,14 @@ export class EspPlaylistElement extends Base {
     const store = player.store;
     const playback = store ? selectPlayback(store.state) : undefined;
     const source = store ? selectSource(store.state) : undefined;
+    const time = store ? selectTime(store.state) : undefined;
 
     // Leaving the previous item: persist its position and remember whether it was playing.
     this.#saveNow();
     const switching = this.#appliedItem !== null && this.#appliedItem.src !== item.src;
     this.#resumePlaying = switching && playback ? !playback.paused || playback.ended : false;
     this.#previousSrc = switching ? (source?.currentSrc ?? '') : '';
+    const hadPrevious = this.#appliedItem !== null;
     this.#appliedItem = item;
     this.#appliedIndex = index;
 
@@ -396,21 +420,48 @@ export class EspPlaylistElement extends Base {
     else player.removeAttribute('poster');
 
     // 2 + 3. Media element and its tracks.
+    const container = player.querySelector('media-container');
+    const previousMedia = container ? findMedia(container) : null;
+    const sameSrc = hadPrevious && previousMedia?.getAttribute('src') === item.src;
     this.#applyMedia(player, item);
 
-    // 4. Skip segments.
-    const skip = player.querySelector('esp-skip-segments') as (Element & { segments?: unknown }) | null;
-    if (skip) skip.segments = item.segments ?? [];
+    // 4. Skip segments. Applied once the new source is attached so the new
+    // segments never run against the old item's time (see #onStoreChange).
+    this.#pendingSegments = item.segments ?? [];
+    if (sameSrc) this.#applySegments(player, true);
 
     // 5. Notify.
     this.#emit('esp-playlist-change', { item, index } satisfies PlaylistChangeDetail);
 
     // Resume bookkeeping for the new item.
     this.#pendingRestore = this.#storage ? readResume(this.#storage, this.#key(item)) : null;
-    this.#awaitingSource = true;
     this.#lastSavedAt = null;
     this.#lastPaused = null;
     this.#lastEnded = false;
+    if (sameSrc) {
+      // Same source as the previous item: nothing reloads, so restart by hand
+      // and keep playing when the previous item was playing or had ended.
+      this.#awaitingSource = false;
+      const resume = restoreTime(this.#pendingRestore, time?.duration);
+      this.#pendingRestore = null;
+      time?.seek(resume ?? 0).catch(noop);
+      if (playback && (!playback.paused || playback.ended)) playback.play().catch(noop);
+    } else {
+      this.#awaitingSource = true;
+    }
+  }
+
+  /** Step 4 of the contract: hands the item's segments to the skip element. */
+  #applySegments(player: PlayerLike, reset: boolean): void {
+    const segments = this.#pendingSegments;
+    if (segments === null) return;
+    this.#pendingSegments = null;
+    const skip = player.querySelector('esp-skip-segments') as
+      | (Element & { segments?: unknown; reset?: () => void })
+      | null;
+    if (!skip) return;
+    if (reset) skip.reset?.();
+    skip.segments = segments;
   }
 
   #applyMedia(player: PlayerLike, item: PlaylistItem): void {
@@ -431,7 +482,8 @@ export class EspPlaylistElement extends Base {
       return;
     }
 
-    if (tag === 'hls-video' && typeof customElements !== 'undefined' && !customElements.get('hls-video')) {
+    if (tag === 'hls-video' && typeof customElements !== 'undefined' && !customElements.get('hls-video') && !warnedHls) {
+      warnedHls = true;
       console.warn("<esp-playlist>: <hls-video> is not registered. Add `import '@videojs/html/media/hls-video'`.");
     }
 
@@ -468,6 +520,7 @@ export class EspPlaylistElement extends Base {
       const fresh = src !== '' && (src !== this.#previousSrc || this.#previousSrc === '');
       if (!attached || !fresh || !(time.duration > 0)) return;
       this.#awaitingSource = false;
+      if (this.#player) this.#applySegments(this.#player, false);
       const at = restoreTime(this.#pendingRestore, time.duration);
       this.#pendingRestore = null;
       if (at !== null) time.seek(at).catch(noop);
@@ -576,7 +629,7 @@ export interface TrackSpec {
 /** Track specs for an item, in the order they are appended: chapters, thumbnails, subtitles. */
 export function trackSpecsFor(item: PlaylistItem): TrackSpec[] {
   const specs: TrackSpec[] = [];
-  if (item.chapters) specs.push({ kind: 'chapters', src: item.chapters, srclang: 'tr', default: true });
+  if (item.chapters) specs.push({ kind: 'chapters', src: item.chapters, default: true });
   if (item.thumbnails) specs.push({ kind: 'metadata', src: item.thumbnails, label: 'thumbnails', default: true });
   for (const sub of item.subtitles ?? []) specs.push(subtitleSpec(sub));
   return specs;

@@ -11,6 +11,7 @@ esp-playlist {
 }
 
 esp-playlist-panel {
+  container: esp-playlist / inline-size;
   --esp-playlist-max-height: 28rem;
   --esp-playlist-thumb-width: 6.5rem;
 
@@ -74,7 +75,9 @@ esp-playlist-panel .esp-playlist-nav-button:active:not(:disabled) {
 }
 
 esp-playlist-panel .esp-playlist-nav-button:disabled {
-  opacity: 0.4;
+  /* Keep the pill visible; only the glyph dims (stays above 3:1 on the pill). */
+  background: color-mix(in srgb, var(--esp-solid) 55%, var(--esp-surface));
+  color: color-mix(in srgb, var(--esp-solid-contrast) 70%, var(--esp-solid));
   cursor: default;
 }
 
@@ -101,6 +104,7 @@ esp-playlist-panel .esp-playlist-scroll {
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
+  scroll-padding-block: 4px;
   padding: 0.25rem 0.5rem;
 }
 
@@ -220,7 +224,8 @@ esp-playlist-panel .esp-playlist-empty[hidden] {
   display: none;
 }
 
-@container (width < 22rem) {
+/* The panel is its own query container (see the root rule). */
+@container esp-playlist (width < 22rem) {
   esp-playlist-panel .esp-playlist-item {
     grid-template-columns: 1.75rem minmax(0, 1fr);
   }

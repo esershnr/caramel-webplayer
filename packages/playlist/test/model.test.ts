@@ -146,3 +146,23 @@ describe('normalizeItems', () => {
     expect(normalizeItems('[]')).toEqual([]);
   });
 });
+
+describe('normalizeItems input validation', () => {
+  it('drops malformed subtitle entries and keeps valid ones', async () => {
+    const { normalizeItems } = await import('../src/model.js');
+    const [item] = normalizeItems([
+      {
+        id: 'a',
+        src: 'a.mp4',
+        subtitles: [{ src: '/tr.vtt', srclang: 'tr', label: 'TR' }, { src: 1 }, null, 'x'],
+      },
+    ]);
+    expect(item?.subtitles).toEqual([{ src: '/tr.vtt', srclang: 'tr', label: 'TR' }]);
+  });
+
+  it('omits subtitles entirely when none are valid', async () => {
+    const { normalizeItems } = await import('../src/model.js');
+    const [item] = normalizeItems([{ id: 'a', src: 'a.mp4', subtitles: [{ label: 'x' }] }]);
+    expect(item?.subtitles).toBeUndefined();
+  });
+});

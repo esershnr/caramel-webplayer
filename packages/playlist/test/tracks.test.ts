@@ -24,7 +24,7 @@ describe('trackSpecsFor', () => {
       ],
     });
     expect(specs).toEqual([
-      { kind: 'chapters', src: '/ch.vtt', srclang: 'tr', default: true },
+      { kind: 'chapters', src: '/ch.vtt', default: true },
       { kind: 'metadata', src: '/thumbs.vtt', label: 'thumbnails', default: true },
       { kind: 'subtitles', src: '/tr.vtt', srclang: 'tr', label: 'Türkçe', default: true },
       { kind: 'subtitles', src: '/en.vtt', srclang: 'en', label: 'English', default: false },
