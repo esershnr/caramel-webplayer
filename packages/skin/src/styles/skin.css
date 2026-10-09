@@ -117,11 +117,22 @@
   /* Pointer position interpolates on the slider itself; everything that reads
      --media-slider-pointer (preview, chapter title, drag thumb) follows along. */
   .esp-skin .media-time-slider {
-    transition: --media-slider-pointer var(--esp-pointer-follow) linear;
+    /* Fill (and the thumb riding on it) animates only inside the seek window
+       that seek-motion.ts opens; playback progress is never interpolated. */
+    --esp-seek-motion: 0ms;
+    transition:
+      --media-slider-pointer var(--esp-pointer-follow) linear,
+      --media-slider-fill var(--esp-seek-motion) var(--esp-ease-fill),
+      --media-slider-buffer var(--esp-duration-fill) var(--esp-ease-fill);
+  }
+
+  .esp-skin .media-time-slider[data-esp-seek] {
+    --esp-seek-motion: var(--esp-duration-fill);
   }
 
   .esp-skin .media-time-slider[data-dragging] {
     --esp-pointer-follow: 20ms;
+    --esp-seek-motion: 0ms;
   }
 
   /* ------------------------------------------------------------------ */

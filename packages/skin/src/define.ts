@@ -6,3 +6,6 @@ import '@videojs/html/video/player';
 import './components/videojs/video/skin.js';
 import '@videojs/html/i18n/locales/tr/register';
 import '@videojs/html/i18n/locales/en/register';
+import { installSeekMotion } from './seek-motion.js';
+
+if (typeof document !== 'undefined') installSeekMotion();
