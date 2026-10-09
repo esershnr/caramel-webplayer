@@ -1,4 +1,4 @@
-<media-container class="media-skin media-container video-skin" data-theme="default" data-preset="video">
+<media-container class="media-skin media-container video-skin esp-skin" data-theme="default" data-preset="video">
 <!-- Add a compatible media component here. -->
 <media-poster class="media-poster">
 <img alt="" decoding="async" class="media-poster-image">
@@ -32,12 +32,8 @@
 <media-tooltip-group>
 <media-controls-group class="video-controls-primary">
 <media-play-button class="media-button media-play-button" id="vjs-6EpYm0RN-0-trigger">
-<media-icon name="restart" class="media-button-icon media-play-button-restart-icon">
-</media-icon>
-<media-icon name="play" class="media-button-icon media-play-button-play-icon">
-</media-icon>
-<media-icon name="pause" class="media-button-icon media-play-button-pause-icon">
-</media-icon>
+<esp-morph-icon class="media-button-icon esp-morph-icon" map="data-ended:restart,data-paused:play,*:pause">
+</esp-morph-icon>
 </media-play-button>
 <media-tooltip trigger="vjs-6EpYm0RN-0-trigger" side="top" class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 <media-tooltip-label>
@@ -46,12 +42,8 @@
 </media-tooltip-shortcut>
 </media-tooltip>
 <media-mute-button commandfor="vjs-9Jipq7XQ-0-popup" class="media-button media-mute-button video-controls-volume-button" id="vjs-6EpYm0RN-0-2-trigger">
-<media-icon name="volume-off" class="media-button-icon media-mute-button-off-icon">
-</media-icon>
-<media-icon name="volume-low" class="media-button-icon media-mute-button-low-icon">
-</media-icon>
-<media-icon name="volume-high" class="media-button-icon media-mute-button-high-icon">
-</media-icon>
+<esp-morph-icon class="media-button-icon esp-morph-icon" map="data-muted:volume-off,data-volume-level=off:volume-off,data-volume-level=low:volume-low,*:volume-high">
+</esp-morph-icon>
 </media-mute-button>
 <media-tooltip trigger="vjs-6EpYm0RN-0-2-trigger" delay="0" disabled sticky side="top" class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 <media-tooltip-label>
@@ -105,10 +97,8 @@
 </media-time>
 </media-controls-group>
 <media-captions-button class="media-button media-captions-button video-controls-captions-button" id="vjs-6EpYm0RN-0-3-trigger">
-<media-icon name="captions-off" class="media-button-icon media-captions-button-off-icon">
-</media-icon>
-<media-icon name="captions-on" class="media-button-icon media-captions-button-on-icon">
-</media-icon>
+<esp-morph-icon class="media-button-icon esp-morph-icon" map="data-active:captions-on,*:captions-off">
+</esp-morph-icon>
 </media-captions-button>
 <media-tooltip trigger="vjs-6EpYm0RN-0-3-trigger" side="top" class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 <media-tooltip-label>
@@ -117,8 +107,8 @@
 </media-tooltip-shortcut>
 </media-tooltip>
 <button commandfor="vjs-Keqr6Ase-0-popup" class="media-button media-settings-menu-trigger video-controls-settings-button" id="vjs-6EpYm0RN-0-4-trigger">
-<media-icon name="gear" class="media-button-icon-base media-settings-menu-trigger-icon">
-</media-icon>
+<esp-morph-icon class="media-button-icon-base media-settings-menu-trigger-icon esp-morph-icon" map="aria-expanded=true:close,*:settings">
+</esp-morph-icon>
 <media-text class="media-settings-menu-trigger-label" token="menu.settings">Settings</media-text>
 </button>
 <media-tooltip trigger="vjs-6EpYm0RN-0-4-trigger" side="top" class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
@@ -289,10 +279,8 @@
 </media-tooltip-shortcut>
 </media-tooltip>
 <media-pip-button class="media-button media-pip-button" id="vjs-6EpYm0RN-0-7-trigger">
-<media-icon name="pip-enter" class="media-button-icon media-pip-button-enter-icon">
-</media-icon>
-<media-icon name="pip-exit" class="media-button-icon media-pip-button-exit-icon">
-</media-icon>
+<esp-morph-icon class="media-button-icon esp-morph-icon" map="data-pip:pip-exit,*:pip-enter">
+</esp-morph-icon>
 </media-pip-button>
 <media-tooltip trigger="vjs-6EpYm0RN-0-7-trigger" side="top" class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 <media-tooltip-label>
@@ -301,10 +289,8 @@
 </media-tooltip-shortcut>
 </media-tooltip>
 <media-fullscreen-button class="media-button media-fullscreen-button" id="vjs-6EpYm0RN-0-8-trigger">
-<media-icon name="fullscreen-enter" class="media-button-icon media-fullscreen-button-enter-icon">
-</media-icon>
-<media-icon name="fullscreen-exit" class="media-button-icon media-fullscreen-button-exit-icon">
-</media-icon>
+<esp-morph-icon class="media-button-icon esp-morph-icon" map="data-fullscreen:fullscreen-exit,*:fullscreen-enter">
+</esp-morph-icon>
 </media-fullscreen-button>
 <media-tooltip trigger="vjs-6EpYm0RN-0-8-trigger" side="top" class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 <media-tooltip-label>

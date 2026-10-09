@@ -2,5 +2,7 @@ packages:
   - packages/*
   - scripts/*
   - examples/*
+allowBuilds:
+  esbuild: true
 minimumReleaseAgeExclude:
   - lucide@1.54.0

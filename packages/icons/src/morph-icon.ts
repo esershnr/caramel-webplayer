@@ -5,6 +5,10 @@ import { parseIconRules, pickIcon, rulesFromOnOff, watchedAttributes, type IconR
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
+/** HTMLElement stand-in so the module can be imported during SSR and in Node scripts. */
+const Base: typeof HTMLElement =
+  typeof HTMLElement === 'undefined' ? (class {} as unknown as typeof HTMLElement) : HTMLElement;
+
 /**
  * <esp-morph-icon>
  *
@@ -29,7 +33,7 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
  *
  * Reduced motion follows the OS setting: morphs become instant swaps.
  */
-export class EspMorphIconElement extends HTMLElement {
+export class EspMorphIconElement extends Base {
   static readonly tagName = 'esp-morph-icon';
   static readonly observedAttributes = ['map', 'watch', 'on', 'off', 'target', 'spring', 'icon'];
 

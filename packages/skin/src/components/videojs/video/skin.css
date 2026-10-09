@@ -23,7 +23,7 @@
       flex-shrink: 0;
       place-items: center;
       padding: 0;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       display: grid;
     }
 
@@ -81,7 +81,7 @@
       transition-duration: 0.15s;
       transition-delay: var(--media-delay-dialog);
       transition-duration: var(--media-duration-dialog);
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       position: absolute;
       inset: 0;
     }
@@ -154,7 +154,7 @@
       text-shadow: var(--media-text-shadow-dialog);
       outline-style: none;
       flex-direction: column;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       display: flex;
       position: absolute;
       top: 50%;
@@ -250,7 +250,7 @@
       height: 100%;
       transition-property: opacity;
       transition-duration: 0.15s;
-      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
       transition-duration: var(--media-duration-slower);
       position: absolute;
       inset: 0;
@@ -297,7 +297,7 @@
     height: 100%;
     transition-property: opacity;
     transition-duration: 0.15s;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-timing-function: var(--media-ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
     transition-duration: var(--media-duration-slower);
     position: absolute;
     inset: 0;
@@ -341,7 +341,7 @@
       inset-inline: 0;
       align-items: center;
       font-weight: 500;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       display: flex;
       position: absolute;
       top: 0;
@@ -395,7 +395,7 @@
       --spacing: var(--media-spacing);
       outline: 2px solid #0000;
       line-height: 1.5;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       display: block;
       position: relative;
       overflow: clip;
@@ -487,7 +487,7 @@
       transition-property: translate, opacity;
       transition-duration: 0.15s;
       transition-duration: var(--media-duration-slow);
-      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
       display: none;
     }
 
@@ -540,7 +540,7 @@
       backdrop-filter: var(--media-backdrop-filter-surface);
       transition-duration: var(--media-duration-fast);
       font-weight: 500;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       position: absolute;
     }
 
@@ -587,7 +587,7 @@
     .media-indicator:is([data-starting-style], [data-ending-style]) {
       opacity: 0;
       transition-duration: var(--media-duration-indicator);
-      transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+      transition-timing-function: var(--media-ease-in, cubic-bezier(0.4, 0, 1, 1));
     }
 
     @media (pointer: fine) {
@@ -617,7 +617,7 @@
       grid-row-start: 1;
       grid-column-start: 2;
       place-content: center;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       display: grid;
     }
 
@@ -629,7 +629,7 @@
 
     .media-playback-status-indicator[data-ending-style] {
       transition-duration: var(--media-duration-fast);
-      transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+      transition-timing-function: var(--media-ease-in, cubic-bezier(0.4, 0, 1, 1));
     }
 
     .media-playback-status-indicator:is([data-starting-style], [data-ending-style]) {
@@ -647,7 +647,7 @@
       transition-duration: var(--media-duration);
       grid-row-start: 1;
       grid-column-start: 1;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
     }
 
     @scope (.media-playback-status-indicator) {
@@ -667,7 +667,7 @@
       transition-duration: var(--media-duration);
       grid-row-start: 1;
       grid-column-start: 1;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
     }
 
     @scope (.media-playback-status-indicator) {
@@ -896,7 +896,7 @@
       text-shadow: inherit;
       grid-row-start: 1;
       grid-column-start: 1;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
     }
   }
 
@@ -999,7 +999,7 @@
     .media-popup-transition {
       transition-property: opacity, filter, transform, scale;
       transition-duration: var(--media-duration-fast);
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
     }
 
     .media-popup-transition[data-ending-style] {
@@ -1365,7 +1365,7 @@
       user-select: none;
       background-color: #fff;
       outline: 4px solid #0000;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       position: absolute;
       translate: -50% -50%;
     }
@@ -1385,7 +1385,7 @@
       transition-duration: 0.15s;
       transition-duration: var(--media-duration);
       content: "";
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       position: absolute;
       scale: 0.5;
       box-shadow:
@@ -1488,7 +1488,7 @@
       flex: 1;
       justify-content: center;
       align-items: center;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       display: flex;
       position: relative;
     }
@@ -1573,7 +1573,7 @@
       transition-duration: var(--media-duration-slow);
       content: "";
       background-color: currentColor;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       position: absolute;
       top: 50%;
       left: 50%;
@@ -1609,7 +1609,7 @@
       transition-property: filter, opacity, scale;
       transition-duration: 0.15s;
       transition-duration: var(--media-duration);
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       position: absolute;
     }
 
@@ -1654,7 +1654,7 @@
       transition-property: opacity;
       transition-duration: 0.15s;
       transition-duration: var(--media-duration);
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       display: block;
     }
 
@@ -1673,7 +1673,7 @@
       transition-property: opacity;
       transition-duration: 0.15s;
       transition-duration: var(--media-duration);
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       position: absolute;
       top: 50%;
       left: 50%;
@@ -1695,7 +1695,7 @@
     .media-time-slider[data-playing] {
       transition-property: --media-slider-buffer;
       transition-duration: 0.15s;
-      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
     }
 
     .media-time-slider-chapter {
@@ -1757,7 +1757,7 @@
       transition-property: height, width;
       transition-duration: 0.15s;
       transition-duration: var(--media-duration-slow);
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
     }
 
     @scope (.media-time-slider-chapter) {
@@ -1837,7 +1837,7 @@
     transition-property: opacity;
     transition-duration: 0.15s;
     transition-duration: var(--media-duration);
-    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
     display: block;
   }
 
@@ -1855,7 +1855,7 @@
     transition-property: filter, opacity, scale;
     transition-duration: 0.15s;
     transition-duration: var(--media-duration);
-    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
     position: absolute;
   }
 
@@ -1900,7 +1900,7 @@
     transition-property: opacity;
     transition-duration: 0.15s;
     transition-duration: var(--media-duration);
-    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
     display: block;
   }
 
@@ -1919,7 +1919,7 @@
     transition-property: opacity;
     transition-duration: 0.15s;
     transition-duration: var(--media-duration);
-    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
     position: absolute;
     top: 50%;
     left: 50%;
@@ -2017,7 +2017,7 @@
       user-select: none;
       text-shadow: 0 1px 0 var(--media-shadow-current-color);
       outline: 2px solid #0000;
-      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
       display: flex;
       position: relative;
     }
@@ -2098,7 +2098,7 @@
       user-select: none;
       text-shadow: 0 1px 0 var(--media-shadow-current-color);
       outline: 2px solid #0000;
-      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
       display: flex;
       position: relative;
     }
@@ -2135,7 +2135,7 @@
       transition-duration: var(--media-duration-menu);
       anchor-scope: --media-menu-item-highlight-anchor;
       outline-style: none;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       position: absolute;
       overflow: auto;
     }
@@ -2321,7 +2321,7 @@
       user-select: none;
       text-shadow: 0 1px 0 var(--media-shadow-current-color);
       outline: 2px solid #0000;
-      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
       display: flex;
       position: relative;
     }
@@ -2449,14 +2449,14 @@
       border-style: solid;
       border-width: 0;
       margin: 0;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       overflow: hidden !important;
     }
 
     .media-menu-popup:is([data-starting-style], [data-ending-style]) {
       transition-property: opacity, filter, transform, scale;
       transition-duration: var(--media-duration-fast);
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
     }
 
     .media-menu-resizable-popup {
@@ -2470,7 +2470,7 @@
       transition-property: transform, translate, scale, rotate;
       transition-duration: 0.15s;
       transition-duration: var(--media-duration);
-      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
     }
 
     @scope (.media-settings-menu-trigger) {
@@ -2521,7 +2521,7 @@
       transition-property: opacity;
       transition-duration: 0.15s;
       transition-duration: var(--media-duration-controls);
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       position: absolute;
       inset: 0;
     }
@@ -2543,7 +2543,7 @@
       transition-duration: 0.15s;
       transition-duration: calc(var(--media-duration-controls) / 2);
       text-shadow: 0 1px 0 var(--media-shadow-current-color);
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       display: contents;
     }
 
@@ -2611,7 +2611,7 @@
       transition-duration: 0.15s;
       transition-duration: calc(var(--media-duration-controls) / 2);
       align-items: center;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       display: flex;
       position: absolute;
     }
@@ -2677,7 +2677,7 @@
       transition-duration: calc(var(--media-duration-controls) / 2);
       align-items: center;
       gap: 1px;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
       display: flex;
       position: absolute;
     }
@@ -2778,7 +2778,7 @@
       transition-duration: var(--media-duration-fast);
       border-radius: 0.25rem;
       outline: 2px solid #0000;
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
     }
 
     .media-time-toggle:focus-visible {
@@ -2796,7 +2796,7 @@
       transition-property: opacity;
       transition-duration: 0.15s;
       transition-duration: var(--media-duration-slow);
-      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-timing-function: var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1));
     }
 
     .media-time-value[data-unavailable] {

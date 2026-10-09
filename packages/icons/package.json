@@ -4,22 +4,27 @@
   "description": "Lucide icon data and a morphing icon element for the esersahiner web player",
   "license": "MIT",
   "type": "module",
-  "sideEffects": ["./src/define.ts", "./dist/define.js"],
-  "files": ["dist"],
+  "sideEffects": [
+    "./src/define.ts",
+    "./dist/define.js"
+  ],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
       "development": "./src/index.ts",
+      "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
     "./define": {
-      "types": "./dist/define.d.ts",
       "development": "./src/define.ts",
+      "types": "./dist/define.d.ts",
       "default": "./dist/define.js"
     },
     "./react": {
-      "types": "./dist/react.d.ts",
       "development": "./src/react.tsx",
+      "types": "./dist/react.d.ts",
       "default": "./dist/react.js"
     },
     "./package.json": "./package.json"
@@ -37,7 +42,9 @@
     "react": ">=18"
   },
   "peerDependenciesMeta": {
-    "react": { "optional": true }
+    "react": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/react": "^19.1.0",

@@ -1,5 +1,5 @@
 {
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": { "noEmit": true, "paths": { "@/*": ["./src/*"] } },
-  "include": ["src"]
+  "compilerOptions": { "noEmit": true, "jsx": "react-jsx" },
+  "include": ["src", "test", "scripts"]
 }

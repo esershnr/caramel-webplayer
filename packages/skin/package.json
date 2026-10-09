@@ -4,8 +4,62 @@
   "description": "Video.js 10 video skin source themed for esersahiner.com with Lucide morphing icons",
   "license": "MIT",
   "type": "module",
-  "private": false,
+  "sideEffects": [
+    "*.css",
+    "./src/define.ts",
+    "./dist/define.js",
+    "./src/components/videojs/video/skin.ts",
+    "./dist/components/videojs/video/skin.js"
+  ],
+  "files": [
+    "dist",
+    "src/components/videojs/**/*.css",
+    "src/styles"
+  ],
+  "exports": {
+    ".": {
+      "development": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./define": {
+      "development": "./src/define.ts",
+      "types": "./dist/define.d.ts",
+      "default": "./dist/define.js"
+    },
+    "./react": {
+      "development": "./src/react.tsx",
+      "types": "./dist/react.d.ts",
+      "default": "./dist/react.js"
+    },
+    "./skin.css": "./src/styles/skin.css",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build:template": "node --conditions=development --import tsx scripts/build-template.ts",
+    "build": "pnpm run build:template && tsc -p tsconfig.build.json && node scripts/copy-css.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
   "dependencies": {
+    "@esersahiner/player-icons": "workspace:*",
+    "@esersahiner/player-theme": "workspace:*",
     "@videojs/html": "10.0.1"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "react": "^19.2.0",
+    "tsx": "^4.23.0",
+    "typescript": "^5.9.0",
+    "vitest": "^5.0.3",
+    "@types/node": "^26.6.0"
   }
 }

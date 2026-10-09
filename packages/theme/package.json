@@ -4,12 +4,17 @@
   "description": "esersahiner.com design tokens (--esp-*) for the web player: light/dark palette, motion, typography",
   "license": "MIT",
   "type": "module",
-  "sideEffects": ["*.css"],
-  "files": ["dist", "styles"],
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "dist",
+    "styles"
+  ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
       "development": "./src/index.ts",
+      "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
     "./tokens.css": "./styles/tokens.css",

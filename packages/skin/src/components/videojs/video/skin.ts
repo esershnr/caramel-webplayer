@@ -59,55 +59,7 @@ import '@videojs/html/ui/status-indicator';
 import '@videojs/html/ui/status-indicator-value';
 import '@videojs/html/ui/seek-indicator';
 import '@videojs/html/ui/seek-indicator-value';
-import { registerIcons } from '@videojs/html/icons';
-import {
-  airPlayEnterIcon,
-  airPlayExitIcon,
-  captionsOffIcon,
-  captionsOnIcon,
-  castEnterIcon,
-  castExitIcon,
-  checkIcon,
-  chevronIcon,
-  fullscreenEnterIcon,
-  fullscreenExitIcon,
-  gearIcon,
-  pauseIcon,
-  pipEnterIcon,
-  pipExitIcon,
-  playIcon,
-  restartIcon,
-  speechIcon,
-  speedIcon,
-  spinnerIcon,
-  switchesIcon,
-  volumeHighIcon,
-  volumeLowIcon,
-  volumeOffIcon,
-} from '@videojs/html/icons';
-
-registerIcons('default', {
-  'airplay-enter': airPlayEnterIcon,
-  'airplay-exit': airPlayExitIcon,
-  'captions-off': captionsOffIcon,
-  'captions-on': captionsOnIcon,
-  'cast-enter': castEnterIcon,
-  'cast-exit': castExitIcon,
-  check: checkIcon,
-  chevron: chevronIcon,
-  'fullscreen-enter': fullscreenEnterIcon,
-  'fullscreen-exit': fullscreenExitIcon,
-  gear: gearIcon,
-  pause: pauseIcon,
-  'pip-enter': pipEnterIcon,
-  'pip-exit': pipExitIcon,
-  play: playIcon,
-  restart: restartIcon,
-  speech: speechIcon,
-  speed: speedIcon,
-  spinner: spinnerIcon,
-  switches: switchesIcon,
-  'volume-high': volumeHighIcon,
-  'volume-low': volumeLowIcon,
-  'volume-off': volumeOffIcon,
-});
+// esersahiner theme and motion overrides (layer: components)
+import '../../../styles/skin.css';
+// Lucide morphing icons used by the buttons; static icons are inlined in the template
+import '@esersahiner/player-icons/define';

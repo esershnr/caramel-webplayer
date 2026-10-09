@@ -1,0 +1,129 @@
+/*
+ * esersahiner overrides for the Video.js 10 default video skin.
+ *
+ * Loaded after the skin source. Lives in the `components` layer, which the skin
+ * declares after `base`, so these rules win over the skin's tokens while staying
+ * overridable by unlayered host CSS. Only --esp-* tokens are referenced here;
+ * no raw hex values.
+ *
+ * The controls stay dark in both color schemes (overlay roles). Light/dark only
+ * affects surfaces outside the video frame (handled by other packages).
+ */
+@import '@esersahiner/player-theme/tokens.css';
+
+/* Let the pointer position interpolate so previews follow the cursor softly. */
+@property --media-slider-pointer {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 0%;
+}
+
+@layer components {
+  .media-skin.esp-skin {
+    /* Typography */
+    --media-font-family: var(--esp-font-body);
+
+    /* Overlay palette */
+    --media-primary: var(--esp-accent);
+    --media-primary-foreground: var(--esp-overlay-text);
+    --media-accent: color-mix(in srgb, var(--esp-overlay-accent) 22%, transparent);
+    --media-accent-foreground: var(--esp-overlay-text);
+    --media-ring: var(--esp-overlay-accent);
+    --media-popover: var(--esp-overlay-surface);
+    --media-popover-foreground: var(--esp-overlay-text);
+    --media-controls-foreground: var(--esp-overlay-text);
+    --media-border-color: var(--esp-overlay-border);
+    --media-surface-border: var(--esp-overlay-border);
+
+    /* Corners: frame 24 -> popups 16 -> controls pill */
+    --media-border-radius: var(--esp-radius-panel);
+    --media-popup-radius: var(--esp-radius-box);
+    --media-dialog-radius: var(--esp-radius-panel);
+    --media-control-radius: var(--esp-radius-chip);
+    --media-menu-item-radius: calc(var(--esp-radius-box) - 4px);
+
+    /* Motion: entrance curve for reveals, fill curve for symmetric moves */
+    --media-ease-out: var(--esp-ease-enter);
+    --media-ease-in-out: var(--esp-ease-fill);
+    --media-ease-in: var(--esp-ease-fill);
+    --media-duration-fast: var(--esp-duration-instant);
+    --media-duration: var(--esp-duration-fast);
+    --media-duration-slow: var(--esp-duration-fast);
+    --media-duration-slower: var(--esp-duration-enter);
+    --media-duration-controls: var(--esp-duration-controls);
+    --media-duration-menu: var(--esp-duration-enter);
+    --media-duration-slider: var(--esp-duration-fill);
+    --media-hidden-offset: calc(var(--media-spacing) * 2);
+
+    /* Soft pointer follow for the thumbnail preview and chapter title */
+    --esp-pointer-follow: 90ms;
+  }
+
+  /* Progress fill eases with the fill curve */
+  .esp-skin .media-slider-fill,
+  .esp-skin .media-slider-buffer {
+    transition-timing-function: var(--esp-ease-fill);
+  }
+
+  /* Pointer position interpolates on the slider itself; everything that reads
+     --media-slider-pointer (preview, chapter title, drag thumb) follows along. */
+  .esp-skin .media-time-slider {
+    transition: --media-slider-pointer var(--esp-pointer-follow) linear;
+  }
+
+  .esp-skin .media-time-slider[data-dragging] {
+    --esp-pointer-follow: 40ms;
+  }
+
+  /* Title uses the heading face */
+  .esp-skin .media-title {
+    font-family: var(--esp-font-heading);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  /* Morphing icon host */
+  .esp-skin .esp-morph-icon {
+    display: block;
+    color: inherit;
+  }
+
+  .esp-skin .esp-morph-icon > svg,
+  .esp-skin .esp-icon {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* Static inline icons that the skin shows and hides per state start hidden
+     the same way the original <media-icon> elements did. */
+  .esp-skin .media-button-icon.esp-icon {
+    grid-row-start: 1;
+    grid-column-start: 1;
+  }
+
+  /* Focus ring: 2px, offset 2px, readable caramel over video */
+  .esp-skin :is(.media-button, .media-slider-thumb, .media-menu-item, button):focus-visible {
+    outline: 2px solid var(--esp-overlay-accent);
+    outline-offset: var(--esp-focus-offset);
+  }
+
+  /* Controls bar reveal: soft, no overshoot */
+  .esp-skin .video-controls-content,
+  .esp-skin .video-controls-backdrop {
+    transition-timing-function: var(--esp-ease-enter);
+  }
+
+  /* Numbers */
+  .esp-skin .media-time-value,
+  .esp-skin .media-time-slider-value,
+  .esp-skin .media-volume-indicator-value {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media-skin.esp-skin {
+    --esp-pointer-follow: 0ms;
+  }
+}
