@@ -320,7 +320,8 @@ export class CaramelChaptersPanelElement extends Base {
   #renderText(): void {
     const t = this.#t;
     if (!t) return;
-    const headingText = this.getAttribute('heading') ?? t(CHAPTERS_KEYS.heading, { default: CHAPTERS_DEFAULTS.heading });
+    const headingText =
+      this.getAttribute('heading') ?? t(CHAPTERS_KEYS.heading, { default: CHAPTERS_DEFAULTS.heading });
     const emptyText = t(CHAPTERS_KEYS.empty, { default: CHAPTERS_DEFAULTS.empty });
     if (this.#heading) {
       if (this.#heading.textContent !== headingText) this.#heading.textContent = headingText;

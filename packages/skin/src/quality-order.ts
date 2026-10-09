@@ -1,4 +1,10 @@
-import { PlayerController, QualityRadioGroupElement, playerContext, selectQuality, type PropertyValues } from '@videojs/html';
+import {
+  PlayerController,
+  QualityRadioGroupElement,
+  playerContext,
+  selectQuality,
+  type PropertyValues,
+} from '@videojs/html';
 
 /** HTMLElement stand-in so the module can be imported during SSR. */
 const Base: typeof QualityRadioGroupElement =

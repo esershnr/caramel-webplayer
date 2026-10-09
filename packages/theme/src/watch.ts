@@ -12,10 +12,7 @@ export interface WatchThemeOptions {
  * own data-theme ancestors, plus the OS preference. Returns an unsubscribe fn.
  * Safe to call during SSR: returns a no-op without a DOM.
  */
-export function watchTheme(
-  callback: (theme: Theme) => void,
-  options: WatchThemeOptions = {},
-): () => void {
+export function watchTheme(callback: (theme: Theme) => void, options: WatchThemeOptions = {}): () => void {
   if (typeof document === 'undefined' || typeof MutationObserver === 'undefined') {
     return () => {};
   }

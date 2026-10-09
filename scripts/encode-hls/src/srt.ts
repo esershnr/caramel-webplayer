@@ -15,7 +15,8 @@ export interface SrtCue {
   text: string;
 }
 
-const TIME_LINE = /^\s*(\d{1,2}:\d{2}:\d{2}[,.]\d{1,3}|\d{1,2}:\d{2}[,.]\d{1,3})\s*-->\s*(\d{1,2}:\d{2}:\d{2}[,.]\d{1,3}|\d{1,2}:\d{2}[,.]\d{1,3})(.*)$/;
+const TIME_LINE =
+  /^\s*(\d{1,2}:\d{2}:\d{2}[,.]\d{1,3}|\d{1,2}:\d{2}[,.]\d{1,3})\s*-->\s*(\d{1,2}:\d{2}:\d{2}[,.]\d{1,3}|\d{1,2}:\d{2}[,.]\d{1,3})(.*)$/;
 
 function normalizeTimestamp(value: string): string {
   const [main, fraction = '0'] = value.replace(',', '.').split('.');

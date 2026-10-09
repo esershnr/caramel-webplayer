@@ -37,7 +37,9 @@ mountSkin(player, { media, extras: [skip, playlist], uid: 'demo' });
 const R2_MANIFEST = 'https://cdn.esersahiner.com/videos/openwrt-rehber/v1/manifest.json';
 void Promise.all([
   loadManifest('/out/openwrt-rehber/manifest.json', `${location.origin}/out/openwrt-rehber/`),
-  loadManifest(R2_MANIFEST).then((item) => (item ? { ...item, id: `${item.id}-r2`, title: `${item.title} (R2)` } : null)),
+  loadManifest(R2_MANIFEST).then((item) =>
+    item ? { ...item, id: `${item.id}-r2`, title: `${item.title} (R2)` } : null,
+  ),
 ]).then((extra) => {
   playlist.items = [...PLAYLIST, ...extra.filter((item): item is NonNullable<typeof item> => item !== null)];
 });
@@ -103,6 +105,8 @@ document.querySelectorAll<HTMLButtonElement>('[data-lang]').forEach((button) => 
     const lang = button.dataset['lang']!;
     i18n.setAttribute('lang', lang);
     document.documentElement.lang = lang;
-    document.querySelectorAll<HTMLButtonElement>('[data-lang]').forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+    document
+      .querySelectorAll<HTMLButtonElement>('[data-lang]')
+      .forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
   });
 });

@@ -33,7 +33,9 @@ export interface Meta {
 
 export class MetaError extends Error {
   constructor(public readonly problems: string[]) {
-    super(`meta.yaml has ${problems.length} problem${problems.length === 1 ? '' : 's'}:\n  - ${problems.join('\n  - ')}`);
+    super(
+      `meta.yaml has ${problems.length} problem${problems.length === 1 ? '' : 's'}:\n  - ${problems.join('\n  - ')}`,
+    );
     this.name = 'MetaError';
   }
 }
@@ -79,7 +81,8 @@ export function parseMeta(text: string, ctx: ValidateContext): Meta {
   if (raw['poster'] !== undefined && raw['poster'] !== null) {
     try {
       poster = parseTime(raw['poster'], 'poster');
-      if (poster > ctx.duration) problems.push(`poster ${raw['poster']} is past the end of the video (${ctx.duration.toFixed(1)} s)`);
+      if (poster > ctx.duration)
+        problems.push(`poster ${raw['poster']} is past the end of the video (${ctx.duration.toFixed(1)} s)`);
     } catch (error) {
       problems.push((error as Error).message);
     }
@@ -105,7 +108,10 @@ export function parseMeta(text: string, ctx: ValidateContext): Meta {
       }
       if (!titles['tr'] || !titles['en']) problems.push(`chapters[${i}] needs tr and en titles`);
       if (at >= 0) {
-        if (at >= ctx.duration) problems.push(`chapters[${i}] starts at ${c['at']}, past the end of the video (${ctx.duration.toFixed(1)} s)`);
+        if (at >= ctx.duration)
+          problems.push(
+            `chapters[${i}] starts at ${c['at']}, past the end of the video (${ctx.duration.toFixed(1)} s)`,
+          );
         const prev = chapters[chapters.length - 1];
         if (prev && at <= prev.at) problems.push(`chapters[${i}] (${c['at']}) must start after the previous chapter`);
       }

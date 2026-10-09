@@ -181,7 +181,15 @@ body {
   background-image: repeating-linear-gradient(-45deg, var(--caramel-segment-hatch) 0 2px, transparent 2px 4px);
 }
 
-.demo-swatch[data-type='intro'] { --demo-swatch: var(--caramel-segment-intro); }
-.demo-swatch[data-type='recap'] { --demo-swatch: var(--caramel-segment-recap); }
-.demo-swatch[data-type='outro'] { --demo-swatch: var(--caramel-segment-outro); }
-.demo-swatch[data-type='sponsor'] { --demo-swatch: var(--caramel-segment-sponsor); }
+.demo-swatch[data-type='intro'] {
+  --demo-swatch: var(--caramel-segment-intro);
+}
+.demo-swatch[data-type='recap'] {
+  --demo-swatch: var(--caramel-segment-recap);
+}
+.demo-swatch[data-type='outro'] {
+  --demo-swatch: var(--caramel-segment-outro);
+}
+.demo-swatch[data-type='sponsor'] {
+  --demo-swatch: var(--caramel-segment-sponsor);
+}

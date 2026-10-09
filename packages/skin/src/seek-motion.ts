@@ -109,7 +109,14 @@ export function installSeekMotion(root: Document = document): () => void {
     if (!(target instanceof Element)) return;
     const slider = target.closest<HTMLElement>('.caramel-skin media-time-slider');
     if (!slider || slider.hasAttribute('data-disabled')) return;
-    if (!isTrackClick({ pointerType: event.pointerType, button: event.button, dragging: slider.hasAttribute('data-dragging') })) return;
+    if (
+      !isTrackClick({
+        pointerType: event.pointerType,
+        button: event.button,
+        dragging: slider.hasAttribute('data-dragging'),
+      })
+    )
+      return;
     const rect = slider.getBoundingClientRect();
     const percent = trackPercent(event.clientX, rect.left, rect.width);
     if (percent !== null) start(slider, percent);

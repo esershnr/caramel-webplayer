@@ -1,10 +1,4 @@
-import {
-  findActiveIndex,
-  normalizeSegments,
-  skipTarget,
-  type AutoSkipConfig,
-  type Segment,
-} from './segments.js';
+import { findActiveIndex, normalizeSegments, skipTarget, type AutoSkipConfig, type Segment } from './segments.js';
 
 export interface SkipModelOptions {
   autoSkip?: AutoSkipConfig | undefined;

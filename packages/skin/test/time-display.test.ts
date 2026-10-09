@@ -9,7 +9,14 @@ describe('time display preference', () => {
   });
 
   it('survives a throwing storage', () => {
-    const bad = { getItem: () => { throw new Error('blocked'); }, setItem: () => { throw new Error('quota'); } };
+    const bad = {
+      getItem: () => {
+        throw new Error('blocked');
+      },
+      setItem: () => {
+        throw new Error('quota');
+      },
+    };
     expect(readTimeDisplayMode(bad)).toBe('elapsed');
     expect(() => writeTimeDisplayMode(bad, 'remaining')).not.toThrow();
   });

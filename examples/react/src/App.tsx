@@ -45,7 +45,9 @@ export function App() {
     let cancelled = false;
     void Promise.all([
       loadManifest('/out/openwrt-rehber/manifest.json', `${location.origin}/out/openwrt-rehber/`),
-      loadManifest(R2_MANIFEST).then((item) => (item ? { ...item, id: `${item.id}-r2`, title: `${item.title} (R2)` } : null)),
+      loadManifest(R2_MANIFEST).then((item) =>
+        item ? { ...item, id: `${item.id}-r2`, title: `${item.title} (R2)` } : null,
+      ),
     ]).then((extra) => {
       if (!cancelled) setItems([...PLAYLIST, ...extra.filter((item): item is PlaylistItem => item !== null)]);
     });
@@ -90,7 +92,13 @@ export function App() {
         <h1 className="caramel-heading">Player demo (React)</h1>
         <div className="demo-theme" role="group" aria-label="Tema">
           {(['light', 'dark', 'system'] as const).map((c) => (
-            <button key={c} type="button" data-theme-choice={c} aria-pressed={choice === c} onClick={() => setChoice(c)}>
+            <button
+              key={c}
+              type="button"
+              data-theme-choice={c}
+              aria-pressed={choice === c}
+              onClick={() => setChoice(c)}
+            >
               {c === 'light' ? 'Açık' : c === 'dark' ? 'Koyu' : 'Sistem'}
             </button>
           ))}
@@ -138,10 +146,22 @@ export function App() {
               Çizgili bant otomatik atlanır (demo: özet). Önizleme kartı fare bandın üstündeyken türü gösterir.
             </p>
             <ul className="demo-list demo-legend">
-              <li><span className="demo-swatch" data-type="intro" />İntro</li>
-              <li><span className="demo-swatch" data-type="recap" data-auto="" />Özet (otomatik atlanır)</li>
-              <li><span className="demo-swatch" data-type="outro" />Jenerik</li>
-              <li><span className="demo-swatch" data-type="sponsor" />Sponsor</li>
+              <li>
+                <span className="demo-swatch" data-type="intro" />
+                İntro
+              </li>
+              <li>
+                <span className="demo-swatch" data-type="recap" data-auto="" />
+                Özet (otomatik atlanır)
+              </li>
+              <li>
+                <span className="demo-swatch" data-type="outro" />
+                Jenerik
+              </li>
+              <li>
+                <span className="demo-swatch" data-type="sponsor" />
+                Sponsor
+              </li>
             </ul>
           </section>
           <section className="demo-panel">

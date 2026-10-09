@@ -83,8 +83,18 @@
      airplay, pip, captions-off, languages span 20 units; most others 16 to 18).
      `transform` is used, not `scale`, because the skin animates `scale` for
      its show/hide states. */
-  .caramel-skin :is(.caramel-icon-cast, .caramel-icon-airplay, .caramel-icon-pip-enter, .caramel-icon-pip-exit, .caramel-icon-captions-off, .caramel-icon-speech),
-  .caramel-skin .caramel-morph-icon:is([data-icon='pip-enter'], [data-icon='pip-exit'], [data-icon='captions-off']) > svg {
+  .caramel-skin
+  :is(
+    .caramel-icon-cast,
+    .caramel-icon-airplay,
+    .caramel-icon-pip-enter,
+    .caramel-icon-pip-exit,
+    .caramel-icon-captions-off,
+    .caramel-icon-speech
+  ),
+  .caramel-skin
+    .caramel-morph-icon:is([data-icon='pip-enter'], [data-icon='pip-exit'], [data-icon='captions-off'])
+    > svg {
     transform: scale(0.88);
   }
 
@@ -215,11 +225,15 @@
     text-shadow: none;
   }
 
-  .caramel-skin .media-menu-popup.caramel-theme :is(.media-menu-trigger-item, .media-menu-radio-item, .media-menu-back-item) {
+  .caramel-skin
+    .media-menu-popup.caramel-theme
+    :is(.media-menu-trigger-item, .media-menu-radio-item, .media-menu-back-item) {
     text-shadow: none;
   }
 
-  .caramel-skin .media-menu-popup.caramel-theme :is(.media-menu-trigger-item, .media-menu-radio-item, .media-menu-back-item):focus-visible {
+  .caramel-skin
+    .media-menu-popup.caramel-theme
+    :is(.media-menu-trigger-item, .media-menu-radio-item, .media-menu-back-item):focus-visible {
     outline: var(--caramel-focus-ring);
     /* Inside a clipped, scrollable panel the ring sits inward. */
     outline-offset: calc(var(--caramel-focus-offset) * -1);
@@ -258,7 +272,10 @@
      parses them with parseFloat, so they must resolve to pixels (a `100%`
      reads as 100px and shrinks the tile). */
   .caramel-skin .media-time-slider .media-slider-preview {
-    --caramel-preview-card-width: min(var(--caramel-preview-width, var(--caramel-preview-natural-width, 240px)), 100cqi);
+    --caramel-preview-card-width: min(
+      var(--caramel-preview-width, var(--caramel-preview-natural-width, 240px)),
+      100cqi
+    );
     min-width: var(--caramel-preview-card-width);
   }
 
@@ -388,7 +405,9 @@
   }
 
   /* The skin also opens the timeline preview for a focus-visible slider. */
-  .media-skin.caramel-skin[data-caramel-pointer-focus] .media-slider:not([data-pointing], [data-dragging]) .media-slider-preview-content {
+  .media-skin.caramel-skin[data-caramel-pointer-focus]
+    .media-slider:not([data-pointing], [data-dragging])
+    .media-slider-preview-content {
     opacity: 0;
   }
 
@@ -493,4 +512,3 @@
     display: none;
   }
 }
-

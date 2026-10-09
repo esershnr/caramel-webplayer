@@ -89,7 +89,14 @@
   --caramel-radius-chip: 9999px;
 
   /* Typography. Host fonts win when it sets --font-heading / --font-body. */
-  --caramel-font-heading: var(--font-heading, 'Montserrat Variable', 'Montserrat', ui-sans-serif, system-ui, sans-serif);
+  --caramel-font-heading: var(
+    --font-heading,
+    'Montserrat Variable',
+    'Montserrat',
+    ui-sans-serif,
+    system-ui,
+    sans-serif
+  );
   --caramel-font-body: var(--font-body, 'Quicksand Variable', 'Quicksand', ui-sans-serif, system-ui, sans-serif);
 
   /* Motion language */

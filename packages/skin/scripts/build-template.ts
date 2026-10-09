@@ -41,21 +41,18 @@ html = html.replace('<!-- Add a compatible media component here. -->', '<!--cara
 
 // 2. Inline static icons
 const missing = new Set<string>();
-html = html.replace(
-  /<media-icon\s+name="([a-z-]+)"([^>]*)>\s*<\/media-icon>/g,
-  (match, name: string, rest: string) => {
-    const iconName = ICON_ALIASES[name] ?? name;
-    const node = getIcon(iconName);
-    if (!node) {
-      missing.add(name);
-      return match;
-    }
-    const classMatch = /class="([^"]*)"/.exec(rest);
-    const className = classMatch?.[1];
-    const extra = `caramel-icon caramel-icon-${iconName}`;
-    return iconToSvg(node, { className: className ? `${className} ${extra}` : extra });
-  },
-);
+html = html.replace(/<media-icon\s+name="([a-z-]+)"([^>]*)>\s*<\/media-icon>/g, (match, name: string, rest: string) => {
+  const iconName = ICON_ALIASES[name] ?? name;
+  const node = getIcon(iconName);
+  if (!node) {
+    missing.add(name);
+    return match;
+  }
+  const classMatch = /class="([^"]*)"/.exec(rest);
+  const className = classMatch?.[1];
+  const extra = `caramel-icon caramel-icon-${iconName}`;
+  return iconToSvg(node, { className: className ? `${className} ${extra}` : extra });
+});
 if (missing.size) {
   throw new Error(`No Lucide mapping for Video.js icons: ${[...missing].join(', ')}`);
 }

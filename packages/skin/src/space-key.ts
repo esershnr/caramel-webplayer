@@ -74,7 +74,13 @@ export function installSpaceKey(root: Document = document): () => void {
     // Holding Space must not toggle over and over.
     if (event.repeat) return;
     container.dispatchEvent(
-      new KeyboardEvent('keydown', { key: ' ', code: event.code || 'Space', bubbles: true, cancelable: true, composed: true }),
+      new KeyboardEvent('keydown', {
+        key: ' ',
+        code: event.code || 'Space',
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      }),
     );
   };
 

@@ -68,7 +68,13 @@ export function readResume(storage: ResumeStorage | null, key: string): ResumeEn
 }
 
 /** Saves when the rules allow it. Returns true when an entry was written. */
-export function saveResume(storage: ResumeStorage | null, key: string, t: number, d: number, now = Date.now()): boolean {
+export function saveResume(
+  storage: ResumeStorage | null,
+  key: string,
+  t: number,
+  d: number,
+  now = Date.now(),
+): boolean {
   if (!storage || !canSave(t, d)) return false;
   try {
     storage.set(key, JSON.stringify({ t, d, at: now } satisfies ResumeEntry));

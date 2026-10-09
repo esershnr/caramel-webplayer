@@ -19,7 +19,9 @@ describe('skin template', () => {
   });
 
   it('draws one morphing icon per on-screen indicator', () => {
-    expect(SKIN_TEMPLATE).toContain('target="media-volume-indicator" map="data-level=off:volume-off,data-level=low:volume-low,*:volume-high"');
+    expect(SKIN_TEMPLATE).toContain(
+      'target="media-volume-indicator" map="data-level=off:volume-off,data-level=low:volume-low,*:volume-high"',
+    );
     expect(SKIN_TEMPLATE).toMatch(/target="media-status-indicator" map="data-status=captions-on:captions-on,/);
     expect(SKIN_TEMPLATE).not.toMatch(/media-volume-indicator-(high|low|off)-icon/);
     expect(SKIN_TEMPLATE).not.toMatch(/media-status-indicator-(captions|fullscreen|pip)-[a-z]+-icon/);

@@ -45,7 +45,9 @@ async function main(argv: string[]): Promise<number> {
     return 0;
   } catch (err) {
     if (err instanceof MissingBinaryError) {
-      process.stderr.write(`Error: ${err.binary} was not found. Looked for "${err.lookedFor}" on PATH.\n${INSTALL_HINT}\n`);
+      process.stderr.write(
+        `Error: ${err.binary} was not found. Looked for "${err.lookedFor}" on PATH.\n${INSTALL_HINT}\n`,
+      );
       return 2;
     }
     if (err instanceof CommandError) {

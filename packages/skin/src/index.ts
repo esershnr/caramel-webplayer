@@ -40,10 +40,39 @@ export function renderSkinHtml(mediaHtml: string, uid = 'caramel-player'): strin
   const { before, after } = splitAtMedia(applyUid(SKIN_TEMPLATE, sanitizeUid(uid)));
   return before + mediaHtml + after;
 }
-export { CaramelTimeDisplayElement, readTimeDisplayMode, writeTimeDisplayMode, registerTimeDisplayI18n, TIME_DISPLAY_STORAGE_KEY, type TimeDisplayMode } from './time-display.js';
-export { installSeekMotion, isTrackClick, trackPercent, SEEK_MOTION_ATTR, SEEK_TARGET_VAR, type TrackPress } from './seek-motion.js';
+export {
+  CaramelTimeDisplayElement,
+  readTimeDisplayMode,
+  writeTimeDisplayMode,
+  registerTimeDisplayI18n,
+  TIME_DISPLAY_STORAGE_KEY,
+  type TimeDisplayMode,
+} from './time-display.js';
+export {
+  installSeekMotion,
+  isTrackClick,
+  trackPercent,
+  SEEK_MOTION_ATTR,
+  SEEK_TARGET_VAR,
+  type TrackPress,
+} from './seek-motion.js';
 export { CaramelQualityBadgeElement, qualityLabel } from './quality-badge.js';
-export { CaramelPreviewSizeElement, previewTileWidth, tileWidthFromCue, PREVIEW_NATURAL_WIDTH_VAR } from './preview-size.js';
-export { CaramelQualityRadioGroupElement, orderQualityValues, QUALITY_AUTO_VALUE, type RenditionLike } from './quality-order.js';
-export { CaramelSeekIndicatorElement, formatSeekLabel, registerSeekIndicatorI18n, type SeekDirection } from './seek-indicator.js';
+export {
+  CaramelPreviewSizeElement,
+  previewTileWidth,
+  tileWidthFromCue,
+  PREVIEW_NATURAL_WIDTH_VAR,
+} from './preview-size.js';
+export {
+  CaramelQualityRadioGroupElement,
+  orderQualityValues,
+  QUALITY_AUTO_VALUE,
+  type RenditionLike,
+} from './quality-order.js';
+export {
+  CaramelSeekIndicatorElement,
+  formatSeekLabel,
+  registerSeekIndicatorI18n,
+  type SeekDirection,
+} from './seek-indicator.js';
 export { installSpaceKey, shouldRedirectSpace, POINTER_FOCUS_ATTR, type SpaceTarget } from './space-key.js';

@@ -51,13 +51,24 @@ interface Probe extends SourceInfo {
 
 async function probeSource(ffprobe: string, input: string): Promise<Probe> {
   const { stdout } = await run(ffprobe, [
-    '-v', 'error', '-show_entries',
+    '-v',
+    'error',
+    '-show_entries',
     'format=duration:stream=codec_type,codec_name,width,height,avg_frame_rate,bit_rate',
-    '-of', 'json', input,
+    '-of',
+    'json',
+    input,
   ]);
   const data = JSON.parse(stdout) as {
     format?: { duration?: string };
-    streams?: { codec_type: string; codec_name?: string; width?: number; height?: number; avg_frame_rate?: string; bit_rate?: string }[];
+    streams?: {
+      codec_type: string;
+      codec_name?: string;
+      width?: number;
+      height?: number;
+      avg_frame_rate?: string;
+      bit_rate?: string;
+    }[];
   };
   const video = data.streams?.find((s) => s.codec_type === 'video');
   const audio = data.streams?.find((s) => s.codec_type === 'audio');
@@ -86,8 +97,20 @@ export async function measureMotion(ffmpeg: string, input: string, duration: num
   let kept = 0;
   for (const ss of offsets) {
     const { stderr } = await run(ffmpeg, [
-      '-v', 'info', '-ss', String(ss), '-t', String(sample), '-i', input,
-      '-vf', 'mpdecimate=hi=768:lo=320:frac=0.33', '-an', '-f', 'null', '-',
+      '-v',
+      'info',
+      '-ss',
+      String(ss),
+      '-t',
+      String(sample),
+      '-i',
+      input,
+      '-vf',
+      'mpdecimate=hi=768:lo=320:frac=0.33',
+      '-an',
+      '-f',
+      'null',
+      '-',
     ]);
     kept += keptFrames(stderr);
   }
@@ -102,12 +125,38 @@ export function keptFrames(stderr: string): number {
 
 function variantArgs(v: Variant, index: number, preset: string): string[] {
   return [
-    `-map`, `[v${index}]`, `-map`, `0:a:0`,
-    `-c:v:${index}`, 'libx264', `-preset:v:${index}`, preset, `-profile:v:${index}`, 'high',
-    `-crf:v:${index}`, String(v.crf), `-maxrate:v:${index}`, `${v.maxrate}k`, `-bufsize:v:${index}`, `${v.bufsize}k`,
-    `-g:v:${index}`, String(v.fps * 2), `-keyint_min:v:${index}`, String(v.fps * 2), `-sc_threshold:v:${index}`, '0',
-    `-pix_fmt:v:${index}`, 'yuv420p', `-tune:v:${index}`, 'film',
-    `-c:a:${index}`, 'aac', `-b:a:${index}`, `${v.audioBitrate}k`, `-ac:a:${index}`, '2',
+    `-map`,
+    `[v${index}]`,
+    `-map`,
+    `0:a:0`,
+    `-c:v:${index}`,
+    'libx264',
+    `-preset:v:${index}`,
+    preset,
+    `-profile:v:${index}`,
+    'high',
+    `-crf:v:${index}`,
+    String(v.crf),
+    `-maxrate:v:${index}`,
+    `${v.maxrate}k`,
+    `-bufsize:v:${index}`,
+    `${v.bufsize}k`,
+    `-g:v:${index}`,
+    String(v.fps * 2),
+    `-keyint_min:v:${index}`,
+    String(v.fps * 2),
+    `-sc_threshold:v:${index}`,
+    '0',
+    `-pix_fmt:v:${index}`,
+    'yuv420p',
+    `-tune:v:${index}`,
+    'film',
+    `-c:a:${index}`,
+    'aac',
+    `-b:a:${index}`,
+    `${v.audioBitrate}k`,
+    `-ac:a:${index}`,
+    '2',
   ];
 }
 
@@ -165,17 +214,38 @@ export async function encode(options: EncodeOptions): Promise<EncodeResult> {
       .join(';');
     const split = `[0:v]fps=${ladder.fps},split=${ladder.variants.length}${ladder.variants.map((_, i) => `[s${i}]`).join('')}`;
     const args = [
-      '-y', '-hide_banner', '-v', 'warning', '-stats', '-i', source,
-      '-filter_complex', `${split};${filters}`,
+      '-y',
+      '-hide_banner',
+      '-v',
+      'warning',
+      '-stats',
+      '-i',
+      source,
+      '-filter_complex',
+      `${split};${filters}`,
       ...ladder.variants.flatMap((v, i) => variantArgs(v, i, options.preset ?? 'medium')),
-      '-var_stream_map', ladder.variants.map((v, i) => `v:${i},a:${i},name:${v.name}`).join(' '),
-      '-f', 'hls', '-hls_time', '6', '-hls_playlist_type', 'vod', '-hls_segment_type', 'fmp4',
-      '-hls_flags', 'single_file+independent_segments', '-master_pl_name', 'master.m3u8',
-      '-hls_segment_filename', path.join(outDir, '%v', 'stream.m4s'),
+      '-var_stream_map',
+      ladder.variants.map((v, i) => `v:${i},a:${i},name:${v.name}`).join(' '),
+      '-f',
+      'hls',
+      '-hls_time',
+      '6',
+      '-hls_playlist_type',
+      'vod',
+      '-hls_segment_type',
+      'fmp4',
+      '-hls_flags',
+      'single_file+independent_segments',
+      '-master_pl_name',
+      'master.m3u8',
+      '-hls_segment_filename',
+      path.join(outDir, '%v', 'stream.m4s'),
       path.join(outDir, '%v', 'stream.m3u8'),
     ];
     for (const v of ladder.variants) mkdirSync(path.join(outDir, v.name), { recursive: true });
-    log(`Encoding ${ladder.variants.map((v) => `${v.name}@${v.maxrate}k`).join(' + ')} at ${ladder.fps} fps (this takes a while)`);
+    log(
+      `Encoding ${ladder.variants.map((v) => `${v.name}@${v.maxrate}k`).join(' + ')} at ${ladder.fps} fps (this takes a while)`,
+    );
     await run(ffmpeg, args);
     // On Windows ffmpeg writes the `%v` folder with a backslash into the master playlist.
     const master = path.join(outDir, 'master.m3u8');
@@ -186,7 +256,22 @@ export async function encode(options: EncodeOptions): Promise<EncodeResult> {
   // Poster ------------------------------------------------------------------
   const posterAt = meta.poster ?? Math.min(duration / 10, 30);
   log(`Poster at ${posterAt.toFixed(1)} s`);
-  await run(ffmpeg, ['-y', '-v', 'error', '-ss', String(posterAt), '-i', source, '-frames:v', '1', '-q:v', '3', '-vf', 'scale=1920:-2', path.join(outDir, 'poster.jpg')]);
+  await run(ffmpeg, [
+    '-y',
+    '-v',
+    'error',
+    '-ss',
+    String(posterAt),
+    '-i',
+    source,
+    '-frames:v',
+    '1',
+    '-q:v',
+    '3',
+    '-vf',
+    'scale=1920:-2',
+    path.join(outDir, 'poster.jpg'),
+  ]);
   files.push('poster.jpg');
 
   // Thumbnails --------------------------------------------------------------

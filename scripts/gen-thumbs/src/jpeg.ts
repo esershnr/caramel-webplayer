@@ -23,8 +23,7 @@ export function readJpegSize(data: Uint8Array): { width: number; height: number 
     const lo = data[offset + 3];
     if (hi === undefined || lo === undefined) break;
     const length = (hi << 8) | lo;
-    const isSof =
-      marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc;
+    const isSof = marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc;
     if (isSof) {
       const h1 = data[offset + 5];
       const h2 = data[offset + 6];

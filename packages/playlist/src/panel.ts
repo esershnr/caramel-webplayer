@@ -214,15 +214,12 @@ export class CaramelPlaylistPanelElement extends Base {
     list.setAttribute('aria-labelledby', heading.id);
     // Own-child listeners live with the element: no abort signal (reconnect safe).
     list.addEventListener('keydown', (event) => this.#onListKeydown(event));
-    list.addEventListener(
-      'click',
-      (event) => {
-        const button = (event.target as Element | null)?.closest<HTMLButtonElement>('.caramel-playlist-item');
-        if (!button || !this.#listEl?.contains(button)) return;
-        const index = Number(button.dataset['index']);
-        if (Number.isInteger(index)) this.#controller?.select(index);
-      },
-    );
+    list.addEventListener('click', (event) => {
+      const button = (event.target as Element | null)?.closest<HTMLButtonElement>('.caramel-playlist-item');
+      if (!button || !this.#listEl?.contains(button)) return;
+      const index = Number(button.dataset['index']);
+      if (Number.isInteger(index)) this.#controller?.select(index);
+    });
     const empty = document.createElement('p');
     empty.className = 'caramel-playlist-empty';
     empty.hidden = true;

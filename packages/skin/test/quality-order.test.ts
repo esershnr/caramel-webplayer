@@ -10,8 +10,19 @@ const r = (id: string, height?: number, bitrate?: number, width?: number) => ({
 
 describe('orderQualityValues', () => {
   it('puts Auto first and sorts by resolution, highest first', () => {
-    const renditions = [r('540', 540, 550_000), r('1080', 1080, 1_600_000), r('360', 360, 300_000), r('720', 720, 900_000)];
-    expect(orderQualityValues(['auto', '540', '1080', '360', '720'], renditions)).toEqual(['auto', '1080', '720', '540', '360']);
+    const renditions = [
+      r('540', 540, 550_000),
+      r('1080', 1080, 1_600_000),
+      r('360', 360, 300_000),
+      r('720', 720, 900_000),
+    ];
+    expect(orderQualityValues(['auto', '540', '1080', '360', '720'], renditions)).toEqual([
+      'auto',
+      '1080',
+      '720',
+      '540',
+      '360',
+    ]);
   });
 
   it('keeps Auto on top even when the manifest lists it last', () => {
@@ -32,7 +43,13 @@ describe('orderQualityValues', () => {
   });
 
   it('puts renditions without a size last, by bitrate, and keeps full ties stable', () => {
-    const renditions = [r('nosize-low', undefined, 100), r('sized', 360, 1), r('nosize-high', undefined, 900), r('twin-a', 720, 5), r('twin-b', 720, 5)];
+    const renditions = [
+      r('nosize-low', undefined, 100),
+      r('sized', 360, 1),
+      r('nosize-high', undefined, 900),
+      r('twin-a', 720, 5),
+      r('twin-b', 720, 5),
+    ];
     expect(orderQualityValues(['nosize-low', 'sized', 'auto', 'nosize-high', 'twin-a', 'twin-b'], renditions)).toEqual([
       'auto',
       'twin-a',

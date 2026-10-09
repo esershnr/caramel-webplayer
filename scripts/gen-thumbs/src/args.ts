@@ -47,12 +47,7 @@ Options:
   -h, --help           Show this help
 `;
 
-function num(
-  name: string,
-  raw: string | undefined,
-  fallback: number,
-  check: (n: number) => boolean,
-): number {
+function num(name: string, raw: string | undefined, fallback: number, check: (n: number) => boolean): number {
   if (raw === undefined) return fallback;
   const n = Number(raw);
   if (!Number.isFinite(n) || !check(n)) {

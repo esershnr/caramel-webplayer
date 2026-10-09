@@ -32,7 +32,10 @@ export interface RunResult {
 const TAIL_LINES = 20;
 
 export function tail(text: string, lines = TAIL_LINES): string {
-  const all = text.replace(/\r/g, '\n').split('\n').filter((l) => l.trim() !== '');
+  const all = text
+    .replace(/\r/g, '\n')
+    .split('\n')
+    .filter((l) => l.trim() !== '');
   return all.slice(-lines).join('\n');
 }
 
@@ -69,15 +72,7 @@ export function ffprobeFor(ffmpeg: string): string {
 /** Media duration in seconds via ffprobe, or undefined when ffprobe is unavailable or silent. */
 export async function probeDuration(ffprobe: string, input: string): Promise<number | undefined> {
   try {
-    const { stdout } = await run(ffprobe, [
-      '-v',
-      'error',
-      '-show_entries',
-      'format=duration',
-      '-of',
-      'json',
-      input,
-    ]);
+    const { stdout } = await run(ffprobe, ['-v', 'error', '-show_entries', 'format=duration', '-of', 'json', input]);
     const parsed = JSON.parse(stdout) as { format?: { duration?: string } };
     const value = Number(parsed.format?.duration);
     return Number.isFinite(value) && value > 0 ? value : undefined;

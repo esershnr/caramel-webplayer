@@ -65,7 +65,6 @@ function toBoolean(value: unknown): boolean {
   return value === '' || value === true || value === 'true';
 }
 
-
 function noop(): void {}
 
 /**
@@ -526,7 +525,12 @@ export class CaramelPlaylistElement extends Base {
       return;
     }
 
-    if (tag === 'hls-video' && typeof customElements !== 'undefined' && !customElements.get('hls-video') && !warnedHls) {
+    if (
+      tag === 'hls-video' &&
+      typeof customElements !== 'undefined' &&
+      !customElements.get('hls-video') &&
+      !warnedHls
+    ) {
       warnedHls = true;
       console.warn("<caramel-playlist>: <hls-video> is not registered. Add `import '@videojs/html/media/hls-video'`.");
     }

@@ -86,7 +86,12 @@ describe('nextIndex', () => {
 describe('cuesEqual', () => {
   it('is true for the same reference and for equal contents', () => {
     expect(cuesEqual(CUES, CUES)).toBe(true);
-    expect(cuesEqual(CUES, CUES.map((c) => ({ ...c })))).toBe(true);
+    expect(
+      cuesEqual(
+        CUES,
+        CUES.map((c) => ({ ...c })),
+      ),
+    ).toBe(true);
     expect(cuesEqual([], [])).toBe(true);
   });
 

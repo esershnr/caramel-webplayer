@@ -56,9 +56,7 @@ export async function generateThumbnails(options: GenerateOptions): Promise<Gene
     log(`Extracting frames every ${interval}s at ${width}px`);
     await extractFrames({ ffmpeg, input: options.input, interval, width, quality, dir: tmp });
 
-    const files = (await readdir(tmp))
-      .filter((f) => FRAME_RE.test(f))
-      .sort((a, b) => a.localeCompare(b));
+    const files = (await readdir(tmp)).filter((f) => FRAME_RE.test(f)).sort((a, b) => a.localeCompare(b));
     const first = files[0];
     if (!first) throw new Error('ffmpeg produced no frames. Is the input a video?');
     const { width: frameWidth, height: frameHeight } = readJpegSize(await readFile(path.join(tmp, first)));

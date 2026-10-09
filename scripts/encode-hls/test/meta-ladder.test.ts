@@ -80,7 +80,14 @@ describe('buildLadder', () => {
     const ladder = buildLadder({ ...screen, motion: 0.2 });
     expect(ladder.fps).toBe(30);
     expect(ladder.variants.map((v) => v.name)).toEqual(['1080p', '540p']);
-    expect(ladder.variants[0]).toMatchObject({ width: 1920, height: 1080, crf: 22, maxrate: 1600, bufsize: 3200, audioBitrate: 128 });
+    expect(ladder.variants[0]).toMatchObject({
+      width: 1920,
+      height: 1080,
+      crf: 22,
+      maxrate: 1600,
+      bufsize: 3200,
+      audioBitrate: 128,
+    });
     expect(ladder.variants[1]).toMatchObject({ width: 960, height: 540, maxrate: 550 });
     expect(ladder.reasons.join(' ')).toMatch(/20% of frames change/);
   });
@@ -114,9 +121,18 @@ describe('keptFrames', () => {
 
 describe('fixPlaylistPaths', () => {
   it('turns backslashes in URI lines into slashes and leaves tags alone', () => {
-    const input = ['#EXTM3U', '#EXT-X-STREAM-INF:BANDWIDTH=1,CODECS="a\\b"', '1080p\\stream.m3u8', '', '540p\\stream.m3u8', ''].join('\n');
+    const input = [
+      '#EXTM3U',
+      '#EXT-X-STREAM-INF:BANDWIDTH=1,CODECS="a\\b"',
+      '1080p\\stream.m3u8',
+      '',
+      '540p\\stream.m3u8',
+      '',
+    ].join('\n');
     expect(fixPlaylistPaths(input)).toBe(
-      ['#EXTM3U', '#EXT-X-STREAM-INF:BANDWIDTH=1,CODECS="a\\b"', '1080p/stream.m3u8', '', '540p/stream.m3u8', ''].join('\n'),
+      ['#EXTM3U', '#EXT-X-STREAM-INF:BANDWIDTH=1,CODECS="a\\b"', '1080p/stream.m3u8', '', '540p/stream.m3u8', ''].join(
+        '\n',
+      ),
     );
   });
 });

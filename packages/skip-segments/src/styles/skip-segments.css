@@ -133,11 +133,7 @@ media-time-slider[data-dragging] .caramel-segment-layer[data-played] {
 /* Auto-skipped types: static diagonal stripes (no motion, so nothing to
    reduce). Manually skipped types stay a flat color. */
 .caramel-segment-marker[data-auto] {
-  background-image: repeating-linear-gradient(
-    -45deg,
-    var(--caramel-segment-hatch) 0 2px,
-    transparent 2px 4px
-  );
+  background-image: repeating-linear-gradient(-45deg, var(--caramel-segment-hatch) 0 2px, transparent 2px 4px);
 }
 
 .caramel-segment-marker[data-active] {

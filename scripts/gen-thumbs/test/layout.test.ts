@@ -1,12 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  buildLayout,
-  cellRect,
-  derivedHeight,
-  frameCount,
-  rowsFor,
-  splitSprites,
-} from '../src/layout.js';
+import { buildLayout, cellRect, derivedHeight, frameCount, rowsFor, splitSprites } from '../src/layout.js';
 
 describe('frameCount', () => {
   it('counts one frame per interval start before the end', () => {
@@ -78,9 +71,7 @@ describe('buildLayout', () => {
       frameHeight: 136,
     });
     expect(layout.frames).toHaveLength(7);
-    expect(layout.sprites).toEqual([
-      { index: 0, start: 0, count: 7, rows: 2, width: 960, height: 272 },
-    ]);
+    expect(layout.sprites).toEqual([{ index: 0, start: 0, count: 7, rows: 2, width: 960, height: 272 }]);
     expect(layout.frames[4]).toEqual({
       index: 4,
       sprite: 0,

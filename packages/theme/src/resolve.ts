@@ -43,8 +43,7 @@ export function readThemeSignals(element: Element | null | undefined): ThemeSign
   const root = document.documentElement;
   const owner = element?.closest<HTMLElement>('[data-theme]');
   const local = owner && owner !== root ? owner.dataset['theme'] : null;
-  const prefersDark =
-    typeof matchMedia === 'function' ? matchMedia('(prefers-color-scheme: dark)').matches : false;
+  const prefersDark = typeof matchMedia === 'function' ? matchMedia('(prefers-color-scheme: dark)').matches : false;
   return {
     dataTheme: local,
     rootDataTheme: root.dataset['theme'],

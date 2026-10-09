@@ -62,16 +62,12 @@ export function Playlist({
     if (!el) return;
     const controller = new AbortController();
     const { signal } = controller;
-    el.addEventListener(
-      'caramel-playlist-change',
-      (e) => onChange?.((e as CustomEvent<PlaylistChangeDetail>).detail),
-      { signal },
-    );
-    el.addEventListener(
-      'caramel-playlist-ended',
-      (e) => onEnded?.((e as CustomEvent<PlaylistEndedDetail>).detail),
-      { signal },
-    );
+    el.addEventListener('caramel-playlist-change', (e) => onChange?.((e as CustomEvent<PlaylistChangeDetail>).detail), {
+      signal,
+    });
+    el.addEventListener('caramel-playlist-ended', (e) => onEnded?.((e as CustomEvent<PlaylistEndedDetail>).detail), {
+      signal,
+    });
     return () => controller.abort();
   }, [onChange, onEnded]);
 

@@ -25,7 +25,16 @@ export interface CaramelVideoSkinProps {
  * App Router. Renders custom elements; registration happens in the browser
  * only so server rendering and hydration stay clean.
  */
-export function CaramelVideoSkin({ children, id, title, poster, lang, className, style, extras }: CaramelVideoSkinProps) {
+export function CaramelVideoSkin({
+  children,
+  id,
+  title,
+  poster,
+  lang,
+  className,
+  style,
+  extras,
+}: CaramelVideoSkinProps) {
   const uid = sanitizeUid(useId());
   // The media mounts only after the player and skin elements are registered.
   // Otherwise the media element connects before <video-player> upgrades and

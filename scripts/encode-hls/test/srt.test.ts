@@ -3,7 +3,8 @@ import { parseSrt, srtToVtt } from '../src/srt.js';
 import { formatVttTime, parseTime } from '../src/time.js';
 import { chaptersToVtt } from '../src/chapters.js';
 
-const SRT = '﻿1\r\n00:00:04,899 --> 00:00:06,933\r\nSelamlar. Bu videoda size tek\r\n\r\n2\r\n00:00:06,933 --> 00:00:08,733 X1:10\r\nbir USB bellekle\r\nçevrimdışı\r\n\r\n3\r\n00:01:00,000 --> 00:01:01,000\r\n\r\n\r\n4\r\n00:01:02,5 --> 00:01:03,50\r\na --> b\r\n';
+const SRT =
+  '﻿1\r\n00:00:04,899 --> 00:00:06,933\r\nSelamlar. Bu videoda size tek\r\n\r\n2\r\n00:00:06,933 --> 00:00:08,733 X1:10\r\nbir USB bellekle\r\nçevrimdışı\r\n\r\n3\r\n00:01:00,000 --> 00:01:01,000\r\n\r\n\r\n4\r\n00:01:02,5 --> 00:01:03,50\r\na --> b\r\n';
 
 describe('srtToVtt', () => {
   it('strips the BOM, normalizes line endings and converts commas', () => {

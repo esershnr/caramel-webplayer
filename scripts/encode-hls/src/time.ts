@@ -7,7 +7,8 @@ export function parseTime(value: unknown, label = 'time'): number {
     if (!Number.isFinite(value) || value < 0) throw new Error(`${label}: ${value} is not a valid time`);
     return value;
   }
-  if (typeof value !== 'string') throw new Error(`${label}: expected "m:ss", "h:mm:ss" or seconds, got ${typeof value}`);
+  if (typeof value !== 'string')
+    throw new Error(`${label}: expected "m:ss", "h:mm:ss" or seconds, got ${typeof value}`);
   const text = value.trim();
   const match = /^(?:(\d+):)?(?:(\d{1,2}):)?(\d{1,2}(?:[.,]\d+)?)$/.exec(text);
   if (!match) throw new Error(`${label}: "${value}" is not a valid time (use "m:ss", "h:mm:ss" or seconds)`);
@@ -22,7 +23,8 @@ export function parseTime(value: unknown, label = 'time'): number {
     minutes = Number(a);
   }
   if (minutes >= 60 && hours > 0) throw new Error(`${label}: "${value}" has minutes above 59`);
-  if (seconds >= 60 && (a !== undefined || b !== undefined)) throw new Error(`${label}: "${value}" has seconds above 59`);
+  if (seconds >= 60 && (a !== undefined || b !== undefined))
+    throw new Error(`${label}: "${value}" has seconds above 59`);
   return hours * 3600 + minutes * 60 + seconds;
 }
 
