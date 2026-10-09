@@ -39,6 +39,10 @@ Reference: `packages/skip-segments/src/element.ts`.
   `selectTextTrack` (`chaptersCues: { startTime, endTime, text }[]`, `textTrackList`,
   `selectSubtitlesTrack()`), `selectMetadata` (`title`, `poster`). A selector returns
   `undefined` until the element sits inside a `<video-player>`; guard every read.
+  Context requests go out once, on connect. If your element can be registered before
+  `<video-player>`, wait for the undefined ancestor with `whenDefined` and reconnect the
+  controllers (`packages/skip-segments/src/element.ts`, `#awaitProvider`). Only await tags
+  that are not defined yet: a resolved `whenDefined` that re-arms itself spins a microtask loop.
 - Do all DOM work in `update(changed: PropertyValues)` after `super.update(changed)`
   (`element.ts:126`). Call `this.requestUpdate()` after changing your own inputs.
 - Listeners go through one `AbortController` created in `connectedCallback` and aborted in

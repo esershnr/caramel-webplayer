@@ -83,6 +83,7 @@
   "devDependencies": {
     "@types/react": "^19.1.0",
     "@videojs/html": "10.0.1",
+    "happy-dom": "^20.14.5",
     "react": "^19.2.0",
     "typescript": "^5.9.0",
     "vitest": "^5.0.3"

@@ -68,6 +68,8 @@ export class CaramelSkipSegmentsElement extends Base {
   #lastSrc: string | null = null;
   #lastDuration = 0;
   #disconnect: AbortController | null = null;
+  /** Tag of the undefined ancestor we wait for, so one connect waits once. */
+  #waitingFor: string | null = null;
 
   /** Segment list. Setting it re-normalizes against the current duration. */
   get segments(): readonly Segment[] {
@@ -108,6 +110,32 @@ export class CaramelSkipSegmentsElement extends Base {
     this.#readAttributes();
     this.#upgradeProperty('segments');
     this.#upgradeProperty('autoSkip');
+    this.#awaitProvider();
+  }
+
+  /**
+   * The player answers context requests only once it is defined. When this
+   * element registers first, its controllers ask an un-upgraded
+   * `<video-player>`, nobody answers and they never ask again. Wait for the
+   * nearest undefined ancestor, then ask again. Only undefined tags are
+   * awaited: a resolved `whenDefined` that re-armed itself would spin a
+   * microtask loop.
+   */
+  #awaitProvider(): void {
+    if (this.#waitingFor || typeof customElements === 'undefined') return;
+    const tag = undefinedAncestorTag(this);
+    if (!tag) return;
+    this.#waitingFor = tag;
+    void customElements.whenDefined(tag).then(() => {
+      this.#waitingFor = null;
+      if (!this.isConnected) return;
+      if (!this.#time.value) {
+        // Controllers dispatch their context requests on connect.
+        super.disconnectedCallback();
+        super.connectedCallback();
+      }
+      this.#awaitProvider();
+    });
   }
 
   /**
@@ -347,6 +375,15 @@ export class CaramelSkipSegmentsElement extends Base {
   #emit(type: string, detail: unknown): void {
     this.dispatchEvent(new CustomEvent(type, { detail, bubbles: true, composed: true }));
   }
+}
+
+/** Local name of the closest ancestor that is a custom element not defined yet. */
+function undefinedAncestorTag(element: Element): string | null {
+  for (let node = element.parentElement; node; node = node.parentElement) {
+    const tag = node.localName;
+    if (tag.includes('-') && !customElements.get(tag)) return tag;
+  }
+  return null;
 }
 
 declare global {
