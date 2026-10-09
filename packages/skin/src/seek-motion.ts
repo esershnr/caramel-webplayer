@@ -9,6 +9,8 @@
  */
 export const SEEK_MOTION_ATTR = 'data-esp-seek';
 const WINDOW_MS = 600;
+/** A seek that starts this soon after a key press inside a player is a jump. */
+const KEY_WINDOW_MS = 400;
 
 let installed = false;
 
@@ -16,6 +18,12 @@ export function installSeekMotion(root: Document = document): () => void {
   if (installed || typeof MutationObserver === 'undefined') return () => {};
   installed = true;
   const timers = new WeakMap<Element, ReturnType<typeof setTimeout>>();
+  // Keyboard seeks (arrows, 0-9, Home / End) jump without animation.
+  let lastKey = -Infinity;
+  const onKey = (event: KeyboardEvent) => {
+    if (event.target instanceof Element && event.target.closest('video-player')) lastKey = performance.now();
+  };
+  root.addEventListener('keydown', onKey, true);
 
   const flag = (slider: Element) => {
     slider.setAttribute(SEEK_MOTION_ATTR, '');
@@ -34,13 +42,16 @@ export function installSeekMotion(root: Document = document): () => void {
     for (const record of records) {
       const target = record.target;
       if (!(target instanceof Element) || target.localName !== 'media-time-slider') continue;
-      if (target.hasAttribute('data-seeking')) flag(target);
+      if (!target.hasAttribute('data-seeking')) continue;
+      if (performance.now() - lastKey < KEY_WINDOW_MS) continue;
+      flag(target);
     }
   });
   observer.observe(root, { subtree: true, attributes: true, attributeFilter: ['data-seeking'] });
 
   return () => {
     observer.disconnect();
+    root.removeEventListener('keydown', onKey, true);
     installed = false;
   };
 }

@@ -11,12 +11,14 @@ import { EspTimeDisplayElement } from './time-display.js';
 import { EspQualityBadgeElement } from './quality-badge.js';
 import { EspPreviewSizeElement } from './preview-size.js';
 import { EspQualityRadioGroupElement } from './quality-order.js';
+import { EspSeekIndicatorElement } from './seek-indicator.js';
 
 if (typeof document !== 'undefined') {
   installSeekMotion();
   for (const Element of [EspTimeDisplayElement, EspQualityBadgeElement, EspPreviewSizeElement]) {
     if (!customElements.get(Element.tagName)) customElements.define(Element.tagName, Element);
   }
-  const quality = EspQualityRadioGroupElement.espTagName;
-  if (!customElements.get(quality)) customElements.define(quality, EspQualityRadioGroupElement);
+  for (const Element of [EspQualityRadioGroupElement, EspSeekIndicatorElement]) {
+    if (!customElements.get(Element.espTagName)) customElements.define(Element.espTagName, Element);
+  }
 }
