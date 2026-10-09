@@ -25,6 +25,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
     "playwright": "1.64.0",
     "typescript": "^5.9.0",
     "vitest": "^5.0.3"
