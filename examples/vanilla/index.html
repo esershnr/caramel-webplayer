@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>esersahiner player, vanilla demo</title>
+    <link rel="stylesheet" href="/src/demo.css" />
+  </head>
+  <body class="esp-theme">
+    <header class="demo-header">
+      <h1 class="esp-heading">Player demo (HTML)</h1>
+      <div class="demo-theme" role="group" aria-label="Tema">
+        <button type="button" data-theme-choice="light">Açık</button>
+        <button type="button" data-theme-choice="dark">Koyu</button>
+        <button type="button" data-theme-choice="system" aria-pressed="true">Sistem</button>
+        <span class="demo-resolved esp-tabular" id="resolved-theme"></span>
+      </div>
+      <div class="demo-theme" role="group" aria-label="Dil">
+        <button type="button" data-lang="tr" aria-pressed="true">TR</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+    </header>
+
+    <main class="demo-main">
+      <media-i18n id="i18n" lang="tr">
+        <video-player id="player" class="demo-player"></video-player>
+      </media-i18n>
+
+      <aside class="demo-panel">
+        <h2 class="esp-heading">Segmentler</h2>
+        <p class="demo-muted">Zaman çizelgesindeki renkli bantlar. Özet otomatik atlanır.</p>
+        <ul id="segment-list" class="demo-list"></ul>
+        <h2 class="esp-heading">Olaylar</h2>
+        <ol id="event-log" class="demo-list demo-log esp-tabular"></ol>
+      </aside>
+    </main>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

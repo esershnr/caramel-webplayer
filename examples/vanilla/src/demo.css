@@ -1,0 +1,147 @@
+/* Demo page chrome. Everything here uses the --esp-* tokens only. */
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--esp-bg);
+  color: var(--esp-text);
+  font-family: var(--esp-font-body);
+  transition: background-color var(--esp-duration-fill) var(--esp-ease-fill);
+}
+
+.demo-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--esp-divider);
+}
+
+.demo-header h1 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.demo-theme {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: var(--esp-surface);
+  border-radius: var(--esp-radius-chip);
+}
+
+.demo-theme button {
+  font: inherit;
+  font-weight: 600;
+  padding: 0.35rem 0.85rem;
+  border: 0;
+  border-radius: var(--esp-radius-chip);
+  background: transparent;
+  color: var(--esp-muted);
+  cursor: pointer;
+}
+
+.demo-theme button:hover {
+  background: var(--esp-raised-hover);
+  color: var(--esp-text);
+}
+
+.demo-theme button[aria-pressed='true'] {
+  background: var(--esp-solid);
+  color: var(--esp-solid-contrast);
+}
+
+.demo-theme button:focus-visible {
+  outline: var(--esp-focus-ring);
+  outline-offset: var(--esp-focus-offset);
+}
+
+.demo-resolved {
+  align-self: center;
+  padding-inline: 0.5rem;
+  color: var(--esp-muted);
+  font-size: 0.85rem;
+}
+
+.demo-main {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr);
+  gap: 1.5rem;
+  padding: 1.5rem;
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+@media (width < 56rem) {
+  .demo-main {
+    grid-template-columns: 1fr;
+  }
+}
+
+.demo-player {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.demo-panel {
+  background: var(--esp-surface);
+  border-radius: var(--esp-radius-panel);
+  padding: 1.25rem;
+  align-self: start;
+}
+
+.demo-panel h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.demo-panel h2 + h2,
+.demo-list + h2 {
+  margin-top: 1.25rem;
+}
+
+.demo-muted {
+  margin: 0 0 0.75rem;
+  color: var(--esp-muted);
+  font-size: 0.9rem;
+}
+
+.demo-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.demo-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--esp-raised);
+  border-radius: var(--esp-radius-box);
+  font-size: 0.9rem;
+}
+
+.demo-list li[data-active] {
+  outline: 2px solid var(--esp-primary);
+  outline-offset: -2px;
+}
+
+.demo-list .type {
+  color: var(--esp-accent-text);
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.demo-log {
+  max-height: 14rem;
+  overflow: auto;
+  font-size: 0.8rem;
+}
+
+.demo-log li {
+  color: var(--esp-muted);
+}

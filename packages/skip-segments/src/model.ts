@@ -50,6 +50,7 @@ export class SkipModel {
   #segments: Segment[] = [];
   #options: ResolvedOptions;
   #activeIndex = -1;
+  #lastTime: number | null = null;
   #autoSkipped = new Set<number>();
   #dismissed = new Set<number>();
 
@@ -81,21 +82,29 @@ export class SkipModel {
     };
   }
 
-  /** Replaces the segment list and forgets all per-segment state. */
+  /**
+   * Replaces the segment list and forgets per-segment state. The active
+   * segment is re-derived from the last known time so a list refresh (for
+   * example once the duration is known) does not report a second entry.
+   */
   setSegments(input: unknown, duration?: number): void {
     this.#segments = normalizeSegments(input, duration);
-    this.reset();
+    this.#autoSkipped.clear();
+    this.#dismissed.clear();
+    this.#activeIndex = this.#lastTime === null ? -1 : findActiveIndex(this.#segments, this.#lastTime);
   }
 
   /** Forgets active, auto-skipped and dismissed state (new source, for example). */
   reset(): void {
     this.#activeIndex = -1;
+    this.#lastTime = null;
     this.#autoSkipped.clear();
     this.#dismissed.clear();
   }
 
   update(tick: SkipTick): SkipResult {
     const { time, duration } = tick;
+    this.#lastTime = time;
     const previous = this.#activeIndex;
     const index = findActiveIndex(this.#segments, time);
     this.#activeIndex = index;

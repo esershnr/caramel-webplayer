@@ -62,7 +62,7 @@ export class EspSkipSegmentsElement extends Base {
   #label: HTMLSpanElement | null = null;
   #markers: HTMLDivElement | null = null;
   #markerDuration = 0;
-  #lastSrc = '';
+  #lastSrc: string | null = null;
   #lastDuration = 0;
   #disconnect: AbortController | null = null;
 
@@ -130,8 +130,9 @@ export class EspSkipSegmentsElement extends Base {
 
     const src = this.#source.value?.currentSrc ?? '';
     if (src !== this.#lastSrc) {
+      // Going from "no source yet" to the first source is not a source change.
+      if (this.#lastSrc) this.#model.reset();
       this.#lastSrc = src;
-      this.#model.reset();
     }
 
     if (time.duration !== this.#lastDuration) {

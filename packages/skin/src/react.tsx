@@ -38,7 +38,7 @@ export function EspVideoSkin({ children, title, poster, lang, className, style, 
   const containerClass = [attrs['class'], className].filter(Boolean).join(' ');
 
   const player = (
-    <video-player title={title} poster={poster} style={style}>
+    <video-player content-title={title} poster={poster} style={style}>
       <media-container class={containerClass} data-theme={attrs['data-theme']} data-preset={attrs['data-preset']}>
         {children}
         <div style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: inner }} />
@@ -56,7 +56,7 @@ declare module 'react' {
     interface IntrinsicElements {
       'video-player': {
         children?: import('react').ReactNode;
-        title?: string | undefined;
+        'content-title'?: string | undefined;
         poster?: string | undefined;
         style?: import('react').CSSProperties | undefined;
         class?: string | undefined;
