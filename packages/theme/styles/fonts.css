@@ -1,5 +1,12 @@
 /*
- * Optional webfont loading. Import only when the host page does not already
- * provide Montserrat and Quicksand (for example through next/font).
+ * Optional self-hosted webfonts (no request leaves the site). Import only when
+ * the host page does not already provide Montserrat and Quicksand (for example
+ * through next/font, which sets --font-heading / --font-body).
+ *
+ * The variable packages declare every subset with unicode-range, so the browser
+ * downloads latin and latin-ext (Turkish characters) only when the text needs
+ * them. Family names are "Montserrat Variable" and "Quicksand Variable"; the
+ * tokens list them first.
  */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Quicksand:wght@400..700&display=swap');
+@import '@fontsource-variable/montserrat/wght.css';
+@import '@fontsource-variable/quicksand/wght.css';

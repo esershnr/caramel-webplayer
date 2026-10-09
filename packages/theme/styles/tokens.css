@@ -65,8 +65,8 @@
   --esp-radius-chip: 9999px;
 
   /* Typography. Host fonts win when it sets --font-heading / --font-body. */
-  --esp-font-heading: var(--font-heading, 'Montserrat', ui-sans-serif, system-ui, sans-serif);
-  --esp-font-body: var(--font-body, 'Quicksand', ui-sans-serif, system-ui, sans-serif);
+  --esp-font-heading: var(--font-heading, 'Montserrat Variable', 'Montserrat', ui-sans-serif, system-ui, sans-serif);
+  --esp-font-body: var(--font-body, 'Quicksand Variable', 'Quicksand', ui-sans-serif, system-ui, sans-serif);
 
   /* Motion language */
   --esp-ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
