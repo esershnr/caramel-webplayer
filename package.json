@@ -20,11 +20,13 @@
     "lint": "biome lint .",
     "format": "biome format --write .",
     "format:check": "biome format .",
+    "changeset": "changeset",
     "dev:vanilla": "pnpm --filter @esershnr/caramel-example-vanilla dev",
     "dev:react": "pnpm --filter @esershnr/caramel-example-react dev"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
+    "@changesets/cli": "^3.0.3",
     "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.2.3",
     "playwright": "1.64.0",
