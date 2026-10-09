@@ -236,9 +236,15 @@
 
      Width: --esp-preview-width when the host sets it, otherwise the sprite
      tile's own width (<esp-preview-size> reads it from the VTT #xywh), otherwise
-     240px; never wider than the player. The thumbnail fills the card and the
-     label row matches it. The width is set on <media-slider-preview> too, so
+     240px; never wider than the player. The thumbnail fills the card; the
+     label row is at most as wide (long titles end in an ellipsis) but its
+     pill hugs the text. The width is set on <media-slider-preview> too, so
      Video.js clamps the card at the timeline edges with its real size.
+
+     The card itself has no surface: no backdrop, shadow or dimming gradient
+     behind the thumbnail and the label. The thumbnail shows with its own
+     rounded corners, the label keeps its own small pill for legibility on
+     bright frames.
 
      Video.js scales the thumbnail to its computed max-width / max-height and
      parses them with parseFloat, so they must resolve to pixels (a `100%`
@@ -254,6 +260,7 @@
     --media-surface-border: var(--esp-divider);
     --media-shadow-surface-inset: 0 0 #0000;
     --media-backdrop-filter-surface: none;
+    --media-shadow-surface: 0 0 #0000;
     bottom: calc(100% + var(--media-slider-preview-offset));
     left: 50%;
     display: flex;
@@ -263,6 +270,8 @@
     width: var(--esp-preview-card-width);
     max-width: none;
     pointer-events: none;
+    background: none;
+    box-shadow: none;
     text-shadow: none;
     font-family: var(--esp-font-body);
   }
@@ -279,7 +288,15 @@
     min-height: 0;
     max-width: var(--esp-preview-card-width);
     max-height: none;
-    background-color: var(--esp-surface);
+    border-radius: var(--esp-radius-box);
+    background: none;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+
+  /* The skin darkens the thumbnail with a gradient and an inset ring here. */
+  .esp-skin .esp-preview-card .media-slider-thumbnail::after {
+    content: none;
   }
 
   .esp-skin .esp-preview-card .media-slider-thumbnail[data-loading] {
@@ -294,9 +311,10 @@
     display: flex;
     align-items: baseline;
     justify-content: center;
+    align-self: center;
     gap: 0.45em;
     box-sizing: border-box;
-    width: 100%;
+    max-width: 100%;
     min-width: 0;
     padding: calc(var(--media-spacing) * 1) calc(var(--media-spacing) * 2.5);
     border-radius: var(--esp-radius-chip);
