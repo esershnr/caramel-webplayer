@@ -5,15 +5,24 @@ eklerken yapılacaklar.
 
 ## 1. Paketler
 
-Monorepo yayınlanana kadar `file:` ya da `workspace:` bağlantısıyla:
+npm'den 0.1.0 sürümleri:
 
-```
-@esersahiner/player-theme  @esersahiner/player-skin  @esersahiner/player-skip-segments
-@esersahiner/player-chapters  @esersahiner/player-playlist  @videojs/html
+```sh
+npm install @esersahiner/player-theme@0.1.0 @esersahiner/player-skin@0.1.0 \
+  @esersahiner/player-skip-segments@0.1.0 @esersahiner/player-chapters@0.1.0 \
+  @esersahiner/player-playlist@0.1.0 @videojs/html@10.0.1
 ```
 
-`pnpm build` çıktıları (`dist/`) kullanılır; paketler `development` koşuluyla
-kaynaktan da çözülür.
+`@videojs/html` (10.0.x) peer dependency'dir, bu yüzden açıkça kurulur. `react` ve
+`react-dom` (>= 19) isteğe bağlı peer'lerdir; sitede zaten var.
+`@esersahiner/player-icons` skin'in bağımlılığı olarak kendiliğinden gelir.
+
+Yayınlanan paketlerde `exports` yalnız `dist/`'i gösterir. Next.js (webpack ve
+Turbopack) dev modunda `development` koşulunu ETKİNLEŞTİRİR; bu yüzden paketler
+o koşulu kullanmaz. Kaynak (`src/*.ts`) yalnız monorepo içinde, özel
+`esp-source` koşuluyla çözülür (tsconfig, örneklerin Vite ve Vitest
+config'leri); Next bu koşulu hiçbir modda açmadığı için site her zaman
+`dist/`'i alır.
 
 ## 2. CSP (Content-Security-Policy) ekleri
 
@@ -87,4 +96,7 @@ export function VideoPage({ lang }: { lang: 'tr' | 'en' }) {
 
 - CDN'de `Range` için CORS izni (scripts/encode-hls/README.md, bölüm 5).
 - Yeni encode için `v2/` yolu ve sitede yalnız manifest URL'sinin değişmesi.
-- `pnpm build` sonrası `dist/` ile çalıştığını doğrula (`development` koşulu Next'te yok).
+- Kurulumdan sonra `next dev` ve `next build` ikisinde de çalıştığını doğrula; ikisi de
+  paketlerin `dist/` çıktısını kullanır (`esp-source` koşulu yalnız monorepo içindir).
+- Lisans: skin paketi `MIT AND Apache-2.0` (Video.js 10 skin türevi dosyalar
+  Apache-2.0); diğerleri MIT. Ayrıntı paketlerdeki `NOTICE` dosyalarında.
