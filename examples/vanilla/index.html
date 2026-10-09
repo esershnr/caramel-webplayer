@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>esersahiner player, vanilla demo</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Ccircle cx=%2712%27 cy=%2712%27 r=%2712%27 fill=%27%235e3310%27/%3E%3Cpath d=%27M9 7l8 5-8 5z%27 fill=%27%23c9945c%27/%3E%3C/svg%3E" />
     <link rel="stylesheet" href="/src/demo.css" />
   </head>
   <body class="esp-theme">
@@ -22,16 +23,19 @@
     </header>
 
     <main class="demo-main">
-      <media-i18n id="i18n" lang="tr">
-        <video-player id="player" class="demo-player"></video-player>
-      </media-i18n>
+      <div class="demo-stage">
+        <media-i18n id="i18n" lang="tr">
+          <video-player id="player" class="demo-player"></video-player>
+        </media-i18n>
+        <esp-chapters-panel for="player" class="demo-chapters"></esp-chapters-panel>
+      </div>
 
-      <aside class="demo-panel">
-        <h2 class="esp-heading">Segmentler</h2>
-        <p class="demo-muted">Zaman çizelgesindeki renkli bantlar. Özet otomatik atlanır.</p>
-        <ul id="segment-list" class="demo-list"></ul>
-        <h2 class="esp-heading">Olaylar</h2>
-        <ol id="event-log" class="demo-list demo-log esp-tabular"></ol>
+      <aside class="demo-side">
+        <esp-playlist-panel for="playlist" class="demo-playlist"></esp-playlist-panel>
+        <section class="demo-panel">
+          <h2 class="esp-heading">Olaylar</h2>
+          <ol id="event-log" class="demo-list demo-log esp-tabular"></ol>
+        </section>
       </aside>
     </main>
 

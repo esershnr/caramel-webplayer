@@ -1,23 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
 import { EspVideoSkin } from '@esersahiner/player-skin/react';
 import { SkipSegments } from '@esersahiner/player-skip-segments/react';
+import { ChaptersPanel } from '@esersahiner/player-chapters/react';
+import { Playlist, PlaylistPanel } from '@esersahiner/player-playlist/react';
 import type { Segment, SkipEventDetail } from '@esersahiner/player-skip-segments';
+import type { PlaylistItem } from '@esersahiner/player-playlist';
 import { watchTheme, type Theme } from '@esersahiner/player-theme';
-
-const MEDIA = 'https://stream.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM.m3u8';
-const POSTER = 'https://image.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM/thumbnail.jpg';
-const STORYBOARD = 'https://image.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM/storyboard.vtt';
-
-const SEGMENTS: Segment[] = [
-  { start: 0, end: 6, type: 'intro' },
-  { start: 8, end: 13, type: 'recap' },
-  { start: 18, end: 23, type: 'sponsor' },
-  { start: 30, end: 35, type: 'outro' },
-];
+import { PLAYLIST } from '../../vanilla/src/playlist-data';
 
 type Choice = 'light' | 'dark' | 'system';
 
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+const NO_SEGMENTS: Segment[] = [];
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -41,7 +35,6 @@ export function App() {
   });
   const [resolved, setResolved] = useState<Theme>('light');
   const [lang, setLang] = useState<'tr' | 'en'>('tr');
-  const [active, setActive] = useState<Segment | null>(null);
   const [log, setLog] = useState<string[]>([]);
 
   useEffect(() => watchTheme(setResolved), []);
@@ -63,14 +56,16 @@ export function App() {
     ({ segment, auto, to }: SkipEventDetail) => push(`${auto ? 'auto-skip' : 'skip'} ${segment.type} -> ${fmt(to)}`),
     [push],
   );
-  const onEnter = useCallback(
-    (segment: Segment) => {
-      setActive(segment);
-      push(`enter ${segment.type}`);
-    },
+  const onEnter = useCallback((segment: Segment) => push(`enter ${segment.type}`), [push]);
+  const onPlaylistChange = useCallback(
+    ({ item, index }: { item: PlaylistItem; index: number }) => push(`playlist ${index + 1}/${PLAYLIST.length} ${item.title}`),
     [push],
   );
-  const onLeave = useCallback(() => setActive(null), []);
+  const onPlaylistEnded = useCallback(() => push('playlist ended'), [push]);
+  const onChapter = useCallback(
+    ({ cue }: { cue: { text: string; startTime: number } }) => push(`chapter ${cue.text} @ ${fmt(cue.startTime)}`),
+    [push],
+  );
 
   return (
     <>
@@ -94,48 +89,40 @@ export function App() {
       </header>
 
       <main className="demo-main">
-        <EspVideoSkin
-          className="demo-player"
-          lang={lang}
-          title="Demo: segmentler, bölümler, önizleme"
-          poster={POSTER}
-          extras={
-            <SkipSegments
-              segments={SEGMENTS}
-              autoSkip={['recap']}
-              onSkip={onSkip}
-              onSegmentEnter={onEnter}
-              onSegmentLeave={onLeave}
-            />
-          }
-        >
-          <hls-video src={MEDIA} playsinline="" crossorigin="anonymous" preload="metadata">
-            <track kind="chapters" src="/chapters.vtt" srcLang="tr" default />
-            <track kind="metadata" label="thumbnails" src={STORYBOARD} default />
-            <track kind="subtitles" src="/subs-tr.vtt" srcLang="tr" label="Türkçe" />
-            <track kind="subtitles" src="/subs-en.vtt" srcLang="en" label="English" />
-          </hls-video>
-        </EspVideoSkin>
+        <div className="demo-stage">
+          <EspVideoSkin
+            id="player"
+            className="demo-player"
+            lang={lang}
+            extras={
+              <>
+                <SkipSegments segments={NO_SEGMENTS} autoSkip={['recap']} onSkip={onSkip} onSegmentEnter={onEnter} />
+                <Playlist
+                  id="playlist"
+                  items={PLAYLIST}
+                  listId="demo-react"
+                  onChange={onPlaylistChange}
+                  onEnded={onPlaylistEnded}
+                />
+              </>
+            }
+          >
+            {/* src, poster, title and tracks come from the playlist item */}
+            <hls-video playsinline="" crossorigin="anonymous" preload="metadata" />
+          </EspVideoSkin>
+          <ChaptersPanel playerId="player" className="demo-chapters" onChapterSelect={onChapter} />
+        </div>
 
-        <aside className="demo-panel">
-          <h2 className="esp-heading">Segmentler</h2>
-          <p className="demo-muted">Zaman çizelgesindeki renkli bantlar. Özet otomatik atlanır.</p>
-          <ul className="demo-list">
-            {SEGMENTS.map((s) => (
-              <li key={`${s.type}-${s.start}`} data-active={active === s || undefined}>
-                <span className="type">{s.type}</span>
-                <span className="esp-tabular">
-                  {fmt(s.start)} - {fmt(s.end)}
-                </span>
-              </li>
-            ))}
-          </ul>
-          <h2 className="esp-heading">Olaylar</h2>
-          <ol className="demo-list demo-log esp-tabular">
-            {log.map((line, i) => (
-              <li key={`${i}-${line}`}>{line}</li>
-            ))}
-          </ol>
+        <aside className="demo-side">
+          <PlaylistPanel for="playlist" className="demo-playlist" />
+          <section className="demo-panel">
+            <h2 className="esp-heading">Olaylar</h2>
+            <ol className="demo-list demo-log esp-tabular">
+              {log.map((line, i) => (
+                <li key={`${i}-${line}`}>{line}</li>
+              ))}
+            </ol>
+          </section>
         </aside>
       </main>
     </>

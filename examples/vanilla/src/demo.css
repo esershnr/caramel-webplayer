@@ -65,11 +65,26 @@ body {
 
 .demo-main {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr);
+  grid-template-columns: minmax(0, 2fr) minmax(18rem, 1fr);
   gap: 1.5rem;
   padding: 1.5rem;
-  max-width: 80rem;
+  max-width: 84rem;
   margin: 0 auto;
+}
+
+.demo-stage,
+.demo-side {
+  display: grid;
+  gap: 1.5rem;
+  align-content: start;
+}
+
+.demo-chapters {
+  --esp-chapters-max-height: 18rem;
+}
+
+.demo-playlist {
+  --esp-playlist-max-height: 22rem;
 }
 
 @media (width < 56rem) {

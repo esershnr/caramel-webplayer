@@ -1,77 +1,39 @@
 import '@esersahiner/player-theme/tokens.css';
 import '@esersahiner/player-theme/fonts.css';
 import '@esersahiner/player-skin/define';
-import '@videojs/html/media/hls-video';
 import '@esersahiner/player-skip-segments/define';
+import '@esersahiner/player-chapters/define';
+import '@esersahiner/player-playlist/define';
+import '@videojs/html/media/hls-video';
 import { mountSkin } from '@esersahiner/player-skin';
 import { watchTheme } from '@esersahiner/player-theme';
 import type { Segment, SkipEventDetail } from '@esersahiner/player-skip-segments';
-
-const MEDIA = 'https://stream.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM.m3u8';
-const POSTER = 'https://image.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM/thumbnail.jpg';
-const STORYBOARD = 'https://image.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM/storyboard.vtt';
-
-const SEGMENTS: Segment[] = [
-  { start: 0, end: 6, type: 'intro' },
-  { start: 8, end: 13, type: 'recap' },
-  { start: 18, end: 23, type: 'sponsor' },
-  { start: 30, end: 35, type: 'outro' },
-];
+import type { PlaylistItem } from '@esersahiner/player-playlist';
+import { PLAYLIST } from './playlist-data';
 
 // Player ------------------------------------------------------------------
+// The playlist controller fills in src, title, poster, tracks and segments for
+// the current item, so the media starts empty.
 const player = document.querySelector<HTMLElement>('#player')!;
-player.setAttribute('content-title', 'Demo: segmentler, bölümler, önizleme');
-player.setAttribute('poster', POSTER);
 
-// HLS media so the quality and audio submenus have entries to show.
-const video = document.createElement('hls-video');
-video.setAttribute('src', MEDIA);
-video.setAttribute('playsinline', '');
-video.setAttribute('crossorigin', 'anonymous');
-video.setAttribute('preload', 'metadata');
-
-const chapters = document.createElement('track');
-chapters.kind = 'chapters';
-chapters.src = '/chapters.vtt';
-chapters.srclang = 'tr';
-chapters.default = true;
-
-const thumbnails = document.createElement('track');
-thumbnails.kind = 'metadata';
-thumbnails.label = 'thumbnails';
-thumbnails.src = STORYBOARD;
-thumbnails.default = true;
-
-const subsTr = document.createElement('track');
-subsTr.kind = 'subtitles';
-subsTr.src = '/subs-tr.vtt';
-subsTr.srclang = 'tr';
-subsTr.label = 'Türkçe';
-
-const subsEn = document.createElement('track');
-subsEn.kind = 'subtitles';
-subsEn.src = '/subs-en.vtt';
-subsEn.srclang = 'en';
-subsEn.label = 'English';
-
-video.append(chapters, thumbnails, subsTr, subsEn);
+const media = document.createElement('hls-video');
+media.setAttribute('playsinline', '');
+media.setAttribute('crossorigin', 'anonymous');
+media.setAttribute('preload', 'metadata');
 
 const skip = document.createElement('esp-skip-segments');
-skip.setAttribute('segments', JSON.stringify(SEGMENTS));
 skip.setAttribute('auto-skip', 'recap');
 
-mountSkin(player, { media: video, extras: [skip], uid: 'demo' });
+const playlist = document.createElement('esp-playlist');
+playlist.id = 'playlist';
+playlist.setAttribute('list-id', 'demo');
+playlist.items = PLAYLIST;
 
-// Side panel --------------------------------------------------------------
-const list = document.querySelector<HTMLUListElement>('#segment-list')!;
+mountSkin(player, { media, extras: [skip, playlist], uid: 'demo' });
+
+// Event log ---------------------------------------------------------------
 const log = document.querySelector<HTMLOListElement>('#event-log')!;
-
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
-for (const segment of SEGMENTS) {
-  const li = document.createElement('li');
-  li.innerHTML = `<span class="type">${segment.type}</span><span class="esp-tabular">${fmt(segment.start)} - ${fmt(segment.end)}</span>`;
-  list.append(li);
-}
 
 function addLog(text: string) {
   const li = document.createElement('li');
@@ -85,12 +47,16 @@ skip.addEventListener('esp-skip', (e) => {
   addLog(`${auto ? 'auto-skip' : 'skip'} ${segment.type} -> ${fmt(to)}`);
 });
 skip.addEventListener('esp-segment-enter', (e) => {
-  const { segment } = (e as CustomEvent<{ segment: Segment }>).detail;
-  addLog(`enter ${segment.type}`);
-  list.querySelectorAll('li').forEach((li, i) => li.toggleAttribute('data-active', SEGMENTS[i] === segment));
+  addLog(`enter ${(e as CustomEvent<{ segment: Segment }>).detail.segment.type}`);
 });
-skip.addEventListener('esp-segment-leave', () => {
-  list.querySelectorAll('li').forEach((li) => li.removeAttribute('data-active'));
+playlist.addEventListener('esp-playlist-change', (e) => {
+  const { item, index } = (e as CustomEvent<{ item: PlaylistItem; index: number }>).detail;
+  addLog(`playlist ${index + 1}/${PLAYLIST.length} ${item.title}`);
+});
+playlist.addEventListener('esp-playlist-ended', () => addLog('playlist ended'));
+document.querySelector('esp-chapters-panel')?.addEventListener('esp-chapter-select', (e) => {
+  const { cue } = (e as CustomEvent<{ cue: { text: string; startTime: number } }>).detail;
+  addLog(`chapter ${cue.text} @ ${fmt(cue.startTime)}`);
 });
 
 // Theme switch ------------------------------------------------------------
@@ -102,6 +68,7 @@ if (preset === 'light' || preset === 'dark') {
     .querySelectorAll<HTMLButtonElement>('[data-theme-choice]')
     .forEach((b) => b.setAttribute('aria-pressed', String(b.dataset['themeChoice'] === preset)));
 }
+
 const resolved = document.querySelector<HTMLElement>('#resolved-theme')!;
 watchTheme((theme) => {
   resolved.textContent = `çözülen: ${theme}`;
