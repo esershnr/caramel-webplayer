@@ -93,6 +93,20 @@ export class EspSkipSegmentsElement extends Base {
     this.#disconnect = new AbortController();
     this.#ensureButton();
     this.#readAttributes();
+    this.#upgradeProperty('segments');
+    this.#upgradeProperty('autoSkip');
+  }
+
+  /**
+   * A property assigned before the element upgraded (a playlist controller
+   * setting `segments` on a not yet defined element) lands as an own property
+   * that would shadow the accessor. Re-route it through the setter.
+   */
+  #upgradeProperty(name: 'segments' | 'autoSkip'): void {
+    if (!Object.prototype.hasOwnProperty.call(this, name)) return;
+    const value = (this as unknown as Record<string, unknown>)[name];
+    delete (this as unknown as Record<string, unknown>)[name];
+    (this as unknown as Record<string, unknown>)[name] = value;
   }
 
   override disconnectedCallback(): void {
