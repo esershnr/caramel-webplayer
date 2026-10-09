@@ -72,6 +72,14 @@ export class EspSkipSegmentsElement extends Base {
   }
 
   set segments(value: unknown) {
+    // React 19 assigns the JSON attribute as a property after upgrade.
+    if (typeof value === 'string') {
+      try {
+        value = JSON.parse(value);
+      } catch {
+        value = [];
+      }
+    }
     this.#segmentsInput = value;
     this.#model.setSegments(value, this.#lastDuration);
     this.#markerDuration = 0;
@@ -122,6 +130,13 @@ export class EspSkipSegmentsElement extends Base {
     super.attributeChangedCallback?.(name, old, value);
     if (!this.isConnected) return;
     this.#readAttributes();
+  }
+
+  /** Forgets active, auto-skipped and dismissed state (a playlist switching items). */
+  reset(): void {
+    this.#model.reset();
+    this.#markerDuration = 0;
+    this.requestUpdate();
   }
 
   /** Skips the active segment by hand. Returns false when no segment is active. */
@@ -189,7 +204,6 @@ export class EspSkipSegmentsElement extends Base {
 
   #ensureButton(): void {
     if (this.#button) return;
-    const signal = this.#disconnect?.signal ?? new AbortController().signal;
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'esp-skip-button';
@@ -200,7 +214,8 @@ export class EspSkipSegmentsElement extends Base {
     icon.className = 'esp-skip-button-icon';
     icon.append(createIconElement(icons['skip-forward']));
     button.append(label, icon);
-    button.addEventListener('click', () => this.skip(), { signal });
+    // Own-child listener: lives with the element, survives reconnects.
+    button.addEventListener('click', () => this.skip());
     this.replaceChildren(button);
     this.#button = button;
     this.#label = label;
