@@ -110,8 +110,6 @@ export class EspPlaylistElement extends Base {
   #appliedKey: string | null = null;
   #appliedItem: PlaylistItem | null = null;
   #appliedIndex = -1;
-  /** Media element this controller created because the player had none. */
-  #createdMedia: Element | null = null;
   /** Media element this controller inserted last (created or replacement). */
   #ownMedia: Element | null = null;
 
@@ -255,8 +253,12 @@ export class EspPlaylistElement extends Base {
     const index = this.#model.index;
     const key = `${index}:${item.id}:${item.src}`;
     if (key === this.#appliedKey) return;
-    // Without a container there is nowhere to mount media. The player observer retries.
-    if (!player.querySelector('media-container')) return;
+    // Without a container and a host media element there is nowhere to mount
+    // the item. The host owns the media element (an empty <video> or
+    // <hls-video>); the player observer retries once it appears, which keeps
+    // the React skin's late media mount (after its elements register) in sync.
+    const container = player.querySelector('media-container');
+    if (!container || !findMedia(container)) return;
     this.#appliedKey = key;
     this.#applyItem(player, item, index);
   }
@@ -334,7 +336,6 @@ export class EspPlaylistElement extends Base {
     this.#appliedKey = null;
     this.#appliedItem = null;
     this.#appliedIndex = -1;
-    this.#createdMedia = null;
     this.#ownMedia = null;
     this.#awaitingSource = false;
     this.#pendingRestore = null;
@@ -354,8 +355,7 @@ export class EspPlaylistElement extends Base {
 
   /**
    * Watches the player for a container or media element that appears later
-   * (React mounts the skin's media after its elements register). A media
-   * element the host adds replaces the one this controller created.
+   * (React mounts the skin's media after its elements register).
    */
   #observePlayer(player: PlayerLike): void {
     if (typeof MutationObserver === 'undefined') return;
@@ -369,14 +369,6 @@ export class EspPlaylistElement extends Base {
         }
       }
       if (!relevant) return;
-      if (this.#createdMedia) {
-        const container = player.querySelector('media-container');
-        const others = container ? Array.from(container.children).filter(isMedia) : [];
-        if (others.some((el) => el !== this.#createdMedia)) {
-          this.#createdMedia.remove();
-          this.#createdMedia = null;
-        }
-      }
       this.#appliedKey = null;
       this.requestUpdate();
     });
@@ -436,7 +428,6 @@ export class EspPlaylistElement extends Base {
         old.append(...tracks);
       }
       if (!sameSrc) old.setAttribute('src', item.src);
-      if (old !== this.#createdMedia) this.#createdMedia = null;
       return;
     }
 
@@ -444,29 +435,20 @@ export class EspPlaylistElement extends Base {
       console.warn("<esp-playlist>: <hls-video> is not registered. Add `import '@videojs/html/media/hls-video'`.");
     }
 
+    // Tag mismatch: swap the element in place, keeping the host's media attributes.
+    if (!old) return;
     const media = document.createElement(tag);
-    if (old) {
-      for (const name of COPIED_MEDIA_ATTRIBUTES) {
-        const value = old.getAttribute(name);
-        if (value !== null) media.setAttribute(name, value);
-      }
-    } else {
-      media.setAttribute('playsinline', '');
+    for (const name of COPIED_MEDIA_ATTRIBUTES) {
+      const value = old.getAttribute(name);
+      if (value !== null) media.setAttribute(name, value);
     }
     media.append(...tracks);
     media.setAttribute('src', item.src);
     this.#ownMedia = media;
-
-    if (old) {
-      // Insert at the same position first so the player sees a media element at all times.
-      old.before(media);
-      (old as Partial<HTMLMediaElement>).pause?.();
-      old.remove();
-      this.#createdMedia = old === this.#createdMedia ? media : null;
-    } else {
-      container.prepend(media);
-      this.#createdMedia = media;
-    }
+    // Insert at the same position first so the player sees a media element at all times.
+    old.before(media);
+    (old as Partial<HTMLMediaElement>).pause?.();
+    old.remove();
   }
 
   // Store subscription: resume, progress saving, auto advance -------------
