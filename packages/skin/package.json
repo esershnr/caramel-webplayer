@@ -36,32 +36,32 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "esp-source": "./src/index.ts",
+      "caramel-source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
     "./define": {
-      "esp-source": "./src/define.ts",
+      "caramel-source": "./src/define.ts",
       "types": "./dist/define.d.ts",
       "default": "./dist/define.js"
     },
     "./react": {
-      "esp-source": "./src/react.tsx",
+      "caramel-source": "./src/react.tsx",
       "types": "./dist/react.d.ts",
       "default": "./dist/react.js"
     },
     "./skin.css": {
-      "esp-source": "./src/styles/skin.css",
+      "caramel-source": "./src/styles/skin.css",
       "default": "./dist/styles/skin.css"
     },
     "./all.css": {
-      "esp-source": "./src/styles/all.css",
+      "caramel-source": "./src/styles/all.css",
       "default": "./dist/styles/all.css"
     },
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build:template": "node --conditions=esp-source --import tsx scripts/build-template.ts",
+    "build:template": "node --conditions=caramel-source --import tsx scripts/build-template.ts",
     "build": "pnpm run build:template && tsc -p tsconfig.build.json && node scripts/copy-css.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",

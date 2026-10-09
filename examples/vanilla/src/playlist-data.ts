@@ -30,7 +30,7 @@ export const PLAYLIST: PlaylistItem[] = [
     src: `https://stream.mux.com/${BIKE}/highest.mp4`,
     poster: `https://image.mux.com/${BIKE}/thumbnail.jpg?time=10`,
     chapters: '/chapters.vtt',
-    // Generated with: esp-gen-thumbs <mp4> --interval 2 --columns 6 --out public/thumbs --name bike --base-url /thumbs
+    // Generated with: caramel-gen-thumbs <mp4> --interval 2 --columns 6 --out public/thumbs --name bike --base-url /thumbs
     thumbnails: '/thumbs/bike.vtt',
     segments: [
       { start: 0, end: 4, type: 'intro' },

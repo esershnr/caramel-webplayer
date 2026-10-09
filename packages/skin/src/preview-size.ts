@@ -5,7 +5,7 @@ const Base: typeof UIElement =
   typeof HTMLElement === 'undefined' ? (class {} as unknown as typeof UIElement) : UIElement;
 
 /** Custom property the element writes; the skin's preview width falls back to it. */
-export const PREVIEW_NATURAL_WIDTH_VAR = '--esp-preview-natural-width';
+export const PREVIEW_NATURAL_WIDTH_VAR = '--caramel-preview-natural-width';
 
 /**
  * Tile width in pixels from a thumbnail cue (`sprite.jpg#xywh=0,0,240,136`,
@@ -27,16 +27,16 @@ export function previewTileWidth(cues: readonly { text: string }[] | null | unde
 }
 
 /**
- * <esp-preview-size>
+ * <caramel-preview-size>
  *
  * Invisible helper inside the timeline preview card. Reads the sprite tile
  * width from the thumbnails track and exposes it as
- * `--esp-preview-natural-width` on the enclosing `<media-slider-preview>`, so
+ * `--caramel-preview-natural-width` on the enclosing `<media-slider-preview>`, so
  * the card is exactly one tile wide (no upscaling) unless the host sets
- * `--esp-preview-width`.
+ * `--caramel-preview-width`.
  */
-export class EspPreviewSizeElement extends Base {
-  static readonly tagName = 'esp-preview-size';
+export class CaramelPreviewSizeElement extends Base {
+  static readonly tagName = 'caramel-preview-size';
 
   readonly #tracks = new PlayerController(this, playerContext, selectTextTrack);
   #width: number | null = null;
@@ -68,6 +68,6 @@ export class EspPreviewSizeElement extends Base {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'esp-preview-size': EspPreviewSizeElement;
+    'caramel-preview-size': CaramelPreviewSizeElement;
   }
 }

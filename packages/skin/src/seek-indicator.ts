@@ -7,7 +7,7 @@ const Base: typeof SeekIndicatorElement =
 
 export type SeekDirection = 'forward' | 'backward';
 
-const UNIT_KEY = 'esp.seek.seconds';
+const UNIT_KEY = 'caramel.seek.seconds';
 const UNIT_EN = 's';
 const UNIT_TR = 'sn';
 
@@ -17,8 +17,8 @@ export function registerSeekIndicatorI18n(): void {
   if (registered) return;
   registered = true;
   const register = registerI18n as unknown as (locale: string, translations: Record<string, unknown>) => void;
-  register('tr', { esp: { seek: { seconds: UNIT_TR } } });
-  register('en', { esp: { seek: { seconds: UNIT_EN } } });
+  register('tr', { caramel: { seek: { seconds: UNIT_TR } } });
+  register('en', { caramel: { seek: { seconds: UNIT_EN } } });
 }
 
 /**
@@ -50,7 +50,7 @@ interface SeekCoreLike {
 }
 
 /**
- * <esp-seek-indicator>
+ * <caramel-seek-indicator>
  *
  * Video.js seek indicator for the arrow keys (and double tap), with two
  * changes: the 0-9 / Home / End jumps show nothing, and the value reads as a
@@ -58,9 +58,9 @@ interface SeekCoreLike {
  * "-5 sn"). Placement (left for backward, right for forward), stacking of
  * rapid presses and the close delay stay Video.js behavior.
  */
-export class EspSeekIndicatorElement extends Base {
+export class CaramelSeekIndicatorElement extends Base {
   /** Registration name (the inherited `tagName` is typed as the Video.js tag). */
-  static readonly espTagName = 'esp-seek-indicator';
+  static readonly caramelTagName = 'caramel-seek-indicator';
 
   readonly #i18n = new I18nController(this, i18nContext);
 
@@ -88,6 +88,6 @@ export class EspSeekIndicatorElement extends Base {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'esp-seek-indicator': EspSeekIndicatorElement;
+    'caramel-seek-indicator': CaramelSeekIndicatorElement;
   }
 }

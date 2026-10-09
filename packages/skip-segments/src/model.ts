@@ -42,7 +42,7 @@ export interface SkipResult {
 }
 
 /**
- * Pure state machine behind <esp-skip-segments>. Feed it time updates, it tells
+ * Pure state machine behind <caramel-skip-segments>. Feed it time updates, it tells
  * you which segment is active, whether to show the button and when to seek.
  * No DOM, no timers, fully testable.
  */

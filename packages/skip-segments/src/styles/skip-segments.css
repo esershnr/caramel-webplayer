@@ -1,36 +1,36 @@
 /*
- * <esp-skip-segments> styles. Overlay roles only: the button sits on the video
- * and stays dark in both themes. Band colors are the --esp-segment-* tokens
+ * <caramel-skip-segments> styles. Overlay roles only: the button sits on the video
+ * and stays dark in both themes. Band colors are the --caramel-segment-* tokens
  * from @esershnr/caramel-theme (contrast table in tokens.css).
  */
 @import '@esershnr/caramel-theme/tokens.css';
 
-esp-skip-segments {
+caramel-skip-segments {
   position: absolute;
   right: calc(var(--media-spacing, 4px) * 6);
   bottom: calc(var(--media-spacing, 4px) * 22);
   z-index: 25;
   display: block;
   pointer-events: none;
-  font-family: var(--esp-font-body);
+  font-family: var(--caramel-font-body);
 }
 
 @container media-root (width < 32rem) {
-  esp-skip-segments {
+  caramel-skip-segments {
     right: calc(var(--media-spacing, 4px) * 3);
     bottom: calc(var(--media-spacing, 4px) * 16);
   }
 }
 
-.esp-skip-button {
+.caramel-skip-button {
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
   padding: 0.6em 1.1em 0.6em 1.3em;
-  border: 1px solid var(--esp-overlay-border);
-  border-radius: var(--esp-radius-chip);
-  background: var(--esp-overlay-surface-strong);
-  color: var(--esp-overlay-text);
+  border: 1px solid var(--caramel-overlay-border);
+  border-radius: var(--caramel-radius-chip);
+  background: var(--caramel-overlay-surface-strong);
+  color: var(--caramel-overlay-text);
   font: inherit;
   font-size: calc(var(--media-spacing, 4px) * 3.5);
   font-weight: 600;
@@ -45,43 +45,43 @@ esp-skip-segments {
   opacity: 0;
   transform: translateY(12px) scale(0.92);
   transition:
-    opacity var(--esp-duration-fast) var(--esp-ease-enter),
-    transform var(--esp-duration-fast) var(--esp-ease-enter);
+    opacity var(--caramel-duration-fast) var(--caramel-ease-enter),
+    transform var(--caramel-duration-fast) var(--caramel-ease-enter);
   visibility: hidden;
 }
 
-.esp-skip-button[data-visible] {
+.caramel-skip-button[data-visible] {
   opacity: 1;
   transform: none;
   visibility: visible;
   /* The entrance springs; the exit above stays quick and plain. */
   transition:
-    opacity var(--esp-duration-fast) var(--esp-ease-enter),
-    transform var(--esp-duration-enter) var(--esp-ease-spring);
+    opacity var(--caramel-duration-fast) var(--caramel-ease-enter),
+    transform var(--caramel-duration-enter) var(--caramel-ease-spring);
 }
 
-.esp-skip-button:hover {
-  background: color-mix(in srgb, var(--esp-overlay-surface-strong), white 8%);
+.caramel-skip-button:hover {
+  background: color-mix(in srgb, var(--caramel-overlay-surface-strong), white 8%);
 }
 
-.esp-skip-button:active {
+.caramel-skip-button:active {
   transform: scale(0.97);
-  transition-duration: var(--esp-duration-instant);
+  transition-duration: var(--caramel-duration-instant);
 }
 
-.esp-skip-button:focus-visible {
-  outline: 2px solid var(--esp-overlay-accent);
-  outline-offset: var(--esp-focus-offset);
+.caramel-skip-button:focus-visible {
+  outline: 2px solid var(--caramel-overlay-accent);
+  outline-offset: var(--caramel-focus-offset);
 }
 
-.esp-skip-button-icon {
+.caramel-skip-button-icon {
   width: 1.15em;
   height: 1.15em;
   display: block;
-  color: var(--esp-overlay-accent);
+  color: var(--caramel-overlay-accent);
 }
 
-.esp-skip-button-icon > svg {
+.caramel-skip-button-icon > svg {
   width: 100%;
   height: 100%;
   display: block;
@@ -93,108 +93,108 @@ esp-skip-segments {
    stays visible. Each band has a dark 1px ring that separates it from the
    caramel fill (no band color can contrast with both the fill and the dark
    track on its own, see tokens.css). */
-.esp-segment-markers,
-.esp-segment-layer {
+.caramel-segment-markers,
+.caramel-segment-layer {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 
-.esp-segment-markers {
+.caramel-segment-markers {
   z-index: 2;
 }
 
-.esp-segment-layer[data-played] {
+.caramel-segment-layer[data-played] {
   clip-path: inset(-4px calc(100% - var(--media-slider-fill, 0%)) -4px -4px);
 }
 
 /* While dragging, the skin shows the fill at the pointer; follow it. */
-media-time-slider[data-dragging] .esp-segment-layer[data-played] {
+media-time-slider[data-dragging] .caramel-segment-layer[data-played] {
   clip-path: inset(-4px calc(100% - var(--media-slider-pointer, 0%)) -4px -4px);
 }
 
-.esp-segment-marker {
+.caramel-segment-marker {
   position: absolute;
   top: 50%;
-  left: var(--esp-seg-start);
-  width: var(--esp-seg-width);
+  left: var(--caramel-seg-start);
+  width: var(--caramel-seg-width);
   height: var(--media-spacing, 4px);
   translate: 0 -50%;
-  border-radius: var(--esp-radius-chip);
-  background-color: var(--esp-segment-color);
-  box-shadow: 0 0 0 1px var(--esp-segment-ring);
-  transition: scale var(--esp-duration-fast) var(--esp-ease-enter);
+  border-radius: var(--caramel-radius-chip);
+  background-color: var(--caramel-segment-color);
+  box-shadow: 0 0 0 1px var(--caramel-segment-ring);
+  transition: scale var(--caramel-duration-fast) var(--caramel-ease-enter);
 }
 
-.esp-segment-layer[data-played] .esp-segment-marker {
-  background-color: color-mix(in srgb, var(--esp-segment-color), white 55%);
+.caramel-segment-layer[data-played] .caramel-segment-marker {
+  background-color: color-mix(in srgb, var(--caramel-segment-color), white 55%);
 }
 
 /* Auto-skipped types: static diagonal stripes (no motion, so nothing to
    reduce). Manually skipped types stay a flat color. */
-.esp-segment-marker[data-auto] {
+.caramel-segment-marker[data-auto] {
   background-image: repeating-linear-gradient(
     -45deg,
-    var(--esp-segment-hatch) 0 2px,
+    var(--caramel-segment-hatch) 0 2px,
     transparent 2px 4px
   );
 }
 
-.esp-segment-marker[data-active] {
+.caramel-segment-marker[data-active] {
   scale: 1 1.5;
 }
 
-:is(.esp-segment-marker, .esp-preview-segment)[data-type='intro'] {
-  --esp-segment-color: var(--esp-segment-intro);
+:is(.caramel-segment-marker, .caramel-preview-segment)[data-type='intro'] {
+  --caramel-segment-color: var(--caramel-segment-intro);
 }
 
-:is(.esp-segment-marker, .esp-preview-segment)[data-type='recap'] {
-  --esp-segment-color: var(--esp-segment-recap);
+:is(.caramel-segment-marker, .caramel-preview-segment)[data-type='recap'] {
+  --caramel-segment-color: var(--caramel-segment-recap);
 }
 
-:is(.esp-segment-marker, .esp-preview-segment)[data-type='outro'] {
-  --esp-segment-color: var(--esp-segment-outro);
+:is(.caramel-segment-marker, .caramel-preview-segment)[data-type='outro'] {
+  --caramel-segment-color: var(--caramel-segment-outro);
 }
 
-:is(.esp-segment-marker, .esp-preview-segment)[data-type='sponsor'] {
-  --esp-segment-color: var(--esp-segment-sponsor);
+:is(.caramel-segment-marker, .caramel-preview-segment)[data-type='sponsor'] {
+  --caramel-segment-color: var(--caramel-segment-sponsor);
 }
 
 /* Type chip in the skin's preview card, after "time · chapter title". */
-.esp-preview-segment {
+.caramel-preview-segment {
   flex: none;
   align-self: center;
   padding: 0.15em 0.6em;
-  border-radius: var(--esp-radius-chip);
-  background: var(--esp-segment-color);
-  color: color-mix(in srgb, var(--esp-segment-color), black 85%);
+  border-radius: var(--caramel-radius-chip);
+  background: var(--caramel-segment-color);
+  color: color-mix(in srgb, var(--caramel-segment-color), black 85%);
   font-size: 0.82em;
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: 0.01em;
 }
 
-.esp-preview-segment[hidden] {
+.caramel-preview-segment[hidden] {
   display: none;
 }
 
 @media (forced-colors: active) {
-  .esp-skip-button {
+  .caramel-skip-button {
     border-color: CanvasText;
     background: Canvas;
     color: CanvasText;
   }
 
-  .esp-segment-marker {
+  .caramel-segment-marker {
     background: Highlight;
     box-shadow: none;
   }
 
-  .esp-segment-layer[data-played] .esp-segment-marker {
+  .caramel-segment-layer[data-played] .caramel-segment-marker {
     background: Highlight;
   }
 
-  .esp-preview-segment {
+  .caramel-preview-segment {
     border: 1px solid CanvasText;
     background: Canvas;
     color: CanvasText;

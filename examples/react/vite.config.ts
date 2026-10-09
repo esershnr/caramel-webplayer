@@ -5,7 +5,7 @@ import { serveOut } from '../vite-serve-out';
 
 export default defineConfig({
   // Workspace packages resolve to their TypeScript sources through the custom
-  // `esp-source` export condition (see examples/vanilla/vite.config.ts).
-  resolve: { conditions: ['esp-source', 'module', 'browser', 'development|production'] },
+  // `caramel-source` export condition (see examples/vanilla/vite.config.ts).
+  resolve: { conditions: ['caramel-source', 'module', 'browser', 'development|production'] },
   plugins: [react(), serveOut(path.resolve(import.meta.dirname, '../../out'))],
 });

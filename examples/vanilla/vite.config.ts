@@ -4,10 +4,10 @@ import { serveOut } from '../vite-serve-out';
 
 export default defineConfig({
   // Workspace packages resolve to their TypeScript sources through the custom
-  // `esp-source` export condition (dev and build). Published consumers never
+  // `caramel-source` export condition (dev and build). Published consumers never
   // enable it and get dist. The rest is Vite's default client list, which
   // `conditions` replaces.
-  resolve: { conditions: ['esp-source', 'module', 'browser', 'development|production'] },
+  resolve: { conditions: ['caramel-source', 'module', 'browser', 'development|production'] },
   server: { open: false },
   // encode-hls output (repo `out/`) under /out/ with Range support.
   plugins: [serveOut(path.resolve(import.meta.dirname, '../../out'))],

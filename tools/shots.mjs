@@ -66,7 +66,7 @@ for (const base of urls) {
       const box = icon?.getBoundingClientRect();
       const bar = [...document.querySelectorAll('.video-controls-content .media-button-icon')].map((el) => {
         const r = el.getBoundingClientRect();
-        const name = el.dataset.icon ?? [...el.classList].find((c) => c.startsWith('esp-icon-'));
+        const name = el.dataset.icon ?? [...el.classList].find((c) => c.startsWith('caramel-icon-'));
         return `${name}:${r.width.toFixed(0)}x${r.height.toFixed(0)}`;
       });
       return {
@@ -118,7 +118,7 @@ for (const base of urls) {
     await hoverPreview('preview');
 
     // Panels outside the video: playlist (next item) and chapter list (select a chapter).
-    const next = page.locator('esp-playlist-panel .esp-playlist-nav button').nth(1);
+    const next = page.locator('caramel-playlist-panel .caramel-playlist-nav button').nth(1);
     if (await next.count()) {
       await next.click();
       await page.waitForTimeout(2500);
@@ -126,7 +126,7 @@ for (const base of urls) {
       // The second item carries the gen-thumbs sprite: hover the timeline again.
       await hoverPreview('playlist-next-preview');
     }
-    const chapter = page.locator('esp-chapters-panel li button').nth(1);
+    const chapter = page.locator('caramel-chapters-panel li button').nth(1);
     if (await chapter.count()) {
       await chapter.focus();
       await chapter.click();
@@ -137,7 +137,7 @@ for (const base of urls) {
     // Encoded item (encode-hls output or the R2 copy): the last playlist entry
     // when more than the three demo clips are listed. Exercises byte-range HLS,
     // the quality menu, per-language chapters, subtitles, skip and fullscreen.
-    const items = page.locator('esp-playlist-panel li button');
+    const items = page.locator('caramel-playlist-panel li button');
     if ((await items.count()) > 3) {
       await items.last().click();
       await page.waitForTimeout(3500);

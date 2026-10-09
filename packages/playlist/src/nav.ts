@@ -1,6 +1,6 @@
 import { UIElement, type PropertyValues } from '@videojs/html';
 import { createIconElement, icons } from '@esershnr/caramel-icons';
-import type { EspPlaylistElement } from './element.js';
+import type { CaramelPlaylistElement } from './element.js';
 import { PLAYLIST_DEFAULTS, PLAYLIST_KEYS, createPlaylistTranslator, registerPlaylistI18n } from './i18n.js';
 
 /** HTMLElement stand-in so the module can be imported during SSR. */
@@ -26,22 +26,22 @@ interface StoreLike {
 }
 
 /**
- * <esp-playlist-nav>
+ * <caramel-playlist-nav>
  *
  * Previous / next buttons for the control bar. Renders nothing (and stays
- * `hidden`) unless the player contains an `<esp-playlist>` (or `for` names
+ * `hidden`) unless the player contains an `<caramel-playlist>` (or `for` names
  * one). Previous follows YouTube: after 3 seconds it restarts the current
  * item, otherwise it goes back; next is disabled on the last item unless the
  * playlist loops. Tooltips carry the neighbouring item's title.
  */
-export class EspPlaylistNavElement extends Base {
-  static readonly tagName = 'esp-playlist-nav';
+export class CaramelPlaylistNavElement extends Base {
+  static readonly tagName = 'caramel-playlist-nav';
 
   static override get observedAttributes(): string[] {
     return [...(super.observedAttributes ?? []), 'for'];
   }
 
-  #controller: EspPlaylistElement | null = null;
+  #controller: CaramelPlaylistElement | null = null;
   #unsubscribe: (() => void) | null = null;
   #controllerAbort: AbortController | null = null;
   #retries = 0;
@@ -75,7 +75,7 @@ export class EspPlaylistNavElement extends Base {
     this.requestUpdate();
   }
 
-  get controller(): EspPlaylistElement | null {
+  get controller(): CaramelPlaylistElement | null {
     return this.#controller;
   }
 
@@ -102,16 +102,16 @@ export class EspPlaylistNavElement extends Base {
 
   #ensureButtons(): void {
     if (this.#prev) return;
-    this.#prev = this.#button('skip-back', 'esp-playlist-nav-prev', () => this.#previous());
-    this.#next = this.#button('skip-forward', 'esp-playlist-nav-next', () => this.#controller?.next());
+    this.#prev = this.#button('skip-back', 'caramel-playlist-nav-prev', () => this.#previous());
+    this.#next = this.#button('skip-forward', 'caramel-playlist-nav-next', () => this.#controller?.next());
     this.replaceChildren(this.#prev, this.#next);
   }
 
   #button(icon: 'skip-back' | 'skip-forward', className: string, action: () => void): HTMLButtonElement {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = `media-button esp-playlist-nav-button ${className}`;
-    const svg = createIconElement(icons[icon], { className: `media-button-icon esp-icon esp-icon-${icon}` });
+    button.className = `media-button caramel-playlist-nav-button ${className}`;
+    const svg = createIconElement(icons[icon], { className: `media-button-icon caramel-icon caramel-icon-${icon}` });
     button.append(svg);
     // Own-child listener: lives with the element, survives reconnects.
     button.addEventListener('click', action);
@@ -137,12 +137,12 @@ export class EspPlaylistNavElement extends Base {
     this.#detach();
     const forId = this.getAttribute('for');
     let candidate: Element | null = forId ? document.getElementById(forId) : null;
-    if (!candidate) candidate = this.closest('video-player')?.querySelector('esp-playlist') ?? null;
-    if (!candidate) candidate = this.closest('esp-playlist');
-    if (candidate && typeof (candidate as EspPlaylistElement).subscribe !== 'function') {
+    if (!candidate) candidate = this.closest('video-player')?.querySelector('caramel-playlist') ?? null;
+    if (!candidate) candidate = this.closest('caramel-playlist');
+    if (candidate && typeof (candidate as CaramelPlaylistElement).subscribe !== 'function') {
       // Present but not upgraded yet: wait once for the definition.
-      if (typeof customElements !== 'undefined' && !customElements.get('esp-playlist')) {
-        void customElements.whenDefined('esp-playlist').then(() => this.isConnected && this.requestUpdate());
+      if (typeof customElements !== 'undefined' && !customElements.get('caramel-playlist')) {
+        void customElements.whenDefined('caramel-playlist').then(() => this.isConnected && this.requestUpdate());
       }
       candidate = null;
     }
@@ -154,11 +154,11 @@ export class EspPlaylistNavElement extends Base {
       }
       return;
     }
-    const controller = candidate as EspPlaylistElement;
+    const controller = candidate as CaramelPlaylistElement;
     this.#controller = controller;
     this.#unsubscribe = controller.subscribe(() => this.requestUpdate());
     this.#controllerAbort = new AbortController();
-    controller.addEventListener('esp-playlist-change', () => this.requestUpdate(), {
+    controller.addEventListener('caramel-playlist-change', () => this.requestUpdate(), {
       signal: this.#controllerAbort.signal,
     });
   }
@@ -195,6 +195,6 @@ function label(button: HTMLButtonElement, text: string): void {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'esp-playlist-nav': EspPlaylistNavElement;
+    'caramel-playlist-nav': CaramelPlaylistNavElement;
   }
 }

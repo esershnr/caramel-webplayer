@@ -1,6 +1,6 @@
 # @esershnr/caramel-skin
 
-The Video.js 10 default video skin, themed with `--esp-*` tokens and Lucide
+The Video.js 10 default video skin, themed with `--caramel-*` tokens and Lucide
 morphing icons: clickable time counter, quality badge and sorted quality menu,
 timeline preview card, signed seek indicator, Space to play / pause from any
 control.
@@ -30,16 +30,16 @@ mountSkin(player, { media: video });
 React (`'use client'`, elements register in the browser only):
 
 ```tsx
-import { EspVideoSkin } from '@esershnr/caramel-skin/react';
+import { CaramelVideoSkin } from '@esershnr/caramel-skin/react';
 
-<EspVideoSkin id="player" lang="tr">
+<CaramelVideoSkin id="player" lang="tr">
   <video src="/video.mp4" playsInline />
-</EspVideoSkin>
+</CaramelVideoSkin>
 ```
 
 Chapters come from `<track kind="chapters" default>`, timeline thumbnails from
 `<track kind="metadata" label="thumbnails" default>`. Override the preview
-width with `--esp-preview-width`. Full guide: [root README](../../README.md).
+width with `--caramel-preview-width`. Full guide: [root README](../../README.md).
 
 License: `MIT AND Apache-2.0`. Our code is MIT (`LICENSE`); files derived from
 the Video.js 10 default skin are Apache-2.0 (`LICENSE-APACHE`). See `NOTICE`.

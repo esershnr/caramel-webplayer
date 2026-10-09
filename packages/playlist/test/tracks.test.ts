@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { trackSpecsFor } from '../src/element.js';
-import { EspPlaylistElement, EspPlaylistPanelElement, defineEspPlaylist } from '../src/index.js';
+import { CaramelPlaylistElement, CaramelPlaylistPanelElement, defineCaramelPlaylist } from '../src/index.js';
 
 describe('element modules in Node', () => {
   it('import without a DOM and define is a no-op', () => {
-    expect(typeof EspPlaylistElement).toBe('function');
-    expect(typeof EspPlaylistPanelElement).toBe('function');
-    expect(() => defineEspPlaylist()).not.toThrow();
+    expect(typeof CaramelPlaylistElement).toBe('function');
+    expect(typeof CaramelPlaylistPanelElement).toBe('function');
+    expect(() => defineCaramelPlaylist()).not.toThrow();
   });
 });
 

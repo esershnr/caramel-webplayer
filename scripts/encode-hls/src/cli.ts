@@ -4,7 +4,7 @@ import { CommandError, MissingBinaryError } from '@esershnr/caramel-gen-thumbs';
 import { encode } from './encode.js';
 import { MetaError } from './meta.js';
 
-const HELP = `Usage: esp-encode-hls <media/slug> --base-url <https://cdn/videos/slug/v1/> [options]
+const HELP = `Usage: caramel-encode-hls <media/slug> --base-url <https://cdn/videos/slug/v1/> [options]
 
 Turns media/<slug>/ (source video, subs/*.srt, meta.yaml) into out/<slug>/:
 HLS (H.264 + AAC, fMP4, one file per rendition with byte-range playlists),

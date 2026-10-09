@@ -1,6 +1,6 @@
 /*
  * The whole skin stylesheet in one file, in the order define.ts loads it:
- * Video.js base and skin styles, then the esp overrides (which bring the
+ * Video.js base and skin styles, then the caramel overrides (which bring the
  * theme tokens). For pages that want the CSS up front (SSR, no flash of an
  * unstyled player before the elements register).
  */

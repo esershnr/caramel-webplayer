@@ -32,7 +32,7 @@ export type { IconNode };
 
 /**
  * Player icon registry. Keys are the semantic names used in skin markup and
- * by <esp-morph-icon>. Values are Lucide IconNode data (24x24, stroke).
+ * by <caramel-morph-icon>. Values are Lucide IconNode data (24x24, stroke).
  */
 export const icons = {
   play: Play,

@@ -14,7 +14,7 @@ import '@esershnr/caramel-chapters/define'; // registers the element, loads the 
 
 ```html
 <video-player id="player">…</video-player>
-<esp-chapters-panel for="player"></esp-chapters-panel>
+<caramel-chapters-panel for="player"></caramel-chapters-panel>
 ```
 
 React:

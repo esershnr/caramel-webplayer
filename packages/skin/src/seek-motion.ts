@@ -7,8 +7,8 @@
  * playback itself) is instant, because the fill has no transition outside
  * the window opened here.
  *
- * During the window the slider carries `data-esp-seek` and
- * `--esp-seek-target`; the skin pins `--media-slider-fill` to the target with
+ * During the window the slider carries `data-caramel-seek` and
+ * `--caramel-seek-target`; the skin pins `--media-slider-fill` to the target with
  * `!important`, so the timeupdate / seeking values Video.js keeps writing
  * inline cannot retarget the transition halfway (that was the stutter). The
  * window closes once the transition has finished AND the media is no longer
@@ -16,8 +16,8 @@
  * position without a second move. Under reduced motion the duration token is
  * 0ms and the click is a plain jump.
  */
-export const SEEK_MOTION_ATTR = 'data-esp-seek';
-export const SEEK_TARGET_VAR = '--esp-seek-target';
+export const SEEK_MOTION_ATTR = 'data-caramel-seek';
+export const SEEK_TARGET_VAR = '--caramel-seek-target';
 
 /** Upper bound for the transition wait (the fill duration is 500ms). */
 const MOTION_FALLBACK_MS = 700;
@@ -107,7 +107,7 @@ export function installSeekMotion(root: Document = document): () => void {
   const onPointerUp = (event: PointerEvent) => {
     const target = event.composedPath()[0];
     if (!(target instanceof Element)) return;
-    const slider = target.closest<HTMLElement>('.esp-skin media-time-slider');
+    const slider = target.closest<HTMLElement>('.caramel-skin media-time-slider');
     if (!slider || slider.hasAttribute('data-disabled')) return;
     if (!isTrackClick({ pointerType: event.pointerType, button: event.button, dragging: slider.hasAttribute('data-dragging') })) return;
     const rect = slider.getBoundingClientRect();
@@ -123,7 +123,7 @@ export function installSeekMotion(root: Document = document): () => void {
     for (const slider of Array.from(holds, ([el]) => el)) {
       const interrupted =
         event.type === 'keydown'
-          ? target instanceof Node && (slider.closest('.esp-skin')?.contains(target) ?? false)
+          ? target instanceof Node && (slider.closest('.caramel-skin')?.contains(target) ?? false)
           : slider.hasAttribute('data-dragging');
       if (interrupted) release(slider);
     }

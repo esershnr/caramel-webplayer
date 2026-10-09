@@ -7,7 +7,7 @@ import type { PlaylistItem } from './types.js';
 /** Turns React's useId into a safe `id`/`for` value. */
 function sanitize(raw: string): string {
   const cleaned = raw.replace(/[^A-Za-z0-9_-]/g, '');
-  return cleaned ? `esp-playlist-${cleaned}` : 'esp-playlist';
+  return cleaned ? `caramel-playlist-${cleaned}` : 'caramel-playlist';
 }
 
 export interface PlaylistProps {
@@ -30,7 +30,7 @@ export interface PlaylistProps {
 }
 
 /**
- * React wrapper for <esp-playlist>. Render it inside `<EspVideoSkin extras>`
+ * React wrapper for <caramel-playlist>. Render it inside `<CaramelVideoSkin extras>`
  * or anywhere inside the player, or outside it with `playerId`. The skin
  * already gates its media on element registration (its `ready` state), so
  * the playlist finds a mounted media element by the time it runs; it only
@@ -63,12 +63,12 @@ export function Playlist({
     const controller = new AbortController();
     const { signal } = controller;
     el.addEventListener(
-      'esp-playlist-change',
+      'caramel-playlist-change',
       (e) => onChange?.((e as CustomEvent<PlaylistChangeDetail>).detail),
       { signal },
     );
     el.addEventListener(
-      'esp-playlist-ended',
+      'caramel-playlist-ended',
       (e) => onEnded?.((e as CustomEvent<PlaylistEndedDetail>).detail),
       { signal },
     );
@@ -76,7 +76,7 @@ export function Playlist({
   }, [onChange, onEnded]);
 
   return (
-    <esp-playlist
+    <caramel-playlist
       ref={ref}
       id={elementId}
       items={json}
@@ -91,7 +91,7 @@ export function Playlist({
 }
 
 export interface PlaylistPanelProps {
-  /** Id of the `<Playlist>` / `<esp-playlist>` controller. Optional inside one. */
+  /** Id of the `<Playlist>` / `<caramel-playlist>` controller. Optional inside one. */
   for?: string | undefined;
   heading?: string | undefined;
   noHeading?: boolean | undefined;
@@ -101,14 +101,14 @@ export interface PlaylistPanelProps {
   style?: CSSProperties | undefined;
 }
 
-/** React wrapper for <esp-playlist-panel>. Renders outside the video, themed by `.esp-theme`. */
+/** React wrapper for <caramel-playlist-panel>. Renders outside the video, themed by `.caramel-theme`. */
 export function PlaylistPanel({ for: forId, heading, noHeading, nav, className, style }: PlaylistPanelProps) {
   useEffect(() => {
     void import('./define.js');
   }, []);
 
   return (
-    <esp-playlist-panel
+    <caramel-playlist-panel
       for={forId}
       heading={heading}
       no-heading={noHeading ? '' : undefined}
@@ -123,7 +123,7 @@ declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     interface IntrinsicElements {
-      'esp-playlist': {
+      'caramel-playlist': {
         ref?: import('react').Ref<HTMLElement> | undefined;
         id?: string | undefined;
         items?: string | undefined;
@@ -134,7 +134,7 @@ declare module 'react' {
         'list-id'?: string | undefined;
         'no-resume'?: string | undefined;
       };
-      'esp-playlist-panel': {
+      'caramel-playlist-panel': {
         ref?: import('react').Ref<HTMLElement> | undefined;
         class?: string | undefined;
         style?: import('react').CSSProperties | undefined;

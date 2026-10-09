@@ -1,6 +1,6 @@
 # @esershnr/caramel-theme
 
-Design tokens for the esersahiner Video.js 10 player: `--esp-*` custom
+Design tokens for the esersahiner Video.js 10 player: `--caramel-*` custom
 properties for the light (latte) and dark (bitter) palette, timeline segment
 colors, motion, radii and typography, plus Catppuccin and neutral presets.
 
@@ -20,11 +20,11 @@ const stop = watchTheme((scheme) => console.log(scheme)); // 'light' | 'dark'
 ```css
 /* after tokens.css */
 :root {
-  --esp-accent: #2f80ed;
+  --caramel-accent: #2f80ed;
 }
 ```
 
-Put `class="esp-theme"` on elements that should follow the color scheme. The
+Put `class="caramel-theme"` on elements that should follow the color scheme. The
 other player packages import `tokens.css` themselves.
 
 Token table, scheme rules and contrast guidance: see the

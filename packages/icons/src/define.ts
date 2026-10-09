@@ -1,10 +1,10 @@
-import { EspMorphIconElement } from './morph-icon.js';
+import { CaramelMorphIconElement } from './morph-icon.js';
 
-/** Registers <esp-morph-icon>. Idempotent; a no-op without a DOM (SSR). */
-export function defineEspMorphIcon(tag: string = EspMorphIconElement.tagName): void {
+/** Registers <caramel-morph-icon>. Idempotent; a no-op without a DOM (SSR). */
+export function defineCaramelMorphIcon(tag: string = CaramelMorphIconElement.tagName): void {
   if (typeof window === 'undefined' || typeof customElements === 'undefined') return;
   if (customElements.get(tag)) return;
-  customElements.define(tag, EspMorphIconElement);
+  customElements.define(tag, CaramelMorphIconElement);
 }
 
-defineEspMorphIcon();
+defineCaramelMorphIcon();

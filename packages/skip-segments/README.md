@@ -11,14 +11,14 @@ npm install @esershnr/caramel-skip-segments @videojs/html
 ```ts
 import '@esershnr/caramel-skip-segments/define'; // registers the element, loads the CSS
 
-const skip = document.createElement('esp-skip-segments');
+const skip = document.createElement('caramel-skip-segments');
 skip.setAttribute('segments', JSON.stringify([
   { start: 0, end: 30, type: 'intro' },
   { start: 600, end: 640, type: 'sponsor' },
 ]));
 skip.setAttribute('auto-skip', 'recap'); // comma separated types, or "all"
 document.querySelector('media-container')!.append(skip);
-skip.addEventListener('esp-skip', (e) => console.log(e.detail));
+skip.addEventListener('caramel-skip', (e) => console.log(e.detail));
 ```
 
 React:
@@ -30,7 +30,7 @@ import { SkipSegments } from '@esershnr/caramel-skip-segments/react';
 ```
 
 Place it inside the player (with `@esershnr/caramel-skin`, pass it in
-`extras`). Band colors: `--esp-segment-intro/recap/outro/sponsor`. More:
+`extras`). Band colors: `--caramel-segment-intro/recap/outro/sponsor`. More:
 [root README](../../README.md).
 
 MIT License, Copyright (c) 2026 Eser Şahiner.

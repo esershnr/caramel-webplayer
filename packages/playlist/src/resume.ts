@@ -29,7 +29,7 @@ export const RESUME_END_MARGIN = 5;
 export const DEFAULT_LIST_ID = 'default';
 
 export function resumeKey(listId: string | null | undefined, itemId: string): string {
-  return `esp-playlist:${listId || DEFAULT_LIST_ID}:${itemId}`;
+  return `caramel-playlist:${listId || DEFAULT_LIST_ID}:${itemId}`;
 }
 
 /** Throttle check: save when nothing was saved yet or the interval has passed. */

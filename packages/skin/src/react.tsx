@@ -4,7 +4,7 @@ import { useEffect, useId, useMemo, useState, type CSSProperties, type ReactNode
 import { SKIN_TEMPLATE } from './template.js';
 import { applyUid, parseOpenTag, sanitizeUid, splitContainer } from './template-utils.js';
 
-export interface EspVideoSkinProps {
+export interface CaramelVideoSkinProps {
   /** The media element, for example `<video src="..." playsInline />`. */
   children: ReactNode;
   /** Id of the `<video-player>` element, for panels that use `for`/`playerId`. */
@@ -25,7 +25,7 @@ export interface EspVideoSkinProps {
  * App Router. Renders custom elements; registration happens in the browser
  * only so server rendering and hydration stay clean.
  */
-export function EspVideoSkin({ children, id, title, poster, lang, className, style, extras }: EspVideoSkinProps) {
+export function CaramelVideoSkin({ children, id, title, poster, lang, className, style, extras }: CaramelVideoSkinProps) {
   const uid = sanitizeUid(useId());
   // The media mounts only after the player and skin elements are registered.
   // Otherwise the media element connects before <video-player> upgrades and

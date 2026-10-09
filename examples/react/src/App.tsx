@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { EspVideoSkin } from '@esershnr/caramel-skin/react';
+import { CaramelVideoSkin } from '@esershnr/caramel-skin/react';
 import { SkipSegments } from '@esershnr/caramel-skip-segments/react';
 import { ChaptersPanel } from '@esershnr/caramel-chapters/react';
 import { Playlist, PlaylistPanel } from '@esershnr/caramel-playlist/react';
@@ -87,14 +87,14 @@ export function App() {
   return (
     <>
       <header className="demo-header">
-        <h1 className="esp-heading">Player demo (React)</h1>
+        <h1 className="caramel-heading">Player demo (React)</h1>
         <div className="demo-theme" role="group" aria-label="Tema">
           {(['light', 'dark', 'system'] as const).map((c) => (
             <button key={c} type="button" data-theme-choice={c} aria-pressed={choice === c} onClick={() => setChoice(c)}>
               {c === 'light' ? 'Açık' : c === 'dark' ? 'Koyu' : 'Sistem'}
             </button>
           ))}
-          <span className="demo-resolved esp-tabular">çözülen: {resolved}</span>
+          <span className="demo-resolved caramel-tabular">çözülen: {resolved}</span>
         </div>
         <div className="demo-theme" role="group" aria-label="Dil">
           {(['tr', 'en'] as const).map((l) => (
@@ -107,7 +107,7 @@ export function App() {
 
       <main className="demo-main">
         <div className="demo-stage">
-          <EspVideoSkin
+          <CaramelVideoSkin
             id="player"
             className="demo-player"
             lang={lang}
@@ -126,14 +126,14 @@ export function App() {
           >
             {/* src, poster, title and tracks come from the playlist item */}
             <hls-video playsinline="" crossorigin="anonymous" preload="metadata" />
-          </EspVideoSkin>
+          </CaramelVideoSkin>
           <ChaptersPanel playerId="player" className="demo-chapters" onChapterSelect={onChapter} />
         </div>
 
         <aside className="demo-side">
           <PlaylistPanel for="playlist" className="demo-playlist" />
           <section className="demo-panel">
-            <h2 className="esp-heading">Zaman çizelgesi bantları</h2>
+            <h2 className="caramel-heading">Zaman çizelgesi bantları</h2>
             <p className="demo-muted">
               Çizgili bant otomatik atlanır (demo: özet). Önizleme kartı fare bandın üstündeyken türü gösterir.
             </p>
@@ -145,8 +145,8 @@ export function App() {
             </ul>
           </section>
           <section className="demo-panel">
-            <h2 className="esp-heading">Olaylar</h2>
-            <ol className="demo-list demo-log esp-tabular">
+            <h2 className="caramel-heading">Olaylar</h2>
+            <ol className="demo-list demo-log caramel-tabular">
               {log.map((line, i) => (
                 <li key={`${i}-${line}`}>{line}</li>
               ))}

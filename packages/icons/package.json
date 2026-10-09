@@ -1,7 +1,7 @@
 {
   "name": "@esershnr/caramel-icons",
   "version": "0.1.0",
-  "description": "Lucide icon data and a morphing <esp-morph-icon> element for the esersahiner Video.js 10 player",
+  "description": "Lucide icon data and a morphing <caramel-morph-icon> element for the esersahiner Video.js 10 player",
   "keywords": [
     "videojs",
     "video.js",
@@ -32,17 +32,17 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "esp-source": "./src/index.ts",
+      "caramel-source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
     "./define": {
-      "esp-source": "./src/define.ts",
+      "caramel-source": "./src/define.ts",
       "types": "./dist/define.d.ts",
       "default": "./dist/define.js"
     },
     "./react": {
-      "esp-source": "./src/react.tsx",
+      "caramel-source": "./src/react.tsx",
       "types": "./dist/react.d.ts",
       "default": "./dist/react.js"
     },

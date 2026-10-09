@@ -1,9 +1,9 @@
-export const MEDIA_MARKER = '<!--esp:media-->';
+export const MEDIA_MARKER = '<!--caramel:media-->';
 
 /** Turns an arbitrary string (for example React's useId) into a safe id prefix. */
 export function sanitizeUid(raw: string): string {
   const cleaned = raw.replace(/[^A-Za-z0-9_-]/g, '');
-  return cleaned ? `esp-${cleaned}` : 'esp';
+  return cleaned ? `caramel-${cleaned}` : 'caramel';
 }
 
 /** Fills the `{{uid}}` id placeholders of the template. */

@@ -26,14 +26,14 @@ const PLAYER_TAG = 'video-player';
 const LOOKUP_RETRIES = 30;
 
 /**
- * <esp-chapters-panel>
+ * <caramel-chapters-panel>
  *
  * A chapter list that lives OUTSIDE the video, on a themed surface. It is fed
  * only by the player store's `chaptersCues` (the first `kind="chapters"` text
  * track), so there is no separate data format.
  *
  *   <video-player id="player">...</video-player>
- *   <esp-chapters-panel for="player"></esp-chapters-panel>
+ *   <caramel-chapters-panel for="player"></caramel-chapters-panel>
  *
  * Attributes:
  *   for         id of the `<video-player>` to follow
@@ -46,7 +46,7 @@ const LOOKUP_RETRIES = 30;
  *   cues        the current cue list (read only)
  *   activeIndex index of the active chapter, or -1 (read only)
  *
- * Events: `esp-chapter-select` (detail: ChapterSelectDetail), bubbles.
+ * Events: `caramel-chapter-select` (detail: ChapterSelectDetail), bubbles.
  */
 /** Language of the nearest `lang` ancestor: the `lang` property first (reactive
  *  elements such as <media-i18n> do not reflect it to the attribute), then the attribute. */
@@ -56,8 +56,8 @@ function langOf(element: Element | null): string {
   return (typeof own === 'string' && own) || element.getAttribute('lang') || '';
 }
 
-export class EspChaptersPanelElement extends Base {
-  static readonly tagName = 'esp-chapters-panel';
+export class CaramelChaptersPanelElement extends Base {
+  static readonly tagName = 'caramel-chapters-panel';
 
   static get observedAttributes(): string[] {
     return ['for', 'heading', 'no-heading', 'lang'];
@@ -104,7 +104,7 @@ export class EspChaptersPanelElement extends Base {
 
   connectedCallback(): void {
     registerChaptersI18n();
-    this.classList.add('esp-theme');
+    this.classList.add('caramel-theme');
     this.#disconnect?.abort();
     this.#disconnect = new AbortController();
     this.#ensureSkeleton();
@@ -140,7 +140,7 @@ export class EspChaptersPanelElement extends Base {
     }
   }
 
-  /** Seeks to the chapter at `index` and dispatches `esp-chapter-select`. */
+  /** Seeks to the chapter at `index` and dispatches `caramel-chapter-select`. */
   select(index: number): boolean {
     const cue = this.#cues[index];
     if (!cue || !this.#store) return false;
@@ -148,7 +148,7 @@ export class EspChaptersPanelElement extends Base {
     if (!time) return false;
     void time.seek(cue.startTime);
     this.dispatchEvent(
-      new CustomEvent<ChapterSelectDetail>('esp-chapter-select', {
+      new CustomEvent<ChapterSelectDetail>('caramel-chapter-select', {
         detail: { cue, index },
         bubbles: true,
         composed: true,
@@ -269,13 +269,13 @@ export class EspChaptersPanelElement extends Base {
     const signal = this.#disconnect?.signal ?? new AbortController().signal;
 
     const heading = document.createElement('h2');
-    heading.className = 'esp-chapters-heading esp-heading';
+    heading.className = 'caramel-chapters-heading caramel-heading';
 
     const empty = document.createElement('p');
-    empty.className = 'esp-chapters-empty';
+    empty.className = 'caramel-chapters-empty';
 
     const list = document.createElement('ol');
-    list.className = 'esp-chapters-list';
+    list.className = 'caramel-chapters-list';
     list.setAttribute('role', 'list');
     // Listeners on own children live as long as the element; a disconnect
     // and reconnect must not strip them, so no abort signal here.
@@ -296,17 +296,17 @@ export class EspChaptersPanelElement extends Base {
     const nodes: HTMLLIElement[] = [];
     this.#cues.forEach((cue, index) => {
       const li = document.createElement('li');
-      li.className = 'esp-chapter';
+      li.className = 'caramel-chapter';
       const button = document.createElement('button');
       button.type = 'button';
-      button.className = 'esp-chapter-button';
+      button.className = 'caramel-chapter-button';
       button.dataset['index'] = String(index);
       button.tabIndex = -1;
       const time = document.createElement('span');
-      time.className = 'esp-chapter-time esp-tabular';
+      time.className = 'caramel-chapter-time caramel-tabular';
       time.textContent = formatTime(cue.startTime);
       const title = document.createElement('span');
-      title.className = 'esp-chapter-title';
+      title.className = 'caramel-chapter-title';
       title.textContent = cue.text;
       button.append(time, title);
       li.append(button);
@@ -386,7 +386,7 @@ export class EspChaptersPanelElement extends Base {
 
   #indexOf(target: EventTarget | null): number {
     if (!(target instanceof Element)) return -1;
-    const button = target.closest<HTMLButtonElement>('.esp-chapter-button');
+    const button = target.closest<HTMLButtonElement>('.caramel-chapter-button');
     if (!button || !this.#list?.contains(button)) return -1;
     const index = Number(button.dataset['index']);
     return Number.isInteger(index) ? index : -1;
@@ -437,6 +437,6 @@ export class EspChaptersPanelElement extends Base {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'esp-chapters-panel': EspChaptersPanelElement;
+    'caramel-chapters-panel': CaramelChaptersPanelElement;
   }
 }

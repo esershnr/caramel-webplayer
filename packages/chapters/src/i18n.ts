@@ -2,8 +2,8 @@ import { createTranslator, getI18nTranslations, registerI18n, type Translator } 
 
 /** Translation keys used by the chapter panel, in the Video.js i18n registry. */
 export const CHAPTERS_KEYS = {
-  heading: 'esp.chapters.heading',
-  empty: 'esp.chapters.empty',
+  heading: 'caramel.chapters.heading',
+  empty: 'caramel.chapters.empty',
 } as const;
 
 /** English defaults, used when no translation is registered. */
@@ -21,15 +21,15 @@ let registered = false;
 
 /**
  * Registers the Turkish and English strings for the chapter panel in the
- * shared Video.js i18n registry. Idempotent. The `esp` namespace is ours, so
+ * shared Video.js i18n registry. Idempotent. The `caramel` namespace is ours, so
  * the call is cast past the typed built-in phrase catalog.
  */
 export function registerChaptersI18n(): void {
   if (registered) return;
   registered = true;
   const register = registerI18n as unknown as (locale: string, translations: Record<string, unknown>) => void;
-  register('tr', { esp: { chapters: TR } });
-  register('en', { esp: { chapters: CHAPTERS_DEFAULTS } });
+  register('tr', { caramel: { chapters: TR } });
+  register('en', { caramel: { chapters: CHAPTERS_DEFAULTS } });
 }
 
 /**

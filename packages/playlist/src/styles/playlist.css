@@ -1,57 +1,57 @@
 /*
- * <esp-playlist> and <esp-playlist-panel> styles. The panel sits outside the
- * video and follows the page theme through the .esp-theme scope it carries.
- * Plain, unlayered rules scoped by the element tags. Only --esp-* tokens.
+ * <caramel-playlist> and <caramel-playlist-panel> styles. The panel sits outside the
+ * video and follows the page theme through the .caramel-theme scope it carries.
+ * Plain, unlayered rules scoped by the element tags. Only --caramel-* tokens.
  */
 @import '@esershnr/caramel-theme/tokens.css';
 
 /* The controller renders nothing. */
-esp-playlist {
+caramel-playlist {
   display: none;
 }
 
-esp-playlist-panel {
-  container: esp-playlist / inline-size;
-  --esp-playlist-max-height: 28rem;
-  --esp-playlist-thumb-width: 6.5rem;
+caramel-playlist-panel {
+  container: caramel-playlist / inline-size;
+  --caramel-playlist-max-height: 28rem;
+  --caramel-playlist-thumb-width: 6.5rem;
 
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   box-sizing: border-box;
   padding: 1rem;
-  border-radius: var(--esp-radius-panel);
-  background: var(--esp-surface);
-  color: var(--esp-text);
-  font-family: var(--esp-font-body);
+  border-radius: var(--caramel-radius-panel);
+  background: var(--caramel-surface);
+  color: var(--caramel-text);
+  font-family: var(--caramel-font-body);
   font-size: 0.9375rem;
   line-height: 1.35;
 }
 
-esp-playlist-panel .esp-playlist-heading {
+caramel-playlist-panel .caramel-playlist-heading {
   margin: 0;
   padding: 0.25rem 0.5rem 0;
-  font-family: var(--esp-font-heading);
+  font-family: var(--caramel-font-heading);
   font-size: 1.125rem;
   font-weight: 600;
 }
 
-esp-playlist-panel .esp-playlist-heading[hidden] {
+caramel-playlist-panel .caramel-playlist-heading[hidden] {
   display: none;
 }
 
 /* Previous / next */
-esp-playlist-panel .esp-playlist-nav {
+caramel-playlist-panel .caramel-playlist-nav {
   display: flex;
   gap: 0.5rem;
   padding: 0 0.5rem;
 }
 
-esp-playlist-panel .esp-playlist-nav[hidden] {
+caramel-playlist-panel .caramel-playlist-nav[hidden] {
   display: none;
 }
 
-esp-playlist-panel .esp-playlist-nav-button {
+caramel-playlist-panel .caramel-playlist-nav-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -59,48 +59,48 @@ esp-playlist-panel .esp-playlist-nav-button {
   height: 2.25rem;
   padding: 0;
   border: 0;
-  border-radius: var(--esp-radius-chip);
-  background: var(--esp-solid);
-  color: var(--esp-solid-contrast);
+  border-radius: var(--caramel-radius-chip);
+  background: var(--caramel-solid);
+  color: var(--caramel-solid-contrast);
   cursor: pointer;
-  transition: transform var(--esp-duration-instant) var(--esp-ease-fill);
+  transition: transform var(--caramel-duration-instant) var(--caramel-ease-fill);
 }
 
-esp-playlist-panel .esp-playlist-nav-button:hover:not(:disabled) {
-  background: var(--esp-solid-hover);
+caramel-playlist-panel .caramel-playlist-nav-button:hover:not(:disabled) {
+  background: var(--caramel-solid-hover);
 }
 
-esp-playlist-panel .esp-playlist-nav-button:active:not(:disabled) {
+caramel-playlist-panel .caramel-playlist-nav-button:active:not(:disabled) {
   transform: scale(0.95);
 }
 
-esp-playlist-panel .esp-playlist-nav-button:disabled {
+caramel-playlist-panel .caramel-playlist-nav-button:disabled {
   /* Keep the pill visible; only the glyph dims (stays above 3:1 on the pill). */
-  background: color-mix(in srgb, var(--esp-solid) 55%, var(--esp-surface));
-  color: color-mix(in srgb, var(--esp-solid-contrast) 70%, var(--esp-solid));
+  background: color-mix(in srgb, var(--caramel-solid) 55%, var(--caramel-surface));
+  color: color-mix(in srgb, var(--caramel-solid-contrast) 70%, var(--caramel-solid));
   cursor: default;
 }
 
-esp-playlist-panel .esp-playlist-nav-button:focus-visible {
-  outline: var(--esp-focus-ring);
-  outline-offset: var(--esp-focus-offset);
+caramel-playlist-panel .caramel-playlist-nav-button:focus-visible {
+  outline: var(--caramel-focus-ring);
+  outline-offset: var(--caramel-focus-offset);
 }
 
-esp-playlist-panel .esp-playlist-nav-icon {
+caramel-playlist-panel .caramel-playlist-nav-icon {
   display: block;
   width: 1.25rem;
   height: 1.25rem;
 }
 
-esp-playlist-panel .esp-playlist-nav-icon > svg {
+caramel-playlist-panel .caramel-playlist-nav-icon > svg {
   display: block;
   width: 100%;
   height: 100%;
 }
 
 /* Scroll area */
-esp-playlist-panel .esp-playlist-scroll {
-  max-height: var(--esp-playlist-max-height);
+caramel-playlist-panel .caramel-playlist-scroll {
+  max-height: var(--caramel-playlist-max-height);
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
@@ -108,7 +108,7 @@ esp-playlist-panel .esp-playlist-scroll {
   padding: 0.25rem 0.5rem;
 }
 
-esp-playlist-panel .esp-playlist-list {
+caramel-playlist-panel .caramel-playlist-list {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -117,90 +117,90 @@ esp-playlist-panel .esp-playlist-list {
   list-style: none;
 }
 
-esp-playlist-panel .esp-playlist-row {
+caramel-playlist-panel .caramel-playlist-row {
   margin: 0;
   padding: 0;
 }
 
-esp-playlist-panel .esp-playlist-row + .esp-playlist-row {
-  border-top: 1px solid var(--esp-divider);
+caramel-playlist-panel .caramel-playlist-row + .caramel-playlist-row {
+  border-top: 1px solid var(--caramel-divider);
   padding-top: 0.5rem;
 }
 
 /* Item */
-esp-playlist-panel .esp-playlist-item {
+caramel-playlist-panel .caramel-playlist-item {
   display: grid;
-  grid-template-columns: 1.75rem var(--esp-playlist-thumb-width) minmax(0, 1fr);
+  grid-template-columns: 1.75rem var(--caramel-playlist-thumb-width) minmax(0, 1fr);
   align-items: center;
   gap: 0.75rem;
   width: 100%;
   box-sizing: border-box;
   padding: 0.5rem 0.75rem 0.5rem 0.5rem;
   border: 0;
-  border-radius: var(--esp-radius-box);
-  background: var(--esp-raised);
+  border-radius: var(--caramel-radius-box);
+  background: var(--caramel-raised);
   color: inherit;
   font: inherit;
   text-align: start;
   cursor: pointer;
-  transition: transform var(--esp-duration-fast) var(--esp-ease-enter);
+  transition: transform var(--caramel-duration-fast) var(--caramel-ease-enter);
 }
 
-esp-playlist-panel .esp-playlist-item:hover {
-  background: var(--esp-raised-hover);
+caramel-playlist-panel .caramel-playlist-item:hover {
+  background: var(--caramel-raised-hover);
 }
 
-esp-playlist-panel .esp-playlist-item:active {
+caramel-playlist-panel .caramel-playlist-item:active {
   transform: scale(0.99);
-  transition-duration: var(--esp-duration-instant);
+  transition-duration: var(--caramel-duration-instant);
 }
 
-esp-playlist-panel .esp-playlist-item[data-active] {
-  outline: 2px solid var(--esp-primary);
+caramel-playlist-panel .caramel-playlist-item[data-active] {
+  outline: 2px solid var(--caramel-primary);
   outline-offset: -2px;
 }
 
-esp-playlist-panel .esp-playlist-item:focus-visible {
-  outline: var(--esp-focus-ring);
-  outline-offset: var(--esp-focus-offset);
+caramel-playlist-panel .caramel-playlist-item:focus-visible {
+  outline: var(--caramel-focus-ring);
+  outline-offset: var(--caramel-focus-offset);
 }
 
-esp-playlist-panel .esp-playlist-number {
-  color: var(--esp-muted);
+caramel-playlist-panel .caramel-playlist-number {
+  color: var(--caramel-muted);
   font-size: 0.875rem;
   font-variant-numeric: tabular-nums;
   text-align: center;
 }
 
-esp-playlist-panel .esp-playlist-item[data-active] .esp-playlist-number {
-  color: var(--esp-primary);
+caramel-playlist-panel .caramel-playlist-item[data-active] .caramel-playlist-number {
+  color: var(--caramel-primary);
   font-weight: 600;
 }
 
-esp-playlist-panel .esp-playlist-thumb {
+caramel-playlist-panel .caramel-playlist-thumb {
   display: block;
   aspect-ratio: 16 / 9;
   width: 100%;
   overflow: hidden;
-  border-radius: var(--esp-radius-box);
-  background: var(--esp-divider);
+  border-radius: var(--caramel-radius-box);
+  background: var(--caramel-divider);
 }
 
-esp-playlist-panel .esp-playlist-thumb > img {
+caramel-playlist-panel .caramel-playlist-thumb > img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-esp-playlist-panel .esp-playlist-text {
+caramel-playlist-panel .caramel-playlist-text {
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
   min-width: 0;
 }
 
-esp-playlist-panel .esp-playlist-title {
+caramel-playlist-panel .caramel-playlist-title {
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
@@ -208,50 +208,50 @@ esp-playlist-panel .esp-playlist-title {
   font-weight: 600;
 }
 
-esp-playlist-panel .esp-playlist-duration {
-  color: var(--esp-muted);
+caramel-playlist-panel .caramel-playlist-duration {
+  color: var(--caramel-muted);
   font-size: 0.8125rem;
   font-variant-numeric: tabular-nums;
 }
 
-esp-playlist-panel .esp-playlist-empty {
+caramel-playlist-panel .caramel-playlist-empty {
   margin: 0;
   padding: 0.75rem 0.5rem;
-  color: var(--esp-muted);
+  color: var(--caramel-muted);
 }
 
-esp-playlist-panel .esp-playlist-empty[hidden] {
+caramel-playlist-panel .caramel-playlist-empty[hidden] {
   display: none;
 }
 
 /* The panel is its own query container (see the root rule). */
-@container esp-playlist (width < 22rem) {
-  esp-playlist-panel .esp-playlist-item {
+@container caramel-playlist (width < 22rem) {
+  caramel-playlist-panel .caramel-playlist-item {
     grid-template-columns: 1.75rem minmax(0, 1fr);
   }
 
-  esp-playlist-panel .esp-playlist-thumb {
+  caramel-playlist-panel .caramel-playlist-thumb {
     display: none;
   }
 }
 
 @media (forced-colors: active) {
-  esp-playlist-panel {
+  caramel-playlist-panel {
     border: 1px solid CanvasText;
   }
 
-  esp-playlist-panel .esp-playlist-item,
-  esp-playlist-panel .esp-playlist-nav-button {
+  caramel-playlist-panel .caramel-playlist-item,
+  caramel-playlist-panel .caramel-playlist-nav-button {
     border: 1px solid ButtonText;
     background: ButtonFace;
     color: ButtonText;
   }
 
-  esp-playlist-panel .esp-playlist-item[data-active] {
+  caramel-playlist-panel .caramel-playlist-item[data-active] {
     outline: 2px solid Highlight;
   }
 
-  esp-playlist-panel .esp-playlist-nav-button:disabled {
+  caramel-playlist-panel .caramel-playlist-nav-button:disabled {
     color: GrayText;
     opacity: 1;
   }

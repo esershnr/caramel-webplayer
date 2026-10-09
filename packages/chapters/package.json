@@ -31,22 +31,22 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "esp-source": "./src/index.ts",
+      "caramel-source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
     "./define": {
-      "esp-source": "./src/define.ts",
+      "caramel-source": "./src/define.ts",
       "types": "./dist/define.d.ts",
       "default": "./dist/define.js"
     },
     "./react": {
-      "esp-source": "./src/react.tsx",
+      "caramel-source": "./src/react.tsx",
       "types": "./dist/react.d.ts",
       "default": "./dist/react.js"
     },
     "./chapters.css": {
-      "esp-source": "./src/styles/chapters.css",
+      "caramel-source": "./src/styles/chapters.css",
       "default": "./dist/styles/chapters.css"
     },
     "./package.json": "./package.json"

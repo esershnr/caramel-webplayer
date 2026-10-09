@@ -16,7 +16,7 @@ export interface ChaptersPanelProps {
 }
 
 /**
- * React wrapper for <esp-chapters-panel>. Place it anywhere on the page and
+ * React wrapper for <caramel-chapters-panel>. Place it anywhere on the page and
  * point it at the player with `playerId`. Registers the element in the browser
  * only (Next.js App Router safe).
  */
@@ -32,7 +32,7 @@ export function ChaptersPanel({ playerId, heading, noHeading, onChapterSelect, c
     if (!el) return;
     const controller = new AbortController();
     el.addEventListener(
-      'esp-chapter-select',
+      'caramel-chapter-select',
       (e) => onChapterSelect?.((e as CustomEvent<ChapterSelectDetail>).detail),
       { signal: controller.signal },
     );
@@ -40,7 +40,7 @@ export function ChaptersPanel({ playerId, heading, noHeading, onChapterSelect, c
   }, [onChapterSelect]);
 
   return (
-    <esp-chapters-panel
+    <caramel-chapters-panel
       ref={ref}
       class={className}
       style={style}
@@ -55,7 +55,7 @@ declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     interface IntrinsicElements {
-      'esp-chapters-panel': {
+      'caramel-chapters-panel': {
         ref?: import('react').Ref<HTMLElement> | undefined;
         class?: string | undefined;
         style?: import('react').CSSProperties | undefined;

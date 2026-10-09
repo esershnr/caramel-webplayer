@@ -10,7 +10,7 @@ export interface PlaylistModelOptions {
 export type PlaylistListener = () => void;
 
 /**
- * Pure queue behind <esp-playlist>. Holds the items and the current index,
+ * Pure queue behind <caramel-playlist>. Holds the items and the current index,
  * answers navigation questions and tells the element where to go when an
  * item ends. No DOM, no timers, fully testable.
  */

@@ -19,7 +19,7 @@ export {
 export { formatDuration } from './format.js';
 export { PLAYLIST_KEYS, PLAYLIST_DEFAULTS, registerPlaylistI18n, createPlaylistTranslator } from './i18n.js';
 export {
-  EspPlaylistElement,
+  CaramelPlaylistElement,
   findMedia,
   trackSpecsFor,
   type PlaylistChangeDetail,
@@ -27,6 +27,6 @@ export {
   type PlayerLike,
   type TrackSpec,
 } from './element.js';
-export { EspPlaylistPanelElement } from './panel.js';
-export { defineEspPlaylist } from './define.js';
-export { EspPlaylistNavElement, previousAction, RESTART_AFTER_SECONDS } from './nav.js';
+export { CaramelPlaylistPanelElement } from './panel.js';
+export { defineCaramelPlaylist } from './define.js';
+export { CaramelPlaylistNavElement, previousAction, RESTART_AFTER_SECONDS } from './nav.js';

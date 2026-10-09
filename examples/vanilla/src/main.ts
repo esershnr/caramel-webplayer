@@ -22,10 +22,10 @@ media.setAttribute('playsinline', '');
 media.setAttribute('crossorigin', 'anonymous');
 media.setAttribute('preload', 'metadata');
 
-const skip = document.createElement('esp-skip-segments');
+const skip = document.createElement('caramel-skip-segments');
 skip.setAttribute('auto-skip', 'recap');
 
-const playlist = document.createElement('esp-playlist');
+const playlist = document.createElement('caramel-playlist');
 playlist.id = 'playlist';
 playlist.setAttribute('list-id', 'demo');
 playlist.items = PLAYLIST;
@@ -53,19 +53,19 @@ function addLog(text: string) {
   while (log.children.length > 30) log.lastElementChild?.remove();
 }
 
-skip.addEventListener('esp-skip', (e) => {
+skip.addEventListener('caramel-skip', (e) => {
   const { segment, auto, to } = (e as CustomEvent<SkipEventDetail>).detail;
   addLog(`${auto ? 'auto-skip' : 'skip'} ${segment.type} -> ${fmt(to)}`);
 });
-skip.addEventListener('esp-segment-enter', (e) => {
+skip.addEventListener('caramel-segment-enter', (e) => {
   addLog(`enter ${(e as CustomEvent<{ segment: Segment }>).detail.segment.type}`);
 });
-playlist.addEventListener('esp-playlist-change', (e) => {
+playlist.addEventListener('caramel-playlist-change', (e) => {
   const { item, index } = (e as CustomEvent<{ item: PlaylistItem; index: number }>).detail;
   addLog(`playlist ${index + 1}/${playlist.items.length} ${item.title}`);
 });
-playlist.addEventListener('esp-playlist-ended', () => addLog('playlist ended'));
-document.querySelector('esp-chapters-panel')?.addEventListener('esp-chapter-select', (e) => {
+playlist.addEventListener('caramel-playlist-ended', () => addLog('playlist ended'));
+document.querySelector('caramel-chapters-panel')?.addEventListener('caramel-chapter-select', (e) => {
   const { cue } = (e as CustomEvent<{ cue: { text: string; startTime: number } }>).detail;
   addLog(`chapter ${cue.text} @ ${fmt(cue.startTime)}`);
 });

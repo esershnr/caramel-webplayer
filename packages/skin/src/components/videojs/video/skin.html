@@ -2,9 +2,9 @@
   Derived from the Video.js 10 default video skin (https://videojs.org).
   Copyright 2025-present Video.js contributors. Licensed under the Apache
   License, Version 2.0 (see LICENSE-APACHE in this package).
-  Modified by Eser Şahiner, 2026 (inline icons and esp elements).
+  Modified by Eser Şahiner, 2026 (inline icons and caramel elements).
 -->
-<media-container class="media-skin media-container video-skin esp-skin" data-theme="default" data-preset="video">
+<media-container class="media-skin media-container video-skin caramel-skin" data-theme="default" data-preset="video">
 <!-- Add a compatible media component here. -->
 <media-poster class="media-poster">
 <img alt="" decoding="async" class="media-poster-image">
@@ -38,8 +38,8 @@
 <media-tooltip-group>
 <media-controls-group class="video-controls-primary">
 <media-play-button class="media-button media-play-button" id="vjs-6EpYm0RN-0-trigger">
-<esp-morph-icon class="media-button-icon esp-morph-icon" map="data-ended:restart,data-paused:play,*:pause">
-</esp-morph-icon>
+<caramel-morph-icon class="media-button-icon caramel-morph-icon" map="data-ended:restart,data-paused:play,*:pause">
+</caramel-morph-icon>
 </media-play-button>
 <media-tooltip trigger="vjs-6EpYm0RN-0-trigger" side="top" class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 <media-tooltip-label>
@@ -47,11 +47,11 @@
 <media-tooltip-shortcut class="media-tooltip-shortcut">
 </media-tooltip-shortcut>
 </media-tooltip>
-<esp-playlist-nav class="esp-playlist-nav" hidden>
-</esp-playlist-nav>
+<caramel-playlist-nav class="caramel-playlist-nav" hidden>
+</caramel-playlist-nav>
 <media-mute-button commandfor="vjs-9Jipq7XQ-0-popup" class="media-button media-mute-button video-controls-volume-button" id="vjs-6EpYm0RN-0-2-trigger">
-<esp-morph-icon class="media-button-icon esp-morph-icon" map="data-muted:volume-off,data-volume-level=off:volume-off,data-volume-level=low:volume-low,*:volume-high">
-</esp-morph-icon>
+<caramel-morph-icon class="media-button-icon caramel-morph-icon" map="data-muted:volume-off,data-volume-level=off:volume-off,data-volume-level=low:volume-low,*:volume-high">
+</caramel-morph-icon>
 </media-mute-button>
 <media-tooltip trigger="vjs-6EpYm0RN-0-2-trigger" delay="0" disabled sticky side="top" class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 <media-tooltip-label>
@@ -70,17 +70,17 @@
 </media-volume-slider>
 </media-volume-popover>
 <media-controls-group class="video-time-slider-group">
-<esp-time-display class="esp-time-display video-time-value">
-<button type="button" class="esp-time-button esp-tabular">
-<media-time class="esp-time-current" type="current">
+<caramel-time-display class="caramel-time-display video-time-value">
+<button type="button" class="caramel-time-button caramel-tabular">
+<media-time class="caramel-time-current" type="current">
 </media-time>
-<media-time class="esp-time-remaining" type="remaining">
+<media-time class="caramel-time-remaining" type="remaining">
 </media-time>
-<span class="esp-time-sep" aria-hidden="true">/</span>
-<media-time class="esp-time-duration" type="duration">
+<span class="caramel-time-sep" aria-hidden="true">/</span>
+<media-time class="caramel-time-duration" type="duration">
 </media-time>
 </button>
-</esp-time-display>
+</caramel-time-display>
 <media-time-slider class="media-slider media-time-slider">
 <media-time-slider-chapters class="media-time-slider-chapters">
 <template>
@@ -97,19 +97,19 @@
 <media-slider-thumb class="media-slider-thumb media-time-slider-thumb">
 </media-slider-thumb>
 <media-slider-preview class="media-slider-preview" overflow="clamp">
-<div class="media-slider-preview-content esp-preview-card esp-theme">
-<esp-preview-size hidden>
-</esp-preview-size>
-<media-slider-thumbnail class="media-popup-surface media-slider-thumbnail esp-preview-thumbnail">
+<div class="media-slider-preview-content caramel-preview-card caramel-theme">
+<caramel-preview-size hidden>
+</caramel-preview-size>
+<media-slider-thumbnail class="media-popup-surface media-slider-thumbnail caramel-preview-thumbnail">
 <img alt="" aria-hidden="true" decoding="async" class="media-slider-thumbnail-image">
 <media-icon name="spinner" class="media-slider-thumbnail-spinner-icon">
 </media-icon>
 </media-slider-thumbnail>
-<div class="esp-preview-label">
-<media-slider-value class="media-time-slider-value esp-preview-time" type="pointer">
+<div class="caramel-preview-label">
+<media-slider-value class="media-time-slider-value caramel-preview-time" type="pointer">
 </media-slider-value>
-<span class="esp-preview-sep" aria-hidden="true">·</span>
-<media-time-slider-chapter-title class="media-time-slider-chapter-title esp-preview-title">
+<span class="caramel-preview-sep" aria-hidden="true">·</span>
+<media-time-slider-chapter-title class="media-time-slider-chapter-title caramel-preview-title">
 </media-time-slider-chapter-title>
 </div>
 </div>
@@ -117,8 +117,8 @@
 </media-time-slider>
 </media-controls-group>
 <media-captions-button class="media-button media-captions-button video-controls-captions-button" id="vjs-6EpYm0RN-0-3-trigger">
-<esp-morph-icon class="media-button-icon esp-morph-icon" map="data-active:captions-on,*:captions-off">
-</esp-morph-icon>
+<caramel-morph-icon class="media-button-icon caramel-morph-icon" map="data-active:captions-on,*:captions-off">
+</caramel-morph-icon>
 </media-captions-button>
 <media-tooltip trigger="vjs-6EpYm0RN-0-3-trigger" side="top" class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 <media-tooltip-label>
@@ -127,16 +127,16 @@
 </media-tooltip-shortcut>
 </media-tooltip>
 <button commandfor="vjs-Keqr6Ase-0-popup" class="media-button media-settings-menu-trigger video-controls-settings-button" id="vjs-6EpYm0RN-0-4-trigger">
-<esp-morph-icon class="media-button-icon-base media-settings-menu-trigger-icon esp-morph-icon" map="aria-expanded=true:close,*:settings">
-</esp-morph-icon>
-<esp-quality-badge class="esp-quality-badge" data-empty>
-</esp-quality-badge>
+<caramel-morph-icon class="media-button-icon-base media-settings-menu-trigger-icon caramel-morph-icon" map="aria-expanded=true:close,*:settings">
+</caramel-morph-icon>
+<caramel-quality-badge class="caramel-quality-badge" data-empty>
+</caramel-quality-badge>
 <media-text class="media-settings-menu-trigger-label" token="menu.settings">Settings</media-text>
 </button>
 <media-tooltip trigger="vjs-6EpYm0RN-0-4-trigger" side="top" class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 <media-text token="menu.settings">Settings</media-text>
 </media-tooltip>
-<media-menu side="top" align="center" class="media-popup media-popup-surface media-menu-popup media-menu-resizable-popup esp-theme" id="vjs-Keqr6Ase-0-popup">
+<media-menu side="top" align="center" class="media-popup media-popup-surface media-menu-popup media-menu-resizable-popup caramel-theme" id="vjs-Keqr6Ase-0-popup">
 <media-menu-content class="media-menu-content">
 <media-menu-item commandfor="vjs-tLacI0er-0-content" class="media-menu-trigger-item">
 <media-icon name="switches" class="media-menu-trigger-item-icon">
@@ -157,7 +157,7 @@
 </media-menu-item>
 <media-menu-separator class="media-menu-separator">
 </media-menu-separator>
-<esp-quality-radio-group class="media-menu-radio-group">
+<caramel-quality-radio-group class="media-menu-radio-group">
 <template>
 <media-menu-radio-item class="media-menu-radio-item">
 <span>
@@ -174,7 +174,7 @@
 </media-menu-item-indicator>
 </media-menu-radio-item>
 </template>
-</esp-quality-radio-group>
+</caramel-quality-radio-group>
 </media-menu-content>
 <media-menu-item commandfor="vjs-Eo8DtgMd-0-content" class="media-menu-trigger-item">
 <media-icon name="speech" class="media-menu-trigger-item-icon">
@@ -301,8 +301,8 @@
 </media-tooltip-shortcut>
 </media-tooltip>
 <media-pip-button class="media-button media-pip-button" id="vjs-6EpYm0RN-0-7-trigger">
-<esp-morph-icon class="media-button-icon esp-morph-icon" map="data-pip:pip-exit,*:pip-enter">
-</esp-morph-icon>
+<caramel-morph-icon class="media-button-icon caramel-morph-icon" map="data-pip:pip-exit,*:pip-enter">
+</caramel-morph-icon>
 </media-pip-button>
 <media-tooltip trigger="vjs-6EpYm0RN-0-7-trigger" side="top" class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 <media-tooltip-label>
@@ -311,8 +311,8 @@
 </media-tooltip-shortcut>
 </media-tooltip>
 <media-fullscreen-button class="media-button media-fullscreen-button" id="vjs-6EpYm0RN-0-8-trigger">
-<esp-morph-icon class="media-button-icon esp-morph-icon" map="data-fullscreen:fullscreen-exit,*:fullscreen-enter">
-</esp-morph-icon>
+<caramel-morph-icon class="media-button-icon caramel-morph-icon" map="data-fullscreen:fullscreen-exit,*:fullscreen-enter">
+</caramel-morph-icon>
 </media-fullscreen-button>
 <media-tooltip trigger="vjs-6EpYm0RN-0-8-trigger" side="top" class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 <media-tooltip-label>
@@ -373,26 +373,26 @@
 <div class="video-status-indicators">
 <media-volume-indicator class="media-indicator media-volume-indicator">
 <media-volume-indicator-fill class="media-indicator-content media-volume-indicator-fill">
-<esp-morph-icon class="media-volume-indicator-icon esp-morph-icon" target="media-volume-indicator" map="data-level=off:volume-off,data-level=low:volume-low,*:volume-high">
-</esp-morph-icon>
+<caramel-morph-icon class="media-volume-indicator-icon caramel-morph-icon" target="media-volume-indicator" map="data-level=off:volume-off,data-level=low:volume-low,*:volume-high">
+</caramel-morph-icon>
 <media-volume-indicator-value class="media-volume-indicator-value">
 </media-volume-indicator-value>
 </media-volume-indicator-fill>
 </media-volume-indicator>
 <media-status-indicator actions="toggleSubtitles,toggleFullscreen,togglePictureInPicture" class="media-indicator media-status-indicator">
 <div class="media-indicator-content media-status-indicator-content">
-<esp-morph-icon class="media-status-indicator-icon esp-morph-icon" target="media-status-indicator" map="data-status=captions-on:captions-on,data-status=captions-off:captions-off,data-status=fullscreen:fullscreen-enter,data-status=exit-fullscreen:fullscreen-exit,data-status=pip:pip-enter,data-status=exit-pip:pip-exit">
-</esp-morph-icon>
+<caramel-morph-icon class="media-status-indicator-icon caramel-morph-icon" target="media-status-indicator" map="data-status=captions-on:captions-on,data-status=captions-off:captions-off,data-status=fullscreen:fullscreen-enter,data-status=exit-fullscreen:fullscreen-exit,data-status=pip:pip-enter,data-status=exit-pip:pip-exit">
+</caramel-morph-icon>
 <media-status-indicator-value class="media-status-indicator-value">
 </media-status-indicator-value>
 </div>
 </media-status-indicator>
-<esp-seek-indicator class="media-seek-indicator">
+<caramel-seek-indicator class="media-seek-indicator">
 <media-icon name="chevron" class="media-seek-indicator-icon">
 </media-icon>
 <media-seek-indicator-value class="media-seek-indicator-value">
 </media-seek-indicator-value>
-</esp-seek-indicator>
+</caramel-seek-indicator>
 <media-status-indicator actions="togglePaused" class="media-playback-status-indicator">
 <media-icon name="play" class="media-playback-status-indicator-play-icon">
 </media-icon>

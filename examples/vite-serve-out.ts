@@ -17,7 +17,7 @@ const TYPES: Record<string, string> = {
 
 export function serveOut(root: string): Plugin {
   return {
-    name: 'esp-serve-out',
+    name: 'caramel-serve-out',
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
         const url = req.url ?? '';

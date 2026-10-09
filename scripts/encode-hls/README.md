@@ -98,7 +98,7 @@ kartı bu genişliği aynen kullanır, büyütmez). Mevcut `v1/` çıktısı 240
 öyle kalır. Kare genişliğini değiştirmek yeniden encode ister (en azından
 `--skip-video` ile) ve yeni çıktı `v2/` gibi yeni bir klasöre yüklenmelidir:
 aynı yoldaki sprite'ları üzerine yazmak CDN önbelleği yüzünden işe yaramaz.
-Yalnız kartı küçültmek / büyütmek için encode gerekmez: `--esp-preview-width`
+Yalnız kartı küçültmek / büyütmek için encode gerekmez: `--caramel-preview-width`
 token'ı yeter (büyütürsen resim bulanıklaşır).
 
 ## 5. R2 CORS kuralı

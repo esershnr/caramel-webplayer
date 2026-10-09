@@ -69,7 +69,7 @@ function toBoolean(value: unknown): boolean {
 function noop(): void {}
 
 /**
- * <esp-playlist>
+ * <caramel-playlist>
  *
  * Playlist controller. Renders nothing; it drives a `<video-player>`: swaps
  * the media, tracks, title, poster and skip segments when the current item
@@ -78,7 +78,7 @@ function noop(): void {}
  * Place it inside the player (for example as a skin `extra`) or anywhere on
  * the page with `for="<player id>"` or the `player` property.
  *
- *   <esp-playlist for="player" items='[{"id":"a","title":"A","src":"a.mp4"}]' list-id="course-1"></esp-playlist>
+ *   <caramel-playlist for="player" items='[{"id":"a","title":"A","src":"a.mp4"}]' list-id="course-1"></caramel-playlist>
  *
  * Attributes / properties:
  *   items            JSON array (attribute) or PlaylistItem[] (property)
@@ -91,14 +91,14 @@ function noop(): void {}
  *   player           (property) the player element itself
  *
  * Methods: `select(indexOrId)`, `next()`, `previous()`.
- * Events: `esp-playlist-change` ({ item, index }), `esp-playlist-ended` ({ item, index })
+ * Events: `caramel-playlist-change` ({ item, index }), `caramel-playlist-ended` ({ item, index })
  * when the last item ends and nothing follows.
  *
  * HLS items create `<hls-video>`; the host must register it with
  * `import '@videojs/html/media/hls-video'`.
  */
-export class EspPlaylistElement extends Base {
-  static readonly tagName = 'esp-playlist';
+export class CaramelPlaylistElement extends Base {
+  static readonly tagName = 'caramel-playlist';
 
   static override get observedAttributes(): string[] {
     return [
@@ -444,7 +444,7 @@ export class EspPlaylistElement extends Base {
     if (sameSrc) this.#applySegments(player, true);
 
     // 5. Notify.
-    this.#emit('esp-playlist-change', { item, index } satisfies PlaylistChangeDetail);
+    this.#emit('caramel-playlist-change', { item, index } satisfies PlaylistChangeDetail);
 
     // Resume bookkeeping for the new item.
     this.#pendingRestore = this.#storage ? readResume(this.#storage, this.#key(item)) : null;
@@ -469,7 +469,7 @@ export class EspPlaylistElement extends Base {
     const segments = this.#pendingSegments;
     if (segments === null) return;
     this.#pendingSegments = null;
-    const skip = player.querySelector('esp-skip-segments') as
+    const skip = player.querySelector('caramel-skip-segments') as
       | (Element & { segments?: unknown; reset?: () => void })
       | null;
     if (!skip) return;
@@ -528,7 +528,7 @@ export class EspPlaylistElement extends Base {
 
     if (tag === 'hls-video' && typeof customElements !== 'undefined' && !customElements.get('hls-video') && !warnedHls) {
       warnedHls = true;
-      console.warn("<esp-playlist>: <hls-video> is not registered. Add `import '@videojs/html/media/hls-video'`.");
+      console.warn("<caramel-playlist>: <hls-video> is not registered. Add `import '@videojs/html/media/hls-video'`.");
     }
 
     // Tag mismatch: swap the element in place, keeping the host's media attributes.
@@ -614,7 +614,7 @@ export class EspPlaylistElement extends Base {
     if (this.#model.index !== index) return; // A selection is already pending.
     const target = this.#model.onEnded();
     if (target === null) {
-      this.#emit('esp-playlist-ended', { item, index } satisfies PlaylistEndedDetail);
+      this.#emit('caramel-playlist-ended', { item, index } satisfies PlaylistEndedDetail);
       return;
     }
     if (target === index) {
@@ -729,6 +729,6 @@ function tracksEqual(a: readonly Element[], b: readonly Element[]): boolean {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'esp-playlist': EspPlaylistElement;
+    'caramel-playlist': CaramelPlaylistElement;
   }
 }

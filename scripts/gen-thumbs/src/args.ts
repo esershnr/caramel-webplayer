@@ -28,7 +28,7 @@ export const DEFAULTS = {
   ffmpeg: 'ffmpeg',
 } as const;
 
-export const HELP = `Usage: esp-gen-thumbs <input> [options]
+export const HELP = `Usage: caramel-gen-thumbs <input> [options]
 
 Generate timeline thumbnail sprites and a WebVTT storyboard with ffmpeg.
 <input> is a local media file or an HTTP/HLS URL.

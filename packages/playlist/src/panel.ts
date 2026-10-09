@@ -2,7 +2,7 @@ import { scrollIntoContainer } from '@esershnr/caramel-theme';
 import { UIElement, type PropertyValues } from '@videojs/html';
 import type { Translator } from '@videojs/html/i18n';
 import { createIconElement, icons } from '@esershnr/caramel-icons';
-import type { EspPlaylistElement } from './element.js';
+import type { CaramelPlaylistElement } from './element.js';
 import { formatDuration } from './format.js';
 import { PLAYLIST_DEFAULTS, PLAYLIST_KEYS, createPlaylistTranslator, registerPlaylistI18n } from './i18n.js';
 import type { PlaylistItem } from './types.js';
@@ -17,14 +17,14 @@ let headingCounter = 0;
 const EMPTY_ITEMS: readonly PlaylistItem[] = [];
 
 /**
- * <esp-playlist-panel>
+ * <caramel-playlist-panel>
  *
- * Themed item list rendered outside the video. Connects to an `<esp-playlist>`
+ * Themed item list rendered outside the video. Connects to an `<caramel-playlist>`
  * controller through `for="<id>"`, the `controller` property or an
- * `<esp-playlist>` ancestor, and mirrors its items and current index.
+ * `<caramel-playlist>` ancestor, and mirrors its items and current index.
  *
- *   <esp-playlist id="queue" for="player" items="..."></esp-playlist>
- *   <esp-playlist-panel for="queue" heading="Bölümler"></esp-playlist-panel>
+ *   <caramel-playlist id="queue" for="player" items="..."></caramel-playlist>
+ *   <caramel-playlist-panel for="queue" heading="Bölümler"></caramel-playlist-panel>
  *
  * Attributes:
  *   for          id of the controller element
@@ -32,7 +32,7 @@ const EMPTY_ITEMS: readonly PlaylistItem[] = [];
  *   no-heading   hide the heading
  *   nav          `top` (default), `bottom` or `none`: where previous/next sit
  *
- * The root element carries the `.esp-theme` scope class, so the page theme
+ * The root element carries the `.caramel-theme` scope class, so the page theme
  * (light/dark) applies. Strings follow the nearest `lang` attribute, or
  * `<html lang>`, and re-resolve when the document language changes.
  */
@@ -44,15 +44,15 @@ function langOf(element: Element | null): string {
   return (typeof own === 'string' && own) || element.getAttribute('lang') || '';
 }
 
-export class EspPlaylistPanelElement extends Base {
-  static readonly tagName = 'esp-playlist-panel';
+export class CaramelPlaylistPanelElement extends Base {
+  static readonly tagName = 'caramel-playlist-panel';
 
   static override get observedAttributes(): string[] {
     return [...(super.observedAttributes ?? []), 'for', 'heading', 'no-heading', 'nav'];
   }
 
-  #explicitController: EspPlaylistElement | null = null;
-  #controller: EspPlaylistElement | null = null;
+  #explicitController: CaramelPlaylistElement | null = null;
+  #controller: CaramelPlaylistElement | null = null;
   #unsubscribe: (() => void) | null = null;
   #controllerAbort: AbortController | null = null;
   #disconnect: AbortController | null = null;
@@ -76,11 +76,11 @@ export class EspPlaylistPanelElement extends Base {
   #navPlacement: NavPlacement = 'top';
 
   /** The controller to mirror. Wins over `for` and the ancestor lookup. */
-  get controller(): EspPlaylistElement | null {
+  get controller(): CaramelPlaylistElement | null {
     return this.#controller;
   }
 
-  set controller(value: EspPlaylistElement | null) {
+  set controller(value: CaramelPlaylistElement | null) {
     this.#explicitController = value;
     if (this.isConnected) this.requestUpdate();
   }
@@ -88,7 +88,7 @@ export class EspPlaylistPanelElement extends Base {
   override connectedCallback(): void {
     super.connectedCallback();
     registerPlaylistI18n();
-    this.classList.add('esp-theme');
+    this.classList.add('caramel-theme');
     this.#disconnect?.abort();
     this.#disconnect = new AbortController();
     this.#ensureSkeleton();
@@ -125,18 +125,18 @@ export class EspPlaylistPanelElement extends Base {
   // Controller wiring ----------------------------------------------------
 
   #resolveController(): void {
-    let candidate: EspPlaylistElement | null = this.#explicitController;
+    let candidate: CaramelPlaylistElement | null = this.#explicitController;
     if (!candidate) {
       const forId = this.getAttribute('for');
-      if (forId) candidate = document.getElementById(forId) as EspPlaylistElement | null;
+      if (forId) candidate = document.getElementById(forId) as CaramelPlaylistElement | null;
     }
-    if (!candidate) candidate = this.closest('esp-playlist');
+    if (!candidate) candidate = this.closest('caramel-playlist');
 
     if (candidate && typeof candidate.subscribe !== 'function') {
       // Not upgraded yet: wait once for the definition. Already defined means
-      // the target is not an <esp-playlist>; do not retry.
-      if (typeof customElements !== 'undefined' && !customElements.get('esp-playlist')) {
-        this.#waitForDefinition('esp-playlist');
+      // the target is not an <caramel-playlist>; do not retry.
+      if (typeof customElements !== 'undefined' && !customElements.get('caramel-playlist')) {
+        this.#waitForDefinition('caramel-playlist');
       }
       candidate = null;
     }
@@ -147,7 +147,7 @@ export class EspPlaylistPanelElement extends Base {
     this.#controller = candidate;
     this.#unsubscribe = candidate.subscribe(() => this.requestUpdate());
     this.#controllerAbort = new AbortController();
-    candidate.addEventListener('esp-playlist-change', () => this.requestUpdate(), {
+    candidate.addEventListener('caramel-playlist-change', () => this.requestUpdate(), {
       signal: this.#controllerAbort.signal,
     });
     this.#renderedItems = null;
@@ -198,19 +198,19 @@ export class EspPlaylistPanelElement extends Base {
     const signal = this.#disconnect?.signal ?? new AbortController().signal;
 
     const heading = document.createElement('h2');
-    heading.className = 'esp-playlist-heading esp-heading';
-    heading.id = `esp-playlist-heading-${++headingCounter}`;
+    heading.className = 'caramel-playlist-heading caramel-heading';
+    heading.id = `caramel-playlist-heading-${++headingCounter}`;
 
     const nav = document.createElement('div');
-    nav.className = 'esp-playlist-nav';
-    const prev = this.#navButton('skip-back', 'esp-playlist-prev', () => this.#controller?.previous());
-    const next = this.#navButton('skip-forward', 'esp-playlist-next', () => this.#controller?.next());
+    nav.className = 'caramel-playlist-nav';
+    const prev = this.#navButton('skip-back', 'caramel-playlist-prev', () => this.#controller?.previous());
+    const next = this.#navButton('skip-forward', 'caramel-playlist-next', () => this.#controller?.next());
     nav.append(prev, next);
 
     const scroll = document.createElement('div');
-    scroll.className = 'esp-playlist-scroll';
+    scroll.className = 'caramel-playlist-scroll';
     const list = document.createElement('ol');
-    list.className = 'esp-playlist-list';
+    list.className = 'caramel-playlist-list';
     list.setAttribute('role', 'list');
     list.setAttribute('aria-labelledby', heading.id);
     // Own-child listeners live with the element: no abort signal (reconnect safe).
@@ -218,14 +218,14 @@ export class EspPlaylistPanelElement extends Base {
     list.addEventListener(
       'click',
       (event) => {
-        const button = (event.target as Element | null)?.closest<HTMLButtonElement>('.esp-playlist-item');
+        const button = (event.target as Element | null)?.closest<HTMLButtonElement>('.caramel-playlist-item');
         if (!button || !this.#listEl?.contains(button)) return;
         const index = Number(button.dataset['index']);
         if (Number.isInteger(index)) this.#controller?.select(index);
       },
     );
     const empty = document.createElement('p');
-    empty.className = 'esp-playlist-empty';
+    empty.className = 'caramel-playlist-empty';
     empty.hidden = true;
     scroll.append(list, empty);
 
@@ -242,9 +242,9 @@ export class EspPlaylistPanelElement extends Base {
   #navButton(icon: 'skip-back' | 'skip-forward', className: string, action: () => void) {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = `esp-playlist-nav-button ${className}`;
+    button.className = `caramel-playlist-nav-button ${className}`;
     const box = document.createElement('span');
-    box.className = 'esp-playlist-nav-icon';
+    box.className = 'caramel-playlist-nav-icon';
     box.append(createIconElement(icons[icon]));
     button.append(box);
     button.addEventListener('click', action);
@@ -324,20 +324,20 @@ export class EspPlaylistPanelElement extends Base {
 
   #renderItem(item: PlaylistItem, index: number): HTMLLIElement {
     const li = document.createElement('li');
-    li.className = 'esp-playlist-row';
+    li.className = 'caramel-playlist-row';
 
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'esp-playlist-item';
+    button.className = 'caramel-playlist-item';
     button.dataset['index'] = String(index);
     button.tabIndex = -1;
 
     const number = document.createElement('span');
-    number.className = 'esp-playlist-number esp-tabular';
+    number.className = 'caramel-playlist-number caramel-tabular';
     number.textContent = String(index + 1);
 
     const thumb = document.createElement('span');
-    thumb.className = 'esp-playlist-thumb';
+    thumb.className = 'caramel-playlist-thumb';
     if (item.poster) {
       const img = document.createElement('img');
       img.loading = 'lazy';
@@ -348,15 +348,15 @@ export class EspPlaylistPanelElement extends Base {
     }
 
     const text = document.createElement('span');
-    text.className = 'esp-playlist-text';
+    text.className = 'caramel-playlist-text';
     const title = document.createElement('span');
-    title.className = 'esp-playlist-title';
+    title.className = 'caramel-playlist-title';
     title.textContent = item.title;
     text.append(title);
     const duration = formatDuration(item.duration);
     if (duration) {
       const time = document.createElement('span');
-      time.className = 'esp-playlist-duration esp-tabular';
+      time.className = 'caramel-playlist-duration caramel-tabular';
       time.textContent = duration;
       text.append(time);
     }
@@ -367,7 +367,7 @@ export class EspPlaylistPanelElement extends Base {
   }
 
   #buttons(): HTMLButtonElement[] {
-    return this.#listEl ? Array.from(this.#listEl.querySelectorAll<HTMLButtonElement>('.esp-playlist-item')) : [];
+    return this.#listEl ? Array.from(this.#listEl.querySelectorAll<HTMLButtonElement>('.caramel-playlist-item')) : [];
   }
 
   #applyActive(index: number): void {
@@ -433,6 +433,6 @@ export class EspPlaylistPanelElement extends Base {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'esp-playlist-panel': EspPlaylistPanelElement;
+    'caramel-playlist-panel': CaramelPlaylistPanelElement;
   }
 }

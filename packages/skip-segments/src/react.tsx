@@ -20,7 +20,7 @@ export interface SkipSegmentsProps {
 }
 
 /**
- * React wrapper for <esp-skip-segments>. Place it inside `<EspVideoSkin extras>`
+ * React wrapper for <caramel-skip-segments>. Place it inside `<CaramelVideoSkin extras>`
  * or anywhere inside the player's container. Registers the element in the
  * browser only (Next.js App Router safe); segments travel as a JSON attribute
  * so the server markup matches the client.
@@ -49,14 +49,14 @@ export function SkipSegments({
     if (!el) return;
     const controller = new AbortController();
     const { signal } = controller;
-    el.addEventListener('esp-skip', (e) => onSkip?.((e as CustomEvent<SkipEventDetail>).detail), { signal });
+    el.addEventListener('caramel-skip', (e) => onSkip?.((e as CustomEvent<SkipEventDetail>).detail), { signal });
     el.addEventListener(
-      'esp-segment-enter',
+      'caramel-segment-enter',
       (e) => onSegmentEnter?.((e as CustomEvent<{ segment: Segment }>).detail.segment),
       { signal },
     );
     el.addEventListener(
-      'esp-segment-leave',
+      'caramel-segment-leave',
       (e) => onSegmentLeave?.((e as CustomEvent<{ segment: Segment }>).detail.segment),
       { signal },
     );
@@ -64,7 +64,7 @@ export function SkipSegments({
   }, [onSkip, onSegmentEnter, onSegmentLeave]);
 
   return (
-    <esp-skip-segments
+    <caramel-skip-segments
       ref={ref}
       class={className}
       style={style}
@@ -80,7 +80,7 @@ declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     interface IntrinsicElements {
-      'esp-skip-segments': {
+      'caramel-skip-segments': {
         ref?: import('react').Ref<HTMLElement> | undefined;
         class?: string | undefined;
         style?: import('react').CSSProperties | undefined;

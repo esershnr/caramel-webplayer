@@ -1,6 +1,6 @@
 # @esershnr/caramel-icons
 
-Lucide icon data for the esersahiner Video.js 10 player and `<esp-morph-icon>`,
+Lucide icon data for the esersahiner Video.js 10 player and `<caramel-morph-icon>`,
 an icon that morphs (Morphicons springs) when attributes on its parent change.
 
 ```sh
@@ -16,7 +16,7 @@ const html = iconToSvg(icons.play, { className: 'my-icon' }); // SSR-safe string
 
 ```html
 <button data-paused>
-  <esp-morph-icon map="data-paused:play,*:pause"></esp-morph-icon>
+  <caramel-morph-icon map="data-paused:play,*:pause"></caramel-morph-icon>
 </button>
 ```
 

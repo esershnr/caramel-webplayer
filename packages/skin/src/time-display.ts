@@ -7,11 +7,11 @@ const Base: typeof UIElement =
 
 export type TimeDisplayMode = 'elapsed' | 'remaining';
 
-export const TIME_DISPLAY_STORAGE_KEY = 'esp-time-display';
+export const TIME_DISPLAY_STORAGE_KEY = 'caramel-time-display';
 
 const KEYS = {
-  showRemaining: 'esp.time.showRemaining',
-  showElapsed: 'esp.time.showElapsed',
+  showRemaining: 'caramel.time.showRemaining',
+  showElapsed: 'caramel.time.showElapsed',
 } as const;
 
 const EN = { showRemaining: 'Show remaining time', showElapsed: 'Show elapsed time' };
@@ -23,8 +23,8 @@ export function registerTimeDisplayI18n(): void {
   if (registered) return;
   registered = true;
   const register = registerI18n as unknown as (locale: string, translations: Record<string, unknown>) => void;
-  register('tr', { esp: { time: TR } });
-  register('en', { esp: { time: EN } });
+  register('tr', { caramel: { time: TR } });
+  register('en', { caramel: { time: EN } });
 }
 
 /** Reads the stored preference; anything unexpected means `elapsed`. */
@@ -45,26 +45,26 @@ export function writeTimeDisplayMode(storage: Pick<Storage, 'setItem'> | null, m
 }
 
 /**
- * <esp-time-display>
+ * <caramel-time-display>
  *
  * YouTube style clickable counter: `01:23 / 05:00` or `-03:37 / 05:00`. The
  * host markup provides the three `<media-time>` children inside a button:
  *
- *   <esp-time-display>
- *     <button type="button" class="esp-time-button">
- *       <media-time class="esp-time-current" type="current"></media-time>
- *       <media-time class="esp-time-remaining" type="remaining"></media-time>
- *       <span class="esp-time-sep" aria-hidden="true">/</span>
- *       <media-time class="esp-time-duration" type="duration"></media-time>
+ *   <caramel-time-display>
+ *     <button type="button" class="caramel-time-button">
+ *       <media-time class="caramel-time-current" type="current"></media-time>
+ *       <media-time class="caramel-time-remaining" type="remaining"></media-time>
+ *       <span class="caramel-time-sep" aria-hidden="true">/</span>
+ *       <media-time class="caramel-time-duration" type="duration"></media-time>
  *     </button>
- *   </esp-time-display>
+ *   </caramel-time-display>
  *
  * The element toggles `data-mode="elapsed|remaining"` (CSS shows one of the
  * two left values), keeps the choice in localStorage and labels the button
  * with the action it performs (TR/EN through the Video.js i18n registry).
  */
-export class EspTimeDisplayElement extends Base {
-  static readonly tagName = 'esp-time-display';
+export class CaramelTimeDisplayElement extends Base {
+  static readonly tagName = 'caramel-time-display';
 
   readonly #i18n = new I18nController(this, i18nContext);
   #mode: TimeDisplayMode = 'elapsed';
@@ -124,6 +124,6 @@ function storage(): Storage | null {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'esp-time-display': EspTimeDisplayElement;
+    'caramel-time-display': CaramelTimeDisplayElement;
   }
 }

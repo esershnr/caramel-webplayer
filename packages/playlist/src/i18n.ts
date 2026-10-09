@@ -2,10 +2,10 @@ import { createTranslator, getI18nTranslations, registerI18n, type Translator } 
 
 /** Translation keys used by the playlist panel, in the Video.js i18n registry. */
 export const PLAYLIST_KEYS = {
-  heading: 'esp.playlist.heading',
-  previous: 'esp.playlist.previous',
-  next: 'esp.playlist.next',
-  empty: 'esp.playlist.empty',
+  heading: 'caramel.playlist.heading',
+  previous: 'caramel.playlist.previous',
+  next: 'caramel.playlist.next',
+  empty: 'caramel.playlist.empty',
 } as const;
 
 /** English defaults, used when no translation is registered. */
@@ -27,15 +27,15 @@ let registered = false;
 
 /**
  * Registers the Turkish and English strings for the playlist panel in the
- * shared Video.js i18n registry. Idempotent. The `esp` namespace is ours, so
+ * shared Video.js i18n registry. Idempotent. The `caramel` namespace is ours, so
  * the call is cast past the typed built-in phrase catalog.
  */
 export function registerPlaylistI18n(): void {
   if (registered) return;
   registered = true;
   const register = registerI18n as unknown as (locale: string, translations: Record<string, unknown>) => void;
-  register('tr', { esp: { playlist: TR } });
-  register('en', { esp: { playlist: PLAYLIST_DEFAULTS } });
+  register('tr', { caramel: { playlist: TR } });
+  register('en', { caramel: { playlist: PLAYLIST_DEFAULTS } });
 }
 
 /**

@@ -15,15 +15,15 @@ export function qualityLabel(height: number | null | undefined): string | null {
 }
 
 /**
- * <esp-quality-badge>
+ * <caramel-quality-badge>
  *
  * Shows HD / FHD / 2K / 4K for the rendition that is playing right now
  * (automatic quality switches update it). Sources without rendition data (a
  * single MP4) fall back to the media element's decoded `videoHeight`.
  * Renders nothing below 720p. Place it inside the settings trigger button.
  */
-export class EspQualityBadgeElement extends Base {
-  static readonly tagName = 'esp-quality-badge';
+export class CaramelQualityBadgeElement extends Base {
+  static readonly tagName = 'caramel-quality-badge';
 
   readonly #quality = new PlayerController(this, playerContext, selectQuality);
   // Time updates are the cheapest frequent signal for re-reading videoHeight.
@@ -63,6 +63,6 @@ export class EspQualityBadgeElement extends Base {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'esp-quality-badge': EspQualityBadgeElement;
+    'caramel-quality-badge': CaramelQualityBadgeElement;
   }
 }

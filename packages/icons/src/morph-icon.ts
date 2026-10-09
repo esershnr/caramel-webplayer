@@ -10,18 +10,18 @@ const Base: typeof HTMLElement =
   typeof HTMLElement === 'undefined' ? (class {} as unknown as typeof HTMLElement) : HTMLElement;
 
 /**
- * <esp-morph-icon>
+ * <caramel-morph-icon>
  *
  * A stroke icon that morphs between Lucide shapes when attributes on its
  * parent (or a `target` ancestor) change. Designed to sit inside Video.js 10
  * buttons, which reflect state as data attributes:
  *
  *   <media-play-button>
- *     <esp-morph-icon map="data-ended:restart,data-paused:play,*:pause"></esp-morph-icon>
+ *     <caramel-morph-icon map="data-ended:restart,data-paused:play,*:pause"></caramel-morph-icon>
  *   </media-play-button>
  *
  *   <media-mute-button>
- *     <esp-morph-icon map="data-muted:volume-off,data-volume-level=low:volume-low,*:volume-high"></esp-morph-icon>
+ *     <caramel-morph-icon map="data-muted:volume-off,data-volume-level=low:volume-low,*:volume-high"></caramel-morph-icon>
  *   </media-mute-button>
  *
  * Attributes:
@@ -33,8 +33,8 @@ const Base: typeof HTMLElement =
  *
  * Reduced motion follows the OS setting: morphs become instant swaps.
  */
-export class EspMorphIconElement extends Base {
-  static readonly tagName = 'esp-morph-icon';
+export class CaramelMorphIconElement extends Base {
+  static readonly tagName = 'caramel-morph-icon';
   static readonly observedAttributes = ['map', 'watch', 'on', 'off', 'target', 'spring', 'icon'];
 
   #path: SVGPathElement | null = null;
@@ -176,6 +176,6 @@ export class EspMorphIconElement extends Base {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'esp-morph-icon': EspMorphIconElement;
+    'caramel-morph-icon': CaramelMorphIconElement;
   }
 }

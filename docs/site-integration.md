@@ -20,7 +20,7 @@ npm install @esershnr/caramel-theme@0.1.0 @esershnr/caramel-skin@0.1.0 \
 Yayınlanan paketlerde `exports` yalnız `dist/`'i gösterir. Next.js (webpack ve
 Turbopack) dev modunda `development` koşulunu ETKİNLEŞTİRİR; bu yüzden paketler
 o koşulu kullanmaz. Kaynak (`src/*.ts`) yalnız monorepo içinde, özel
-`esp-source` koşuluyla çözülür (tsconfig, örneklerin Vite ve Vitest
+`caramel-source` koşuluyla çözülür (tsconfig, örneklerin Vite ve Vitest
 config'leri); Next bu koşulu hiçbir modda açmadığı için site her zaman
 `dist/`'i alır.
 
@@ -55,7 +55,7 @@ yalnız tarayıcıda kaydeder, sunucu render'ı temiz kalır):
 ```tsx
 'use client';
 import { useEffect, useState } from 'react';
-import { EspVideoSkin } from '@esershnr/caramel-skin/react';
+import { CaramelVideoSkin } from '@esershnr/caramel-skin/react';
 import { SkipSegments } from '@esershnr/caramel-skip-segments/react';
 import { ChaptersPanel } from '@esershnr/caramel-chapters/react';
 import { Playlist, PlaylistPanel } from '@esershnr/caramel-playlist/react';
@@ -70,10 +70,10 @@ export function VideoPage({ lang }: { lang: 'tr' | 'en' }) {
     fetch(MANIFEST).then((r) => r.json()).then((item: PlaylistItem) => setItems([item]));
   }, []);
   return (
-    <div className="esp-theme" lang={lang}>
-      <EspVideoSkin id="player" lang={lang} extras={<><SkipSegments segments={[]} autoSkip={['recap']} /><Playlist id="playlist" items={items} listId="site" /></>}>
+    <div className="caramel-theme" lang={lang}>
+      <CaramelVideoSkin id="player" lang={lang} extras={<><SkipSegments segments={[]} autoSkip={['recap']} /><Playlist id="playlist" items={items} listId="site" /></>}>
         <hls-video playsinline="" crossorigin="anonymous" preload="metadata" />
-      </EspVideoSkin>
+      </CaramelVideoSkin>
       <ChaptersPanel playerId="player" />
       <PlaylistPanel for="playlist" nav="none" />
     </div>
@@ -88,7 +88,7 @@ export function VideoPage({ lang }: { lang: 'tr' | 'en' }) {
 - HLS `src` mutlak URL olmalı (motor göreli URL'yi `Invalid base URL` ile reddeder); playlist denetleyicisi göreli verileni `document.baseURI` ile mutlaklaştırır, manifest zaten mutlak yazar.
 - Dil: `lang` prop'u hem player etiketlerini (`<media-i18n>`) hem bölüm track'ini
   (`chapters: { tr, en }`) seçer; `<html lang>` değişince otomatik takip eder.
-- Tema: site zaten `.dark` sınıfını `<html>`'e koyuyor; `.esp-theme` kapsamı bunu okur.
+- Tema: site zaten `.dark` sınıfını `<html>`'e koyuyor; `.caramel-theme` kapsamı bunu okur.
 - Manifest'i sunucuda da çekip `items` olarak verebilirsin; bileşen SSR'da
   player iskeletini üretir, media elementini elementler kaydolunca bağlar.
 
@@ -97,6 +97,6 @@ export function VideoPage({ lang }: { lang: 'tr' | 'en' }) {
 - CDN'de `Range` için CORS izni (scripts/encode-hls/README.md, bölüm 5).
 - Yeni encode için `v2/` yolu ve sitede yalnız manifest URL'sinin değişmesi.
 - Kurulumdan sonra `next dev` ve `next build` ikisinde de çalıştığını doğrula; ikisi de
-  paketlerin `dist/` çıktısını kullanır (`esp-source` koşulu yalnız monorepo içindir).
+  paketlerin `dist/` çıktısını kullanır (`caramel-source` koşulu yalnız monorepo içindir).
 - Lisans: skin paketi `MIT AND Apache-2.0` (Video.js 10 skin türevi dosyalar
   Apache-2.0); diğerleri MIT. Ayrıntı paketlerdeki `NOTICE` dosyalarında.

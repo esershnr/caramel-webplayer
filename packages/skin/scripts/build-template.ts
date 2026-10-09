@@ -6,7 +6,7 @@
  *   the skin stylesheet keeps targeting them.
  * - Random element ids (`vjs-XXXXXXXX-0...`) become `{{uid}}-N` placeholders so
  *   several players can share a page.
- * - The media placeholder comment becomes `<!--esp:media-->`.
+ * - The media placeholder comment becomes `<!--caramel:media-->`.
  *
  * Run with: pnpm --filter @esershnr/caramel-skin build:template
  */
@@ -37,7 +37,7 @@ const notice = /^\s*<!--([\s\S]*?)-->\s*/.exec(html);
 html = html.slice(notice?.[0].length ?? 0);
 
 // 1. Media placeholder
-html = html.replace('<!-- Add a compatible media component here. -->', '<!--esp:media-->');
+html = html.replace('<!-- Add a compatible media component here. -->', '<!--caramel:media-->');
 
 // 2. Inline static icons
 const missing = new Set<string>();
@@ -52,7 +52,7 @@ html = html.replace(
     }
     const classMatch = /class="([^"]*)"/.exec(rest);
     const className = classMatch?.[1];
-    const extra = `esp-icon esp-icon-${iconName}`;
+    const extra = `caramel-icon caramel-icon-${iconName}`;
     return iconToSvg(node, { className: className ? `${className} ${extra}` : extra });
   },
 );

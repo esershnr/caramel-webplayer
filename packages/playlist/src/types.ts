@@ -16,7 +16,7 @@ export interface PlaylistSubtitle {
  * Shared playlist item contract. Every package that touches playlists reads
  * this shape; the demos and host sites author it.
  *
- * When the current item changes, `<esp-playlist>` must update all of these
+ * When the current item changes, `<caramel-playlist>` must update all of these
  * together, in this order:
  *   1. `content-title` and `poster` attributes on `<video-player>`.
  *   2. The media element: `src` on the existing element when its tag matches
@@ -24,9 +24,9 @@ export interface PlaylistSubtitle {
  *      does not.
  *   3. The `<track>` children of the media: chapters (`kind="chapters" default`),
  *      thumbnails (`kind="metadata" label="thumbnails" default`) and subtitles.
- *   4. `segments` on the `<esp-skip-segments>` inside the same player
+ *   4. `segments` on the `<caramel-skip-segments>` inside the same player
  *      (`[]` when the item has none).
- *   5. A bubbling `esp-playlist-change` event with `{ item, index }`.
+ *   5. A bubbling `caramel-playlist-change` event with `{ item, index }`.
  * The chapter panel needs nothing: it reads `chaptersCues` from the player store,
  * which follows the chapters track.
  */

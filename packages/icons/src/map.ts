@@ -1,5 +1,5 @@
 /**
- * Attribute to icon rules used by <esp-morph-icon>.
+ * Attribute to icon rules used by <caramel-morph-icon>.
  *
  * Syntax of the `map` attribute: comma separated rules, first match wins.
  *   - `data-ended:restart`            attribute present (any value)

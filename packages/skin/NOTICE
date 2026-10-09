@@ -22,7 +22,7 @@ packages/skin/src/components/videojs/ and are distributed in this package as:
 
 Modified by Eser Şahiner, 2026: the Video.js icon registry replaced by inline
 Lucide icons and morphing icons; the time readout, timeline preview, seek
-indicator and quality menu replaced or extended with esp elements (clickable
+indicator and quality menu replaced or extended with caramel elements (clickable
 counter, preview card, signed seek indicator, sorted quality list, quality
 badge, playlist buttons); theme and motion overrides added.
 Each modified file carries a notice at its top. The full Apache License 2.0

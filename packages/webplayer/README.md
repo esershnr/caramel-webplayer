@@ -29,18 +29,18 @@ React:
 ```tsx
 'use client';
 import '@esershnr/caramel-webplayer/webplayer.css';
-import { EspVideoSkin, SkipSegments } from '@esershnr/caramel-webplayer/react';
+import { CaramelVideoSkin, SkipSegments } from '@esershnr/caramel-webplayer/react';
 
-<EspVideoSkin id="player" lang="tr" extras={<SkipSegments segments={[{ start: 0, end: 30, type: 'intro' }]} />}>
+<CaramelVideoSkin id="player" lang="tr" extras={<SkipSegments segments={[{ start: 0, end: 30, type: 'intro' }]} />}>
   <video src="/video.mp4" playsInline />
-</EspVideoSkin>
+</CaramelVideoSkin>
 ```
 
 | Entry | Contents |
 | --- | --- |
 | `@esershnr/caramel-webplayer` | Every export of theme, icons, skin, skip-segments, chapters, playlist. `findActiveIndex` exists twice upstream, so it is `findActiveSegmentIndex` and `findActiveChapterIndex` here. |
 | `/define` | Registers all elements and loads their stylesheets (browser only). |
-| `/react` | All React wrappers (`EspVideoSkin`, `SkipSegments`, `ChaptersPanel`, `Playlist`, `PlaylistPanel`, `Icon`, `MorphIcon`). |
+| `/react` | All React wrappers (`CaramelVideoSkin`, `SkipSegments`, `ChaptersPanel`, `Playlist`, `PlaylistPanel`, `Icon`, `MorphIcon`). |
 | `/webplayer.css` | Theme tokens and the complete skin stylesheet, for loading CSS before the elements register (SSR). |
 
 Full guide, theming and the modular packages: [root README](../../README.md).

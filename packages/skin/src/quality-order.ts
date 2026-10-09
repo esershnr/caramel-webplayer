@@ -42,15 +42,15 @@ export function orderQualityValues(values: readonly string[], renditions: readon
 }
 
 /**
- * <esp-quality-radio-group>
+ * <caramel-quality-radio-group>
  *
  * Video.js quality radio group whose items are kept in `orderQualityValues`
  * order. The DOM itself is reordered, so arrow key navigation follows the
  * visual order.
  */
-export class EspQualityRadioGroupElement extends Base {
+export class CaramelQualityRadioGroupElement extends Base {
   /** Registration name (the inherited `tagName` is typed as the Video.js tag). */
-  static readonly espTagName = 'esp-quality-radio-group';
+  static readonly caramelTagName = 'caramel-quality-radio-group';
 
   readonly #quality = new PlayerController(this, playerContext, selectQuality);
 
@@ -78,6 +78,6 @@ export class EspQualityRadioGroupElement extends Base {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'esp-quality-radio-group': EspQualityRadioGroupElement;
+    'caramel-quality-radio-group': CaramelQualityRadioGroupElement;
   }
 }

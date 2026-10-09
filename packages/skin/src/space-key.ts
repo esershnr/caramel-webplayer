@@ -1,5 +1,5 @@
 /**
- * YouTube style Space and focus handling for every esp player on the page.
+ * YouTube style Space and focus handling for every caramel player on the page.
  *
  * Space: Video.js skips its Space hotkey when focus sits on a control that
  * uses Space as its own activation (buttons, sliders), so after clicking the
@@ -12,16 +12,16 @@
  * keep Space. Outside a player nothing changes, so page scrolling is intact.
  *
  * Focus ring: a pointer press inside a player marks the container with
- * `data-esp-pointer-focus` and the skin hides focus rings while it is set;
+ * `data-caramel-pointer-focus` and the skin hides focus rings while it is set;
  * Tab clears it, so keyboard navigation shows :focus-visible as before.
  */
-export const POINTER_FOCUS_ATTR = 'data-esp-pointer-focus';
+export const POINTER_FOCUS_ATTR = 'data-caramel-pointer-focus';
 
 /** Elements that use Space as their own activation (same set Video.js checks). */
 const ACTIVATABLE = 'button,a[href],[role="slider"],[role="button"]';
 const EDITABLE = 'input,textarea,select,[contenteditable]:not([contenteditable="false"])';
 const MENU_ITEM = '[role^="menuitem"],[role="option"]';
-const CONTAINER = 'media-container.esp-skin';
+const CONTAINER = 'media-container.caramel-skin';
 
 export interface SpaceTarget {
   key: string;

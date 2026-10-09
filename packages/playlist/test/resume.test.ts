@@ -37,9 +37,9 @@ function brokenStorage(): ResumeStorage {
 
 describe('resumeKey', () => {
   it('namespaces by list id with a default', () => {
-    expect(resumeKey('course', 'ep1')).toBe('esp-playlist:course:ep1');
-    expect(resumeKey(null, 'ep1')).toBe('esp-playlist:default:ep1');
-    expect(resumeKey('', 'ep1')).toBe('esp-playlist:default:ep1');
+    expect(resumeKey('course', 'ep1')).toBe('caramel-playlist:course:ep1');
+    expect(resumeKey(null, 'ep1')).toBe('caramel-playlist:default:ep1');
+    expect(resumeKey('', 'ep1')).toBe('caramel-playlist:default:ep1');
   });
 });
 

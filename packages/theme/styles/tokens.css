@@ -1,9 +1,9 @@
 /*
- * esersahiner.com player tokens (--esp-*).
+ * esersahiner.com player tokens (--caramel-*).
  * Source of truth for colors: esersahiner-next-js/lib/theme.js (latte D3 / bitter).
  *
  * Every color is declared once with light-dark(); the active scheme is decided
- * on the `.esp-theme` scope so the host page's own color-scheme is left alone.
+ * on the `.caramel-theme` scope so the host page's own color-scheme is left alone.
  * Precedence: data-theme="light|dark" or .light/.dark on <html> (or any
  * ancestor) wins, otherwise prefers-color-scheme.
  *
@@ -12,46 +12,46 @@
 
 :root {
   /* Surfaces (outside the video frame: playlist, chapter list, menus, cards) */
-  --esp-bg: light-dark(#fbf7f0, #141414);
-  --esp-surface: light-dark(#ece5da, #2d2d2d);
-  --esp-raised: light-dark(#faf7f2, #242424);
-  --esp-divider: light-dark(#d2c4b0, #454545);
-  --esp-border: light-dark(#8a5f36, #8a8a8a);
+  --caramel-bg: light-dark(#fbf7f0, #141414);
+  --caramel-surface: light-dark(#ece5da, #2d2d2d);
+  --caramel-raised: light-dark(#faf7f2, #242424);
+  --caramel-divider: light-dark(#d2c4b0, #454545);
+  --caramel-border: light-dark(#8a5f36, #8a8a8a);
 
   /* Text */
-  --esp-text: light-dark(#2a1606, #ffffff);
-  --esp-muted: light-dark(#553821, #b8b0a6);
+  --caramel-text: light-dark(#2a1606, #ffffff);
+  --caramel-muted: light-dark(#553821, #b8b0a6);
 
   /* Indicator: selection, focus ring, active chapter marker */
-  --esp-primary: light-dark(#5e3310, #c9945c);
+  --caramel-primary: light-dark(#5e3310, #c9945c);
 
   /* Solid fill: buttons, active list item */
-  --esp-solid: light-dark(#5e3310, #8a5a2b);
+  --caramel-solid: light-dark(#5e3310, #8a5a2b);
 
   /* Caramel accent: decoration only (progress fill, lines). Never for text. */
-  --esp-accent: #c9945c;
+  --caramel-accent: #c9945c;
   /* Readable caramel for text and icons */
-  --esp-accent-text: light-dark(#653d19, #d9ae7e);
+  --caramel-accent-text: light-dark(#653d19, #d9ae7e);
 
   /* Derived roles. Everything below follows the main tokens above, so a site
      that overrides only the main tokens gets matching hovers and contrasts.
-     Mixing with --esp-text darkens in light mode and lightens in dark mode. */
-  --esp-raised-hover: color-mix(in srgb, var(--esp-raised), var(--esp-text) 8%);
-  --esp-primary-hover: color-mix(in srgb, var(--esp-primary), var(--esp-text) 15%);
-  --esp-primary-contrast: light-dark(var(--esp-surface), var(--esp-bg));
-  --esp-solid-hover: color-mix(in srgb, var(--esp-solid), var(--esp-text) 15%);
-  --esp-solid-contrast: light-dark(var(--esp-surface), var(--esp-text));
+     Mixing with --caramel-text darkens in light mode and lightens in dark mode. */
+  --caramel-raised-hover: color-mix(in srgb, var(--caramel-raised), var(--caramel-text) 8%);
+  --caramel-primary-hover: color-mix(in srgb, var(--caramel-primary), var(--caramel-text) 15%);
+  --caramel-primary-contrast: light-dark(var(--caramel-surface), var(--caramel-bg));
+  --caramel-solid-hover: color-mix(in srgb, var(--caramel-solid), var(--caramel-text) 15%);
+  --caramel-solid-contrast: light-dark(var(--caramel-surface), var(--caramel-text));
 
   /* Overlay layer on top of the video. Theme independent: stays dark so the
      controls read on any frame. Only the accent follows the palette. */
-  --esp-overlay-scrim: color-mix(in srgb, black 35%, transparent);
-  --esp-overlay-surface: color-mix(in srgb, black 55%, transparent);
-  --esp-overlay-surface-strong: color-mix(in srgb, black 80%, transparent);
-  --esp-overlay-text: #ffffff;
-  --esp-overlay-accent: color-mix(in srgb, var(--esp-accent), white 25%);
+  --caramel-overlay-scrim: color-mix(in srgb, black 35%, transparent);
+  --caramel-overlay-surface: color-mix(in srgb, black 55%, transparent);
+  --caramel-overlay-surface-strong: color-mix(in srgb, black 80%, transparent);
+  --caramel-overlay-text: #ffffff;
+  --caramel-overlay-accent: color-mix(in srgb, var(--caramel-accent), white 25%);
   /* Text placed ON overlay-accent (badges) */
-  --esp-overlay-on-accent: color-mix(in srgb, var(--esp-accent), black 85%);
-  --esp-overlay-border: color-mix(in srgb, white 24%, transparent);
+  --caramel-overlay-on-accent: color-mix(in srgb, var(--caramel-accent), black 85%);
+  --caramel-overlay-border: color-mix(in srgb, white 24%, transparent);
 
   /* Timeline segment bands (skip-segments). They sit on the video like the
      other overlay roles, so one value serves both schemes. Hues follow the
@@ -59,7 +59,7 @@
      violet) with the saturation lowered to sit next to the caramel palette.
 
      Contrast (WCAG, computed). Unplayed track = white 20% over the dark
-     control scrim, about #333333. Played fill = --esp-accent #c9945c.
+     control scrim, about #333333. Played fill = --caramel-accent #c9945c.
                  band/track  band/fill  band/ring  chip text
        intro       6.1        1.3        7.9        8.4
        recap       5.0        1.1        6.5        7.0
@@ -67,93 +67,93 @@
        sponsor     6.1        1.3        7.9        8.3
      No single color can reach 3:1 against both the dark track (needs a
      luminance of 0.20 or more) and the caramel fill (needs 0.08 or less), so
-     every band carries a 1px --esp-segment-ring (black 80%): ring/fill 6.1,
+     every band carries a 1px --caramel-segment-ring (black 80%): ring/fill 6.1,
      band/ring column above. The band reads on the track by its own color
      and on the played fill by the ring. Chip text is
      color-mix(band, black 85%) on the band. */
-  --esp-segment-intro: #5ec4c0;
-  --esp-segment-recap: #b294ee;
-  --esp-segment-outro: #7fa7f5;
-  --esp-segment-sponsor: #72c67e;
-  --esp-segment-ring: color-mix(in srgb, black 80%, transparent);
+  --caramel-segment-intro: #5ec4c0;
+  --caramel-segment-recap: #b294ee;
+  --caramel-segment-outro: #7fa7f5;
+  --caramel-segment-sponsor: #72c67e;
+  --caramel-segment-ring: color-mix(in srgb, black 80%, transparent);
   /* Stripes on bands of auto-skipped types */
-  --esp-segment-hatch: color-mix(in srgb, black 40%, transparent);
+  --caramel-segment-hatch: color-mix(in srgb, black 40%, transparent);
 
   /* Focus ring: 2px solid primary, 2px offset */
-  --esp-focus-ring: 2px solid var(--esp-primary);
-  --esp-focus-offset: 2px;
+  --caramel-focus-ring: 2px solid var(--caramel-primary);
+  --caramel-focus-offset: 2px;
 
   /* Corners: panel 24 -> inner box 16 -> chip pill */
-  --esp-radius-panel: 24px;
-  --esp-radius-box: 16px;
-  --esp-radius-chip: 9999px;
+  --caramel-radius-panel: 24px;
+  --caramel-radius-box: 16px;
+  --caramel-radius-chip: 9999px;
 
   /* Typography. Host fonts win when it sets --font-heading / --font-body. */
-  --esp-font-heading: var(--font-heading, 'Montserrat Variable', 'Montserrat', ui-sans-serif, system-ui, sans-serif);
-  --esp-font-body: var(--font-body, 'Quicksand Variable', 'Quicksand', ui-sans-serif, system-ui, sans-serif);
+  --caramel-font-heading: var(--font-heading, 'Montserrat Variable', 'Montserrat', ui-sans-serif, system-ui, sans-serif);
+  --caramel-font-body: var(--font-body, 'Quicksand Variable', 'Quicksand', ui-sans-serif, system-ui, sans-serif);
 
   /* Motion language */
-  --esp-ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
-  --esp-ease-fill: cubic-bezier(0.65, 0, 0.35, 1);
-  --esp-ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
-  --esp-duration-instant: 100ms;
-  --esp-duration-fast: 180ms;
-  --esp-duration-enter: 360ms;
-  --esp-duration-fill: 500ms;
-  --esp-duration-controls: 320ms;
+  --caramel-ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --caramel-ease-fill: cubic-bezier(0.65, 0, 0.35, 1);
+  --caramel-ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --caramel-duration-instant: 100ms;
+  --caramel-duration-fast: 180ms;
+  --caramel-duration-enter: 360ms;
+  --caramel-duration-fill: 500ms;
+  --caramel-duration-controls: 320ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --esp-duration-instant: 0ms;
-    --esp-duration-fast: 0ms;
-    --esp-duration-enter: 0ms;
-    --esp-duration-fill: 0ms;
-    --esp-duration-controls: 0ms;
+    --caramel-duration-instant: 0ms;
+    --caramel-duration-fast: 0ms;
+    --caramel-duration-enter: 0ms;
+    --caramel-duration-fill: 0ms;
+    --caramel-duration-controls: 0ms;
     /* Springs become a plain ease so nothing overshoots */
-    --esp-ease-spring: ease-out;
+    --caramel-ease-spring: ease-out;
   }
 }
 
-/* Scheme resolution scope. Put .esp-theme on player wrappers and panels. */
-.esp-theme {
+/* Scheme resolution scope. Put .caramel-theme on player wrappers and panels. */
+.caramel-theme {
   color-scheme: light;
-  color: var(--esp-text);
-  font-family: var(--esp-font-body);
+  color: var(--caramel-text);
+  font-family: var(--caramel-font-body);
 }
 
 @media (prefers-color-scheme: dark) {
-  .esp-theme {
+  .caramel-theme {
     color-scheme: dark;
   }
 }
 
 /* Explicit host or local choice beats the OS preference. */
-:root[data-theme='light'] .esp-theme,
-:root.light .esp-theme,
-[data-theme='light'] .esp-theme,
-.esp-theme[data-theme='light'] {
+:root[data-theme='light'] .caramel-theme,
+:root.light .caramel-theme,
+[data-theme='light'] .caramel-theme,
+.caramel-theme[data-theme='light'] {
   color-scheme: light;
 }
 
-:root[data-theme='dark'] .esp-theme,
-:root.dark .esp-theme,
-[data-theme='dark'] .esp-theme,
-.esp-theme[data-theme='dark'] {
+:root[data-theme='dark'] .caramel-theme,
+:root.dark .caramel-theme,
+[data-theme='dark'] .caramel-theme,
+.caramel-theme[data-theme='dark'] {
   color-scheme: dark;
 }
 
 /* Utilities shared by every package */
-.esp-tabular {
+.caramel-tabular {
   font-variant-numeric: tabular-nums;
 }
 
-.esp-heading {
-  font-family: var(--esp-font-heading);
+.caramel-heading {
+  font-family: var(--caramel-font-heading);
   font-weight: 600;
 }
 
-.esp-focusable:focus-visible {
-  outline: var(--esp-focus-ring);
-  outline-offset: var(--esp-focus-offset);
+.caramel-focusable:focus-visible {
+  outline: var(--caramel-focus-ring);
+  outline-offset: var(--caramel-focus-offset);
 }

@@ -3,51 +3,51 @@
  *
  * Loaded after the skin source. Lives in the `components` layer, which the skin
  * declares after `base`, so these rules win over the skin's tokens while staying
- * overridable by unlayered host CSS. Only --esp-* tokens are referenced here;
+ * overridable by unlayered host CSS. Only --caramel-* tokens are referenced here;
  * no raw hex values.
  *
  * Controls over the video stay dark in both color schemes (overlay roles).
  * Surfaces that are not "on the video" follow the page theme: the settings
- * menu and the timeline preview card carry the `.esp-theme` scope class in the
- * template, so the --esp-* tokens resolve to the light or dark palette there.
+ * menu and the timeline preview card carry the `.caramel-theme` scope class in the
+ * template, so the --caramel-* tokens resolve to the light or dark palette there.
  */
 @import '@esershnr/caramel-theme/tokens.css';
 
 @layer components {
-  .media-skin.esp-skin {
+  .media-skin.caramel-skin {
     /* Typography */
-    --media-font-family: var(--esp-font-body);
+    --media-font-family: var(--caramel-font-body);
 
     /* Overlay palette */
-    --media-primary: var(--esp-accent);
-    --media-primary-foreground: var(--esp-overlay-text);
-    --media-accent: color-mix(in srgb, var(--esp-overlay-accent) 22%, transparent);
-    --media-accent-foreground: var(--esp-overlay-text);
-    --media-ring: var(--esp-overlay-accent);
-    --media-popover: var(--esp-overlay-surface);
-    --media-popover-foreground: var(--esp-overlay-text);
-    --media-controls-foreground: var(--esp-overlay-text);
-    --media-border-color: var(--esp-overlay-border);
-    --media-surface-border: var(--esp-overlay-border);
+    --media-primary: var(--caramel-accent);
+    --media-primary-foreground: var(--caramel-overlay-text);
+    --media-accent: color-mix(in srgb, var(--caramel-overlay-accent) 22%, transparent);
+    --media-accent-foreground: var(--caramel-overlay-text);
+    --media-ring: var(--caramel-overlay-accent);
+    --media-popover: var(--caramel-overlay-surface);
+    --media-popover-foreground: var(--caramel-overlay-text);
+    --media-controls-foreground: var(--caramel-overlay-text);
+    --media-border-color: var(--caramel-overlay-border);
+    --media-surface-border: var(--caramel-overlay-border);
 
     /* Corners: frame 24 -> popups 16 -> controls pill */
-    --media-border-radius: var(--esp-radius-panel);
-    --media-popup-radius: var(--esp-radius-box);
-    --media-dialog-radius: var(--esp-radius-panel);
-    --media-control-radius: var(--esp-radius-chip);
-    --media-menu-item-radius: calc(var(--esp-radius-box) - 6px);
+    --media-border-radius: var(--caramel-radius-panel);
+    --media-popup-radius: var(--caramel-radius-box);
+    --media-dialog-radius: var(--caramel-radius-panel);
+    --media-control-radius: var(--caramel-radius-chip);
+    --media-menu-item-radius: calc(var(--caramel-radius-box) - 6px);
 
     /* Motion: entrance curve for reveals, fill curve for symmetric moves */
-    --media-ease-out: var(--esp-ease-enter);
-    --media-ease-in-out: var(--esp-ease-fill);
-    --media-ease-in: var(--esp-ease-fill);
-    --media-duration-fast: var(--esp-duration-instant);
-    --media-duration: var(--esp-duration-fast);
-    --media-duration-slow: var(--esp-duration-fast);
-    --media-duration-slower: var(--esp-duration-enter);
-    --media-duration-controls: var(--esp-duration-controls);
-    --media-duration-menu: var(--esp-duration-enter);
-    --media-duration-slider: var(--esp-duration-fill);
+    --media-ease-out: var(--caramel-ease-enter);
+    --media-ease-in-out: var(--caramel-ease-fill);
+    --media-ease-in: var(--caramel-ease-fill);
+    --media-duration-fast: var(--caramel-duration-instant);
+    --media-duration: var(--caramel-duration-fast);
+    --media-duration-slow: var(--caramel-duration-fast);
+    --media-duration-slower: var(--caramel-duration-enter);
+    --media-duration-controls: var(--caramel-duration-controls);
+    --media-duration-menu: var(--caramel-duration-enter);
+    --media-duration-slider: var(--caramel-duration-fill);
     --media-hidden-offset: calc(var(--media-spacing) * 2);
   }
 
@@ -61,18 +61,18 @@
      Zero specificity on purpose: the skin hides state icons with
      `.media-*-icon { display: none }` (0,1,0) and shows one per state; a
      stronger `display: block` here once made every OSD icon visible at once. */
-  :where(.esp-skin .esp-icon) {
+  :where(.caramel-skin .caramel-icon) {
     display: block;
     transform-origin: center;
   }
 
   /* Morph host: the host is the sized box, the inner svg fills it. */
-  .esp-skin .esp-morph-icon {
+  .caramel-skin .caramel-morph-icon {
     display: block;
     color: inherit;
   }
 
-  .esp-skin .esp-morph-icon > svg {
+  .caramel-skin .caramel-morph-icon > svg {
     width: 100%;
     height: 100%;
     display: block;
@@ -83,13 +83,13 @@
      airplay, pip, captions-off, languages span 20 units; most others 16 to 18).
      `transform` is used, not `scale`, because the skin animates `scale` for
      its show/hide states. */
-  .esp-skin :is(.esp-icon-cast, .esp-icon-airplay, .esp-icon-pip-enter, .esp-icon-pip-exit, .esp-icon-captions-off, .esp-icon-speech),
-  .esp-skin .esp-morph-icon:is([data-icon='pip-enter'], [data-icon='pip-exit'], [data-icon='captions-off']) > svg {
+  .caramel-skin :is(.caramel-icon-cast, .caramel-icon-airplay, .caramel-icon-pip-enter, .caramel-icon-pip-exit, .caramel-icon-captions-off, .caramel-icon-speech),
+  .caramel-skin .caramel-morph-icon:is([data-icon='pip-enter'], [data-icon='pip-exit'], [data-icon='captions-off']) > svg {
     transform: scale(0.88);
   }
 
-  .esp-skin :is(.esp-icon-settings, .esp-icon-speed, .esp-icon-restart),
-  .esp-skin .esp-morph-icon:is([data-icon='settings'], [data-icon='close'], [data-icon='restart']) > svg {
+  .caramel-skin :is(.caramel-icon-settings, .caramel-icon-speed, .caramel-icon-restart),
+  .caramel-skin .caramel-morph-icon:is([data-icon='settings'], [data-icon='close'], [data-icon='restart']) > svg {
     transform: scale(1.06);
   }
 
@@ -97,11 +97,11 @@
      from a <style> inside that svg; the inlined Lucide loader has none, so it
      spins here. The skin turns --media-spinner-animation to `none` while the
      indicator is hidden and under reduced motion, which stops it too. */
-  .esp-skin .esp-icon-spinner {
-    animation: var(--media-spinner-animation, esp-spinner-turn 0.9s linear infinite);
+  .caramel-skin .caramel-icon-spinner {
+    animation: var(--media-spinner-animation, caramel-spinner-turn 0.9s linear infinite);
   }
 
-  @keyframes esp-spinner-turn {
+  @keyframes caramel-spinner-turn {
     to {
       transform: rotate(360deg);
     }
@@ -109,7 +109,7 @@
 
   /* On-screen indicators (arrow keys, c / f / i): one icon that morphs with
      the indicator's state, same mapping as the control bar buttons. */
-  .esp-skin :is(.media-volume-indicator-icon, .media-status-indicator-icon) {
+  .caramel-skin :is(.media-volume-indicator-icon, .media-status-indicator-icon) {
     flex-shrink: 0;
     width: var(--media-icon-size, calc(var(--media-spacing) * 4.5));
     height: var(--media-icon-size, calc(var(--media-spacing) * 4.5));
@@ -117,7 +117,7 @@
   }
 
   /* Cast and AirPlay only when the platform reports a target right now. */
-  .esp-skin :is(.media-cast-button, .media-airplay-button):not([data-availability='available']) {
+  .caramel-skin :is(.media-cast-button, .media-airplay-button):not([data-availability='available']) {
     display: none;
   }
 
@@ -125,34 +125,34 @@
   /* Sliders                                                              */
   /* ------------------------------------------------------------------ */
 
-  .esp-skin .media-slider-fill,
-  .esp-skin .media-slider-buffer {
-    transition-timing-function: var(--esp-ease-fill);
+  .caramel-skin .media-slider-fill,
+  .caramel-skin .media-slider-buffer {
+    transition-timing-function: var(--caramel-ease-fill);
   }
 
   /* The pointer position (--media-slider-pointer) is not registered and not
      transitioned: the hover dot, preview card and drag thumb sit exactly
      under the cursor, with no delay. */
-  .esp-skin .media-time-slider {
+  .caramel-skin .media-time-slider {
     /* Fill (and the thumb riding on it) animates only inside the click-to-seek
        window that seek-motion.ts opens; playback progress and every other
        jump are never interpolated. */
-    --esp-seek-motion: 0ms;
+    --caramel-seek-motion: 0ms;
     transition:
-      --media-slider-fill var(--esp-seek-motion) var(--esp-ease-fill),
-      --media-slider-buffer var(--esp-duration-fill) var(--esp-ease-fill);
+      --media-slider-fill var(--caramel-seek-motion) var(--caramel-ease-fill),
+      --media-slider-buffer var(--caramel-duration-fill) var(--caramel-ease-fill);
   }
 
   /* Click-to-seek glide: the fill is pinned to the clicked point for the whole
      move, so the timeupdate / seeking values Video.js keeps writing inline
      cannot retarget it halfway. !important is what beats the inline value. */
-  .esp-skin .media-time-slider[data-esp-seek] {
-    --esp-seek-motion: var(--esp-duration-fill);
-    --media-slider-fill: var(--esp-seek-target) !important;
+  .caramel-skin .media-time-slider[data-caramel-seek] {
+    --caramel-seek-motion: var(--caramel-duration-fill);
+    --media-slider-fill: var(--caramel-seek-target) !important;
   }
 
-  .esp-skin .media-time-slider[data-dragging] {
-    --esp-seek-motion: 0ms;
+  .caramel-skin .media-time-slider[data-dragging] {
+    --caramel-seek-motion: 0ms;
   }
 
   /* Hover dot. The skin draws it as a ::before of <media-slider-preview>, but
@@ -160,11 +160,11 @@
      player, which kept the dot half a card away from both ends. It is drawn on
      the slider instead, at the raw pointer position: 0% is the left end of the
      track, 100% the right end. Only the card is clamped. */
-  .esp-skin .media-time-slider .media-slider-preview::before {
+  .caramel-skin .media-time-slider .media-slider-preview::before {
     display: none;
   }
 
-  .esp-skin .media-time-slider::after {
+  .caramel-skin .media-time-slider::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -181,10 +181,10 @@
     scale: 0.5;
     transition-property: opacity, scale;
     transition-duration: var(--media-duration-slow);
-    transition-timing-function: var(--esp-ease-enter);
+    transition-timing-function: var(--caramel-ease-enter);
   }
 
-  .esp-skin .media-time-slider[data-pointing]:not([data-dragging])::after {
+  .caramel-skin .media-time-slider[data-pointing]:not([data-dragging])::after {
     opacity: 1;
     scale: 1;
   }
@@ -193,57 +193,57 @@
   /* Themed surfaces: settings menu and preview card                      */
   /* ------------------------------------------------------------------ */
 
-  .esp-skin .media-menu-popup.esp-theme {
-    --media-popover: var(--esp-surface);
-    --media-popover-foreground: var(--esp-text);
-    --media-foreground: var(--esp-text);
-    --media-muted-foreground: var(--esp-muted);
-    --media-accent: var(--esp-raised-hover);
-    --media-accent-foreground: var(--esp-text);
-    --media-primary: var(--esp-primary);
-    --media-primary-foreground: var(--esp-primary-contrast);
-    --media-border: var(--esp-divider);
-    --media-surface-border: var(--esp-divider);
-    --media-ring: var(--esp-primary);
+  .caramel-skin .media-menu-popup.caramel-theme {
+    --media-popover: var(--caramel-surface);
+    --media-popover-foreground: var(--caramel-text);
+    --media-foreground: var(--caramel-text);
+    --media-muted-foreground: var(--caramel-muted);
+    --media-accent: var(--caramel-raised-hover);
+    --media-accent-foreground: var(--caramel-text);
+    --media-primary: var(--caramel-primary);
+    --media-primary-foreground: var(--caramel-primary-contrast);
+    --media-border: var(--caramel-divider);
+    --media-surface-border: var(--caramel-divider);
+    --media-ring: var(--caramel-primary);
     --media-shadow-current-color: transparent;
     --media-shadow-separator: 0 0 #0000;
     --media-shadow-surface-inset: 0 0 #0000;
     --media-shadow-surface: 0 12px 32px -8px color-mix(in srgb, black 35%, transparent);
     --media-backdrop-filter-surface: none;
-    --media-popup-radius: var(--esp-radius-box);
-    font-family: var(--esp-font-body);
+    --media-popup-radius: var(--caramel-radius-box);
+    font-family: var(--caramel-font-body);
     text-shadow: none;
   }
 
-  .esp-skin .media-menu-popup.esp-theme :is(.media-menu-trigger-item, .media-menu-radio-item, .media-menu-back-item) {
+  .caramel-skin .media-menu-popup.caramel-theme :is(.media-menu-trigger-item, .media-menu-radio-item, .media-menu-back-item) {
     text-shadow: none;
   }
 
-  .esp-skin .media-menu-popup.esp-theme :is(.media-menu-trigger-item, .media-menu-radio-item, .media-menu-back-item):focus-visible {
-    outline: var(--esp-focus-ring);
+  .caramel-skin .media-menu-popup.caramel-theme :is(.media-menu-trigger-item, .media-menu-radio-item, .media-menu-back-item):focus-visible {
+    outline: var(--caramel-focus-ring);
     /* Inside a clipped, scrollable panel the ring sits inward. */
-    outline-offset: calc(var(--esp-focus-offset) * -1);
+    outline-offset: calc(var(--caramel-focus-offset) * -1);
   }
 
-  .esp-skin .media-menu-popup.esp-theme .media-menu-radio-item-icon {
-    color: var(--esp-primary);
+  .caramel-skin .media-menu-popup.caramel-theme .media-menu-radio-item-icon {
+    color: var(--caramel-primary);
   }
 
-  .esp-skin .media-menu-popup.esp-theme .media-menu-badge {
-    background: var(--esp-solid);
-    color: var(--esp-solid-contrast);
+  .caramel-skin .media-menu-popup.caramel-theme .media-menu-badge {
+    background: var(--caramel-solid);
+    color: var(--caramel-solid-contrast);
   }
 
-  .esp-skin .media-menu-popup.esp-theme .media-menu-separator {
-    border-color: var(--esp-divider);
+  .caramel-skin .media-menu-popup.caramel-theme .media-menu-separator {
+    border-color: var(--caramel-divider);
   }
 
   /* Timeline preview card (YouTube layout): thumbnail on top, below it one
      row with the pointer time and the chapter title. The card is the single
      positioned element; the thumbnail and the label are static children.
 
-     Width: --esp-preview-width when the host sets it, otherwise the sprite
-     tile's own width (<esp-preview-size> reads it from the VTT #xywh), otherwise
+     Width: --caramel-preview-width when the host sets it, otherwise the sprite
+     tile's own width (<caramel-preview-size> reads it from the VTT #xywh), otherwise
      240px; never wider than the player. The thumbnail fills the card; the
      label row is at most as wide (long titles end in an ellipsis) but its
      pill hugs the text. The width is set on <media-slider-preview> too, so
@@ -257,15 +257,15 @@
      Video.js scales the thumbnail to its computed max-width / max-height and
      parses them with parseFloat, so they must resolve to pixels (a `100%`
      reads as 100px and shrinks the tile). */
-  .esp-skin .media-time-slider .media-slider-preview {
-    --esp-preview-card-width: min(var(--esp-preview-width, var(--esp-preview-natural-width, 240px)), 100cqi);
-    min-width: var(--esp-preview-card-width);
+  .caramel-skin .media-time-slider .media-slider-preview {
+    --caramel-preview-card-width: min(var(--caramel-preview-width, var(--caramel-preview-natural-width, 240px)), 100cqi);
+    min-width: var(--caramel-preview-card-width);
   }
 
-  .esp-skin .esp-preview-card {
-    --media-popover: var(--esp-surface);
-    --media-popover-foreground: var(--esp-text);
-    --media-surface-border: var(--esp-divider);
+  .caramel-skin .caramel-preview-card {
+    --media-popover: var(--caramel-surface);
+    --media-popover-foreground: var(--caramel-text);
+    --media-surface-border: var(--caramel-divider);
     --media-shadow-surface-inset: 0 0 #0000;
     --media-backdrop-filter-surface: none;
     --media-shadow-surface: 0 0 #0000;
@@ -275,16 +275,16 @@
     flex-direction: column;
     align-items: stretch;
     gap: calc(var(--media-spacing) * 1.5);
-    width: var(--esp-preview-card-width);
+    width: var(--caramel-preview-card-width);
     max-width: none;
     pointer-events: none;
     background: none;
     box-shadow: none;
     text-shadow: none;
-    font-family: var(--esp-font-body);
+    font-family: var(--caramel-font-body);
   }
 
-  .esp-skin .esp-preview-card .media-slider-thumbnail {
+  .caramel-skin .caramel-preview-card .media-slider-thumbnail {
     position: static;
     align-self: center;
     translate: none;
@@ -294,28 +294,28 @@
     transition: none;
     min-width: 0;
     min-height: 0;
-    max-width: var(--esp-preview-card-width);
+    max-width: var(--caramel-preview-card-width);
     max-height: none;
-    border-radius: var(--esp-radius-box);
+    border-radius: var(--caramel-radius-box);
     background: none;
     box-shadow: none;
     backdrop-filter: none;
   }
 
   /* The skin darkens the thumbnail with a gradient and an inset ring here. */
-  .esp-skin .esp-preview-card .media-slider-thumbnail::after {
+  .caramel-skin .caramel-preview-card .media-slider-thumbnail::after {
     content: none;
   }
 
-  .esp-skin .esp-preview-card .media-slider-thumbnail[data-loading] {
-    width: var(--esp-preview-card-width);
+  .caramel-skin .caramel-preview-card .media-slider-thumbnail[data-loading] {
+    width: var(--caramel-preview-card-width);
   }
 
-  .esp-skin .esp-preview-card .media-slider-thumbnail[data-hidden] {
+  .caramel-skin .caramel-preview-card .media-slider-thumbnail[data-hidden] {
     display: none;
   }
 
-  .esp-skin .esp-preview-label {
+  .caramel-skin .caramel-preview-label {
     display: flex;
     align-items: baseline;
     justify-content: center;
@@ -325,38 +325,38 @@
     max-width: 100%;
     min-width: 0;
     padding: calc(var(--media-spacing) * 1) calc(var(--media-spacing) * 2.5);
-    border-radius: var(--esp-radius-chip);
-    background: var(--esp-surface);
-    color: var(--esp-text);
-    box-shadow: 0 0 0 1px var(--esp-divider);
+    border-radius: var(--caramel-radius-chip);
+    background: var(--caramel-surface);
+    color: var(--caramel-text);
+    box-shadow: 0 0 0 1px var(--caramel-divider);
     white-space: nowrap;
     overflow: hidden;
     font-variant-numeric: tabular-nums;
   }
 
-  .esp-skin .esp-preview-time {
+  .caramel-skin .caramel-preview-time {
     flex: none;
     position: static;
   }
 
-  .esp-skin .esp-preview-sep {
+  .caramel-skin .caramel-preview-sep {
     flex: none;
-    color: var(--esp-muted);
+    color: var(--caramel-muted);
   }
 
-  .esp-skin .esp-preview-title {
+  .caramel-skin .caramel-preview-title {
     min-width: 0;
     padding-inline: 0;
     max-width: none;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: var(--esp-accent-text);
+    color: var(--caramel-accent-text);
     font-weight: 600;
   }
 
   /* No chapter under the pointer: only the time, no separator. */
-  .esp-skin .esp-preview-label:has(.esp-preview-title:empty) .esp-preview-sep,
-  .esp-skin .esp-preview-title:empty {
+  .caramel-skin .caramel-preview-label:has(.caramel-preview-title:empty) .caramel-preview-sep,
+  .caramel-skin .caramel-preview-title:empty {
     display: none;
   }
 
@@ -364,79 +364,79 @@
   /* Text                                                                 */
   /* ------------------------------------------------------------------ */
 
-  .esp-skin .media-title {
-    font-family: var(--esp-font-heading);
+  .caramel-skin .media-title {
+    font-family: var(--caramel-font-heading);
     font-weight: 600;
     letter-spacing: 0.01em;
   }
 
-  .esp-skin :is(.media-button, .media-slider-thumb, button):focus-visible {
-    outline: 2px solid var(--esp-overlay-accent);
-    outline-offset: var(--esp-focus-offset);
+  .caramel-skin :is(.media-button, .media-slider-thumb, button):focus-visible {
+    outline: 2px solid var(--caramel-overlay-accent);
+    outline-offset: var(--caramel-focus-offset);
   }
 
   /* After a pointer press inside the player (space-key.ts sets the flag, Tab
      clears it) a focused control shows no ring, even once Space or an arrow
      key has made it :focus-visible. Keyboard navigation keeps its rings. */
-  .media-skin.esp-skin[data-esp-pointer-focus]:focus-visible,
-  .media-skin.esp-skin[data-esp-pointer-focus] :focus-visible {
+  .media-skin.caramel-skin[data-caramel-pointer-focus]:focus-visible,
+  .media-skin.caramel-skin[data-caramel-pointer-focus] :focus-visible {
     outline-color: transparent;
   }
 
-  .media-skin.esp-skin[data-esp-pointer-focus] .media-slider-thumb:focus-visible::after {
+  .media-skin.caramel-skin[data-caramel-pointer-focus] .media-slider-thumb:focus-visible::after {
     opacity: 0;
   }
 
   /* The skin also opens the timeline preview for a focus-visible slider. */
-  .media-skin.esp-skin[data-esp-pointer-focus] .media-slider:not([data-pointing], [data-dragging]) .media-slider-preview-content {
+  .media-skin.caramel-skin[data-caramel-pointer-focus] .media-slider:not([data-pointing], [data-dragging]) .media-slider-preview-content {
     opacity: 0;
   }
 
-  .esp-skin .video-controls-content,
-  .esp-skin .video-controls-backdrop {
-    transition-timing-function: var(--esp-ease-enter);
+  .caramel-skin .video-controls-content,
+  .caramel-skin .video-controls-backdrop {
+    transition-timing-function: var(--caramel-ease-enter);
   }
 
-  .esp-skin .media-time-value,
-  .esp-skin .media-time-slider-value,
-  .esp-skin .media-volume-indicator-value {
+  .caramel-skin .media-time-value,
+  .caramel-skin .media-time-slider-value,
+  .caramel-skin .media-volume-indicator-value {
     font-variant-numeric: tabular-nums;
   }
 
   /* Previous / next (from @esershnr/caramel-playlist). The element only
-     shows itself when the player has an <esp-playlist>; without the playlist
+     shows itself when the player has an <caramel-playlist>; without the playlist
      package it never upgrades and stays out of the layout. */
-  .esp-skin esp-playlist-nav:not(:defined),
-  .esp-skin esp-playlist-nav[hidden] {
+  .caramel-skin caramel-playlist-nav:not(:defined),
+  .caramel-skin caramel-playlist-nav[hidden] {
     display: none;
   }
 
-  .esp-skin .esp-playlist-nav {
+  .caramel-skin .caramel-playlist-nav {
     display: contents;
   }
 
-  .esp-skin .esp-playlist-nav-button:disabled {
+  .caramel-skin .caramel-playlist-nav-button:disabled {
     opacity: 0.45;
     cursor: default;
   }
 
   /* Quality badge on the settings gear: HD / FHD / 2K / 4K for the playing
-     rendition. Override with --esp-quality-badge-bg / -text. Defaults are the
+     rendition. Override with --caramel-quality-badge-bg / -text. Defaults are the
      overlay accent pair (9.1:1 text, 8:1 against the control bar). */
-  .esp-skin .media-settings-menu-trigger {
+  .caramel-skin .media-settings-menu-trigger {
     position: relative;
   }
 
-  .esp-skin .esp-quality-badge {
+  .caramel-skin .caramel-quality-badge {
     position: absolute;
     top: calc(var(--media-spacing) * 0.25);
     right: calc(var(--media-spacing) * 0.25);
     z-index: 1;
     padding: 1px 3px;
-    border-radius: var(--esp-radius-chip);
-    background: var(--esp-quality-badge-bg, var(--esp-overlay-accent));
-    color: var(--esp-quality-badge-text, var(--esp-overlay-on-accent));
-    font-family: var(--esp-font-body);
+    border-radius: var(--caramel-radius-chip);
+    background: var(--caramel-quality-badge-bg, var(--caramel-overlay-accent));
+    color: var(--caramel-quality-badge-text, var(--caramel-overlay-on-accent));
+    font-family: var(--caramel-font-body);
     font-size: calc(var(--media-spacing) * 1.9);
     font-weight: 700;
     line-height: 1.1;
@@ -445,29 +445,29 @@
     pointer-events: none;
     transform-origin: top right;
     transition:
-      opacity var(--esp-duration-fast) var(--esp-ease-enter),
-      transform var(--esp-duration-enter) var(--esp-ease-spring);
+      opacity var(--caramel-duration-fast) var(--caramel-ease-enter),
+      transform var(--caramel-duration-enter) var(--caramel-ease-spring);
   }
 
-  .esp-skin .esp-quality-badge[data-empty],
-  .esp-skin .esp-quality-badge:empty {
+  .caramel-skin .caramel-quality-badge[data-empty],
+  .caramel-skin .caramel-quality-badge:empty {
     opacity: 0;
     transform: scale(0.6);
   }
 
   /* Clickable counter: "01:23 / 05:00" or "-03:37 / 05:00" */
-  .esp-skin .esp-time-display {
+  .caramel-skin .caramel-time-display {
     display: block;
     flex: none;
   }
 
-  .esp-skin .esp-time-button {
+  .caramel-skin .caramel-time-button {
     display: inline-flex;
     align-items: baseline;
     gap: 0.35em;
     padding: calc(var(--media-spacing) * 1) calc(var(--media-spacing) * 1.5);
     border: 0;
-    border-radius: var(--esp-radius-chip);
+    border-radius: var(--caramel-radius-chip);
     background: none;
     color: inherit;
     font: inherit;
@@ -477,19 +477,19 @@
     text-shadow: inherit;
   }
 
-  .esp-skin .esp-time-button:focus-visible {
-    outline: 2px solid var(--esp-overlay-accent);
-    outline-offset: var(--esp-focus-offset);
+  .caramel-skin .caramel-time-button:focus-visible {
+    outline: 2px solid var(--caramel-overlay-accent);
+    outline-offset: var(--caramel-focus-offset);
   }
 
-  .esp-skin .esp-time-sep,
-  .esp-skin .esp-time-duration {
+  .caramel-skin .caramel-time-sep,
+  .caramel-skin .caramel-time-duration {
     color: color-mix(in srgb, currentColor 72%, transparent);
   }
 
-  .esp-skin .esp-time-display[data-mode='elapsed'] .esp-time-remaining,
-  .esp-skin .esp-time-display[data-mode='remaining'] .esp-time-current,
-  .esp-skin .esp-time-display:not([data-mode]) .esp-time-remaining {
+  .caramel-skin .caramel-time-display[data-mode='elapsed'] .caramel-time-remaining,
+  .caramel-skin .caramel-time-display[data-mode='remaining'] .caramel-time-current,
+  .caramel-skin .caramel-time-display:not([data-mode]) .caramel-time-remaining {
     display: none;
   }
 }

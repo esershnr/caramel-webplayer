@@ -25,16 +25,16 @@ export interface SkipEventDetail {
 }
 
 /**
- * <esp-skip-segments>
+ * <caramel-skip-segments>
  *
  * Drop it anywhere inside a Video.js 10 `<media-container>`. It renders the
  * "Skip intro" button where it sits, auto-skips configured segment types and
  * paints segment markers into the player's `<media-time-slider>`.
  *
- *   <esp-skip-segments
+ *   <caramel-skip-segments
  *     segments='[{"start":0,"end":30,"type":"intro"}]'
  *     auto-skip="recap">
- *   </esp-skip-segments>
+ *   </caramel-skip-segments>
  *
  * Attributes / properties:
  *   segments    JSON array (attribute) or Segment[] (property)
@@ -42,11 +42,11 @@ export interface SkipEventDetail {
  *   hide-after  seconds after which the button hides (0 = never)
  *   no-markers  disable timeline markers
  *
- * Events: `esp-skip` (detail: SkipEventDetail), `esp-segment-enter`,
- * `esp-segment-leave` (detail: { segment }).
+ * Events: `caramel-skip` (detail: SkipEventDetail), `caramel-segment-enter`,
+ * `caramel-segment-leave` (detail: { segment }).
  */
-export class EspSkipSegmentsElement extends Base {
-  static readonly tagName = 'esp-skip-segments';
+export class CaramelSkipSegmentsElement extends Base {
+  static readonly tagName = 'caramel-skip-segments';
 
   static override get observedAttributes(): string[] {
     return [...(super.observedAttributes ?? []), 'segments', 'auto-skip', 'hide-after', 'no-markers'];
@@ -150,7 +150,7 @@ export class EspSkipSegmentsElement extends Base {
     const to = this.#model.skip(time.duration);
     if (to === null || !segment) return false;
     void time.seek(to);
-    this.#emit('esp-skip', { segment, auto: false, to } satisfies SkipEventDetail);
+    this.#emit('caramel-skip', { segment, auto: false, to } satisfies SkipEventDetail);
     this.requestUpdate();
     return true;
   }
@@ -174,12 +174,12 @@ export class EspSkipSegmentsElement extends Base {
 
     const result = this.#model.update({ time: time.currentTime, duration: time.duration });
 
-    if (result.entered) this.#emit('esp-segment-enter', { segment: result.entered });
-    if (result.left) this.#emit('esp-segment-leave', { segment: result.left });
+    if (result.entered) this.#emit('caramel-segment-enter', { segment: result.entered });
+    if (result.left) this.#emit('caramel-segment-leave', { segment: result.left });
 
     if (result.seekTo !== null && result.active) {
       void time.seek(result.seekTo);
-      this.#emit('esp-skip', { segment: result.active, auto: true, to: result.seekTo } satisfies SkipEventDetail);
+      this.#emit('caramel-skip', { segment: result.active, auto: true, to: result.seekTo } satisfies SkipEventDetail);
     }
 
     this.#renderButton(result.active, result.visible);
@@ -210,12 +210,12 @@ export class EspSkipSegmentsElement extends Base {
     if (this.#button) return;
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'esp-skip-button';
+    button.className = 'caramel-skip-button';
     button.tabIndex = -1;
     const label = document.createElement('span');
-    label.className = 'esp-skip-button-label';
+    label.className = 'caramel-skip-button-label';
     const icon = document.createElement('span');
-    icon.className = 'esp-skip-button-icon';
+    icon.className = 'caramel-skip-button-icon';
     icon.append(createIconElement(icons['skip-forward']));
     button.append(label, icon);
     // Own-child listener: lives with the element, survives reconnects.
@@ -256,7 +256,7 @@ export class EspSkipSegmentsElement extends Base {
     if (!this.#markers || this.#markers.parentElement !== slider) {
       this.#removeMarkers();
       this.#markers = document.createElement('div');
-      this.#markers.className = 'esp-segment-markers';
+      this.#markers.className = 'caramel-segment-markers';
       this.#markers.setAttribute('aria-hidden', 'true');
       slider.append(this.#markers);
       this.#listenToSlider(slider);
@@ -267,17 +267,17 @@ export class EspSkipSegmentsElement extends Base {
       const auto = this.#model.options.autoSkip;
       const layers = [false, true].map((played) => {
         const layer = document.createElement('div');
-        layer.className = 'esp-segment-layer';
+        layer.className = 'caramel-segment-layer';
         if (played) layer.dataset['played'] = '';
         for (const segment of this.#model.segments) {
           const geo = segmentGeometry(segment, duration);
           if (!geo || geo.width <= 0) continue;
           const marker = document.createElement('span');
-          marker.className = 'esp-segment-marker';
+          marker.className = 'caramel-segment-marker';
           marker.dataset['type'] = segment.type;
           if (auto[segment.type]) marker.dataset['auto'] = '';
-          marker.style.setProperty('--esp-seg-start', `${geo.start}%`);
-          marker.style.setProperty('--esp-seg-width', `${geo.width}%`);
+          marker.style.setProperty('--caramel-seg-start', `${geo.start}%`);
+          marker.style.setProperty('--caramel-seg-width', `${geo.width}%`);
           layer.append(marker);
         }
         return layer;
@@ -305,7 +305,7 @@ export class EspSkipSegmentsElement extends Base {
   }
 
   /**
-   * Type chip in the skin's preview card (`.esp-preview-label`): while the
+   * Type chip in the skin's preview card (`.caramel-preview-label`): while the
    * pointer is over a band the card shows "İntro", "Sponsor", ... in the band
    * color next to the time and chapter title.
    */
@@ -324,12 +324,12 @@ export class EspSkipSegmentsElement extends Base {
   }
 
   #renderChip(segment: Segment | null): void {
-    const label = this.#markers?.parentElement?.querySelector('.esp-preview-label');
+    const label = this.#markers?.parentElement?.querySelector('.caramel-preview-label');
     if (!label) return;
     if (!this.#chip || this.#chip.parentElement !== label) {
       this.#chip?.remove();
       this.#chip = document.createElement('span');
-      this.#chip.className = 'esp-preview-segment';
+      this.#chip.className = 'caramel-preview-segment';
       this.#chip.hidden = true;
       label.append(this.#chip);
     }
@@ -351,6 +351,6 @@ export class EspSkipSegmentsElement extends Base {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'esp-skip-segments': EspSkipSegmentsElement;
+    'caramel-skip-segments': CaramelSkipSegmentsElement;
   }
 }

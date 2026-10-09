@@ -47,7 +47,7 @@ export async function generateThumbnails(options: GenerateOptions): Promise<Gene
   const ffprobe = options.ffprobe ?? ffprobeFor(ffmpeg);
   const log = options.log ?? (() => {});
 
-  const tmp = await mkdtemp(path.join(os.tmpdir(), 'esp-gen-thumbs-'));
+  const tmp = await mkdtemp(path.join(os.tmpdir(), 'caramel-gen-thumbs-'));
   try {
     log(`Probing duration with ${ffprobe}`);
     const probedDuration = await probeDuration(ffprobe, options.input);

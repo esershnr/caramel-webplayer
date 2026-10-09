@@ -12,7 +12,7 @@ export interface MorphIconProps {
   on?: IconName | undefined;
   /** Icon when the watched attribute is absent. */
   off?: IconName | undefined;
-  /** Full value map, see <esp-morph-icon> docs. */
+  /** Full value map, see <caramel-morph-icon> docs. */
   map?: string | undefined;
   /** CSS selector resolved with closest() instead of the parent element. */
   target?: string | undefined;
@@ -24,7 +24,7 @@ export interface MorphIconProps {
 }
 
 /**
- * React wrapper for <esp-morph-icon>. Registers the custom element in the
+ * React wrapper for <caramel-morph-icon>. Registers the custom element in the
  * browser only, so it is safe in the Next.js App Router.
  */
 export function MorphIcon({ className, style, ...rest }: MorphIconProps) {
@@ -32,7 +32,7 @@ export function MorphIcon({ className, style, ...rest }: MorphIconProps) {
     void import('./define.js');
   }, []);
   // React 19 passes unknown props to custom elements as attributes.
-  return <esp-morph-icon class={className} style={style} {...rest} />;
+  return <caramel-morph-icon class={className} style={style} {...rest} />;
 }
 
 export interface IconProps {
@@ -48,14 +48,14 @@ export function Icon({ name, size, strokeWidth, className, label }: IconProps) {
   const node = getIcon(name);
   if (!node) return null;
   const html = iconToSvg(node, { size, strokeWidth, className, label });
-  return <span className="esp-icon" dangerouslySetInnerHTML={{ __html: html }} />;
+  return <span className="caramel-icon" dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {
     interface IntrinsicElements {
-      'esp-morph-icon': {
+      'caramel-morph-icon': {
         class?: string | undefined;
         style?: import('react').CSSProperties | undefined;
         watch?: string | undefined;

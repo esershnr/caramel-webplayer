@@ -8,11 +8,11 @@ describe('SSR import', () => {
   it('imports the index and the element without a DOM', async () => {
     expect(typeof globalThis.HTMLElement).toBe('undefined');
     const mod = await import('../src/index.js');
-    expect(typeof mod.EspChaptersPanelElement).toBe('function');
-    expect(mod.EspChaptersPanelElement.tagName).toBe('esp-chapters-panel');
-    expect(typeof mod.defineEspChaptersPanel).toBe('function');
-    expect(() => mod.defineEspChaptersPanel()).not.toThrow();
-    expect(mod.CHAPTERS_KEYS.empty).toBe('esp.chapters.empty');
+    expect(typeof mod.CaramelChaptersPanelElement).toBe('function');
+    expect(mod.CaramelChaptersPanelElement.tagName).toBe('caramel-chapters-panel');
+    expect(typeof mod.defineCaramelChaptersPanel).toBe('function');
+    expect(() => mod.defineCaramelChaptersPanel()).not.toThrow();
+    expect(mod.CHAPTERS_KEYS.empty).toBe('caramel.chapters.empty');
   });
 
   it('resolves Turkish and English strings through the registry', async () => {

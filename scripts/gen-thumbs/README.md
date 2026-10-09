@@ -17,9 +17,9 @@ install). Install with `winget install Gyan.FFmpeg`, `brew install ffmpeg` or
 # from the repo
 pnpm --filter @esershnr/caramel-gen-thumbs start -- <input> [options]
 
-# after a build (bin esp-gen-thumbs)
-esp-gen-thumbs ./movie.mp4 --interval 5 --width 320 --out ./public/thumbs
-esp-gen-thumbs https://example.com/stream.m3u8 --base-url https://cdn.example.com/thumbs
+# after a build (bin caramel-gen-thumbs)
+caramel-gen-thumbs ./movie.mp4 --interval 5 --width 320 --out ./public/thumbs
+caramel-gen-thumbs https://example.com/stream.m3u8 --base-url https://cdn.example.com/thumbs
 ```
 
 `<input>` is a local file or an HTTP/HLS URL; ffmpeg reads both directly.
