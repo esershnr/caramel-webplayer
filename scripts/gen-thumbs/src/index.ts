@@ -24,5 +24,5 @@ export {
 } from './vtt.js';
 export { readJpegSize } from './jpeg.js';
 export { DEFAULTS, HELP, parseCliArgs, type CliOptions, type ParsedArgs } from './args.js';
-export { CommandError, MissingBinaryError } from './ffmpeg.js';
+export { CommandError, MissingBinaryError, run, tail, ffprobeFor, probeDuration, type RunResult } from './ffmpeg.js';
 export { generateThumbnails, type GenerateOptions, type GenerateResult } from './generate.js';
