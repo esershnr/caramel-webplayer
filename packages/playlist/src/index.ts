@@ -29,3 +29,4 @@ export {
 } from './element.js';
 export { EspPlaylistPanelElement } from './panel.js';
 export { defineEspPlaylist } from './define.js';
+export { EspPlaylistNavElement, previousAction, RESTART_AFTER_SECONDS } from './nav.js';

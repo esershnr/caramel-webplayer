@@ -287,6 +287,23 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* Previous / next (from @esersahiner/player-playlist). The element only
+     shows itself when the player has an <esp-playlist>; without the playlist
+     package it never upgrades and stays out of the layout. */
+  .esp-skin esp-playlist-nav:not(:defined),
+  .esp-skin esp-playlist-nav[hidden] {
+    display: none;
+  }
+
+  .esp-skin .esp-playlist-nav {
+    display: contents;
+  }
+
+  .esp-skin .esp-playlist-nav-button:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+
   /* Quality badge on the settings gear: HD / FHD / 2K / 4K for the playing
      rendition. Override with --esp-quality-badge-bg / -text. Defaults are the
      overlay accent pair (9.1:1 text, 8:1 against the control bar). */
