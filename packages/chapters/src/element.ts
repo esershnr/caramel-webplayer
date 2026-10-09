@@ -1,3 +1,4 @@
+import { scrollIntoContainer } from '@esersahiner/player-theme';
 import { selectTextTrack, selectTime } from '@videojs/html';
 import { onI18nRegistryChange, type Translator } from '@videojs/html/i18n';
 import { cuesEqual, findActiveIndex, formatTime, nextIndex, type ChapterCue } from './chapters.js';
@@ -22,6 +23,7 @@ export interface ChapterSelectDetail {
 }
 
 const PLAYER_TAG = 'video-player';
+const LOOKUP_RETRIES = 30;
 
 /**
  * <esp-chapters-panel>
@@ -60,6 +62,7 @@ export class EspChaptersPanelElement extends Base {
   #langObserver: MutationObserver | null = null;
   #unsubscribeRegistry: (() => void) | null = null;
   #waitingForDefinition = false;
+  #lookupRetries = 0;
 
   #t: Translator | null = null;
   #lang = '';
@@ -118,6 +121,7 @@ export class EspChaptersPanelElement extends Base {
     if (old === value || !this.isConnected) return;
     switch (name) {
       case 'for':
+        this.#lookupRetries = 0;
         this.#connectPlayer();
         break;
       case 'lang':
@@ -181,16 +185,28 @@ export class EspChaptersPanelElement extends Base {
 
   #waitForDefinition(): void {
     if (this.#waitingForDefinition || typeof customElements === 'undefined') return;
-    this.#waitingForDefinition = true;
-    void customElements
-      .whenDefined(PLAYER_TAG)
-      .then(() => {
-        this.#waitingForDefinition = false;
-        if (this.isConnected && !this.#store) this.#connectPlayer();
-      })
-      .catch(() => {
-        this.#waitingForDefinition = false;
-      });
+    if (!customElements.get(PLAYER_TAG)) {
+      // Not defined yet: one wait per connect. A resolved promise must not
+      // re-arm itself, that would spin a microtask loop.
+      this.#waitingForDefinition = true;
+      void customElements
+        .whenDefined(PLAYER_TAG)
+        .then(() => {
+          this.#waitingForDefinition = false;
+          if (this.isConnected && !this.#store) this.#connectPlayer();
+        })
+        .catch(() => {
+          this.#waitingForDefinition = false;
+        });
+      return;
+    }
+    // Defined but not found (rendered later, wrong id): a few frame retries, then give up
+    // until `for` or `player` changes.
+    if (this.#lookupRetries >= LOOKUP_RETRIES || typeof requestAnimationFrame !== 'function') return;
+    this.#lookupRetries++;
+    requestAnimationFrame(() => {
+      if (this.isConnected && !this.#store) this.#connectPlayer();
+    });
   }
 
   // Store updates ----------------------------------------------------------
@@ -234,11 +250,8 @@ export class EspChaptersPanelElement extends Base {
 
   #scrollToActive(index: number): void {
     const li = this.#list?.children[index];
-    if (!li) return;
-    if (this.scrollHeight <= this.clientHeight) return;
-    const reduce =
-      typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    li.scrollIntoView({ block: 'nearest', behavior: reduce ? 'instant' : 'smooth' });
+    if (!(li instanceof HTMLElement)) return;
+    scrollIntoContainer(this, li);
   }
 
   // Rendering --------------------------------------------------------------
@@ -256,9 +269,11 @@ export class EspChaptersPanelElement extends Base {
     const list = document.createElement('ol');
     list.className = 'esp-chapters-list';
     list.setAttribute('role', 'list');
-    list.addEventListener('click', (event) => this.#onClick(event), { signal });
-    list.addEventListener('keydown', (event) => this.#onKeydown(event), { signal });
-    list.addEventListener('focusin', (event) => this.#onFocusIn(event), { signal });
+    // Listeners on own children live as long as the element; a disconnect
+    // and reconnect must not strip them, so no abort signal here.
+    list.addEventListener('click', (event) => this.#onClick(event));
+    list.addEventListener('keydown', (event) => this.#onKeydown(event));
+    list.addEventListener('focusin', (event) => this.#onFocusIn(event));
 
     this.replaceChildren(heading, empty, list);
     this.#heading = heading;
@@ -396,11 +411,9 @@ export class EspChaptersPanelElement extends Base {
         target = nextIndex(current, -1, length);
         break;
       case 'Home':
-      case 'PageUp':
         target = length > 0 ? 0 : -1;
         break;
       case 'End':
-      case 'PageDown':
         target = length - 1;
         break;
       default:
