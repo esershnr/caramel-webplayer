@@ -28,7 +28,7 @@ const report = [];
 for (const base of urls) {
   const tag = new URL(base).port === '5174' ? 'react' : 'vanilla';
   for (const theme of themes) {
-    const context = await browser.newContext({ viewport: { width: 1280, height: 800 }, colorScheme: theme });
+    const context = await browser.newContext({ viewport: { width: 1280, height: 1000 }, colorScheme: theme });
     const page = await context.newPage();
     const errors = [];
     page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
@@ -107,11 +107,31 @@ for (const base of urls) {
     await shot('volume');
 
     // Time slider preview (hover mid track)
-    const b = await page.locator('.media-time-slider').boundingBox();
-    if (b) {
+    const hoverPreview = async (name) => {
+      const b = await page.locator('.media-time-slider').boundingBox();
+      if (!b) return;
       await page.mouse.move(b.x + b.width * 0.4, b.y + b.height / 2);
-      await page.waitForTimeout(600);
-      await shot('preview');
+      await page.waitForTimeout(700);
+      await shot(name);
+      await page.mouse.move(5, 5);
+    };
+    await hoverPreview('preview');
+
+    // Panels outside the video: playlist (next item) and chapter list (select a chapter).
+    const next = page.locator('esp-playlist-panel .esp-playlist-nav button').nth(1);
+    if (await next.count()) {
+      await next.click();
+      await page.waitForTimeout(2500);
+      await shot('playlist-next');
+      // The second item carries the gen-thumbs sprite: hover the timeline again.
+      await hoverPreview('playlist-next-preview');
+    }
+    const chapter = page.locator('esp-chapters-panel li button').nth(1);
+    if (await chapter.count()) {
+      await chapter.focus();
+      await chapter.click();
+      await page.waitForTimeout(800);
+      await shot('chapter-select');
     }
 
     report.push({ tag, theme, errors });
