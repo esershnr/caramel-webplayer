@@ -37,6 +37,6 @@ import { Playlist, PlaylistPanel } from '@esershnr/caramel-playlist/react';
 ```
 
 The item contract is in `PlaylistItem`. With `@esershnr/caramel-skin`, pass
-`<caramel-playlist>` in `extras`. More: [root README](../../README.md).
+`<caramel-playlist>` in `extras`. More: [root README](https://github.com/esershnr/caramel-webplayer#readme).
 
 MIT License, Copyright (c) 2026 Eser Şahiner.

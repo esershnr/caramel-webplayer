@@ -39,7 +39,7 @@ import { CaramelVideoSkin } from '@esershnr/caramel-skin/react';
 
 Chapters come from `<track kind="chapters" default>`, timeline thumbnails from
 `<track kind="metadata" label="thumbnails" default>`. Override the preview
-width with `--caramel-preview-width`. Full guide: [root README](../../README.md).
+width with `--caramel-preview-width`. Full guide: [root README](https://github.com/esershnr/caramel-webplayer#readme).
 
 License: `MIT AND Apache-2.0`. Our code is MIT (`LICENSE`); files derived from
 the Video.js 10 default skin are Apache-2.0 (`LICENSE-APACHE`). See `NOTICE`.

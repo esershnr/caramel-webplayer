@@ -31,6 +31,6 @@ import { SkipSegments } from '@esershnr/caramel-skip-segments/react';
 
 Place it inside the player (with `@esershnr/caramel-skin`, pass it in
 `extras`). Band colors: `--caramel-segment-intro/recap/outro/sponsor`. More:
-[root README](../../README.md).
+[root README](https://github.com/esershnr/caramel-webplayer#readme).
 
 MIT License, Copyright (c) 2026 Eser Şahiner.

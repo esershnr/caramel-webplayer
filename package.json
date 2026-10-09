@@ -4,6 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "description": "Custom Video.js 10 player packages for esersahiner.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/esershnr/caramel-webplayer.git"
+  },
   "packageManager": "pnpm@11.25.0",
   "engines": {
     "node": ">=22"

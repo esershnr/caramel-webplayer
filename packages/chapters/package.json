@@ -16,6 +16,11 @@
   ],
   "license": "MIT",
   "author": "Eser Şahiner (https://esersahiner.com)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/esershnr/caramel-webplayer.git",
+    "directory": "packages/chapters"
+  },
   "type": "module",
   "sideEffects": [
     "*.css",

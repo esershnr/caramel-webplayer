@@ -29,7 +29,7 @@ import { Icon, MorphIcon } from '@esershnr/caramel-icons/react';
 <MorphIcon map="data-paused:play,*:pause" />
 ```
 
-More: [root README](../../README.md).
+More: [root README](https://github.com/esershnr/caramel-webplayer#readme).
 
 MIT License, Copyright (c) 2026 Eser Şahiner. Lucide (ISC) and Morphicons (MIT)
 are credited in `NOTICE`.

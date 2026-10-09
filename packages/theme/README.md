@@ -28,6 +28,6 @@ Put `class="caramel-theme"` on elements that should follow the color scheme. The
 other player packages import `tokens.css` themselves.
 
 Token table, scheme rules and contrast guidance: see the
-[root README](../../README.md#theming--renkleri-değiştirme).
+[root README](https://github.com/esershnr/caramel-webplayer#theming--renkleri-değiştirme).
 
 MIT License, Copyright (c) 2026 Eser Şahiner.

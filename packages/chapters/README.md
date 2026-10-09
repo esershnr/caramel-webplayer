@@ -25,6 +25,6 @@ import { ChaptersPanel } from '@esershnr/caramel-chapters/react';
 <ChaptersPanel playerId="player" onChapterSelect={(detail) => console.log(detail)} />
 ```
 
-More: [root README](../../README.md).
+More: [root README](https://github.com/esershnr/caramel-webplayer#readme).
 
 MIT License, Copyright (c) 2026 Eser Şahiner.

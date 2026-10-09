@@ -43,7 +43,7 @@ import { CaramelVideoSkin, SkipSegments } from '@esershnr/caramel-webplayer/reac
 | `/react` | All React wrappers (`CaramelVideoSkin`, `SkipSegments`, `ChaptersPanel`, `Playlist`, `PlaylistPanel`, `Icon`, `MorphIcon`). |
 | `/webplayer.css` | Theme tokens and the complete skin stylesheet, for loading CSS before the elements register (SSR). |
 
-Full guide, theming and the modular packages: [root README](../../README.md).
+Full guide, theming and the modular packages: [root README](https://github.com/esershnr/caramel-webplayer#readme).
 
 MIT License, Copyright (c) 2026 Eser Şahiner. The skin package it depends on is
 `MIT AND Apache-2.0` (files derived from the Video.js 10 default skin).
