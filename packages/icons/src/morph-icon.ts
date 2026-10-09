@@ -72,6 +72,8 @@ export class EspMorphIconElement extends Base {
     const node = typeof icon === 'string' ? getIcon(icon) : icon;
     if (!node) return;
     this.#current = typeof icon === 'string' ? icon : null;
+    if (this.#current) this.dataset['icon'] = this.#current;
+    else delete this.dataset['icon'];
     this.#ensureSvg();
     if (!this.#morph) {
       this.#morph = createMorph(this.#path!, node, { reducedMotion: 'user' });
@@ -160,6 +162,7 @@ export class EspMorphIconElement extends Base {
     const node = getIcon(icon);
     if (!node) return;
     this.#current = icon;
+    this.dataset['icon'] = icon;
     this.#ensureSvg();
     if (!this.#morph) {
       this.#morph = createMorph(this.#path!, node, { reducedMotion: 'user' });

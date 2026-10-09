@@ -6,8 +6,10 @@
  * overridable by unlayered host CSS. Only --esp-* tokens are referenced here;
  * no raw hex values.
  *
- * The controls stay dark in both color schemes (overlay roles). Light/dark only
- * affects surfaces outside the video frame (handled by other packages).
+ * Controls over the video stay dark in both color schemes (overlay roles).
+ * Surfaces that are not "on the video" follow the page theme: the settings
+ * menu and the timeline preview card carry the `.esp-theme` scope class in the
+ * template, so the --esp-* tokens resolve to the light or dark palette there.
  */
 @import '@esersahiner/player-theme/tokens.css';
 
@@ -40,7 +42,7 @@
     --media-popup-radius: var(--esp-radius-box);
     --media-dialog-radius: var(--esp-radius-panel);
     --media-control-radius: var(--esp-radius-chip);
-    --media-menu-item-radius: calc(var(--esp-radius-box) - 4px);
+    --media-menu-item-radius: calc(var(--esp-radius-box) - 6px);
 
     /* Motion: entrance curve for reveals, fill curve for symmetric moves */
     --media-ease-out: var(--esp-ease-enter);
@@ -59,7 +61,54 @@
     --esp-pointer-follow: 90ms;
   }
 
-  /* Progress fill eases with the fill curve */
+  /* ------------------------------------------------------------------ */
+  /* Icons                                                                */
+  /* ------------------------------------------------------------------ */
+
+  /* Inline Lucide icons are the sized box themselves: the skin's per-class
+     width/height rules (`.media-button-icon`, `.media-menu-trigger-item-icon`,
+     chevrons, indicators) apply to the <svg>, so no size is set here. */
+  .esp-skin .esp-icon {
+    display: block;
+    transform-origin: center;
+  }
+
+  /* Morph host: the host is the sized box, the inner svg fills it. */
+  .esp-skin .esp-morph-icon {
+    display: block;
+    color: inherit;
+  }
+
+  .esp-skin .esp-morph-icon > svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    transform-origin: center;
+  }
+
+  /* Optical size correction. Lucide glyphs fill the 24 grid unevenly (cast,
+     airplay, pip, captions-off, languages span 20 units; most others 16 to 18).
+     `transform` is used, not `scale`, because the skin animates `scale` for
+     its show/hide states. */
+  .esp-skin :is(.esp-icon-cast, .esp-icon-airplay, .esp-icon-pip-enter, .esp-icon-pip-exit, .esp-icon-captions-off, .esp-icon-speech),
+  .esp-skin .esp-morph-icon:is([data-icon='pip-enter'], [data-icon='pip-exit'], [data-icon='captions-off']) > svg {
+    transform: scale(0.88);
+  }
+
+  .esp-skin :is(.esp-icon-settings, .esp-icon-speed, .esp-icon-restart),
+  .esp-skin .esp-morph-icon:is([data-icon='settings'], [data-icon='close'], [data-icon='restart']) > svg {
+    transform: scale(1.06);
+  }
+
+  /* Cast and AirPlay only when the platform reports a target right now. */
+  .esp-skin :is(.media-cast-button, .media-airplay-button):not([data-availability='available']) {
+    display: none;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Sliders                                                              */
+  /* ------------------------------------------------------------------ */
+
   .esp-skin .media-slider-fill,
   .esp-skin .media-slider-buffer {
     transition-timing-function: var(--esp-ease-fill);
@@ -75,46 +124,100 @@
     --esp-pointer-follow: 40ms;
   }
 
-  /* Title uses the heading face */
+  /* ------------------------------------------------------------------ */
+  /* Themed surfaces: settings menu and preview card                      */
+  /* ------------------------------------------------------------------ */
+
+  .esp-skin .media-menu-popup.esp-theme {
+    --media-popover: var(--esp-surface);
+    --media-popover-foreground: var(--esp-text);
+    --media-foreground: var(--esp-text);
+    --media-muted-foreground: var(--esp-muted);
+    --media-accent: var(--esp-raised-hover);
+    --media-accent-foreground: var(--esp-text);
+    --media-primary: var(--esp-primary);
+    --media-primary-foreground: var(--esp-primary-contrast);
+    --media-border: var(--esp-divider);
+    --media-surface-border: var(--esp-divider);
+    --media-ring: var(--esp-primary);
+    --media-shadow-current-color: transparent;
+    --media-shadow-separator: 0 0 #0000;
+    --media-shadow-surface-inset: 0 0 #0000;
+    --media-shadow-surface: 0 12px 32px -8px color-mix(in srgb, black 35%, transparent);
+    --media-backdrop-filter-surface: none;
+    --media-popup-radius: var(--esp-radius-box);
+    font-family: var(--esp-font-body);
+    text-shadow: none;
+  }
+
+  .esp-skin .media-menu-popup.esp-theme :is(.media-menu-trigger-item, .media-menu-radio-item, .media-menu-back-item) {
+    text-shadow: none;
+  }
+
+  .esp-skin .media-menu-popup.esp-theme :is(.media-menu-trigger-item, .media-menu-radio-item, .media-menu-back-item):focus-visible {
+    outline: var(--esp-focus-ring);
+    /* Inside a clipped, scrollable panel the ring sits inward. */
+    outline-offset: calc(var(--esp-focus-offset) * -1);
+  }
+
+  .esp-skin .media-menu-popup.esp-theme .media-menu-radio-item-icon {
+    color: var(--esp-primary);
+  }
+
+  .esp-skin .media-menu-popup.esp-theme .media-menu-badge {
+    background: var(--esp-solid);
+    color: var(--esp-solid-contrast);
+  }
+
+  .esp-skin .media-menu-popup.esp-theme .media-menu-separator {
+    border-color: var(--esp-divider);
+  }
+
+  /* Timeline preview card: thumbnail frame and the chapter / time chip */
+  .esp-skin .media-slider-thumbnail.esp-theme {
+    --media-popover: var(--esp-surface);
+    --media-popover-foreground: var(--esp-text);
+    --media-surface-border: var(--esp-divider);
+    --media-shadow-surface-inset: 0 0 #0000;
+    --media-backdrop-filter-surface: none;
+    background-color: var(--esp-surface);
+  }
+
+  .esp-skin .media-time-slider-preview-content.esp-theme {
+    padding: calc(var(--media-spacing) * 1) calc(var(--media-spacing) * 2.5);
+    border-radius: var(--esp-radius-chip);
+    background: var(--esp-surface);
+    color: var(--esp-text);
+    box-shadow: 0 0 0 1px var(--esp-divider);
+    text-shadow: none;
+    font-family: var(--esp-font-body);
+  }
+
+  .esp-skin .media-time-slider-preview-content.esp-theme .media-time-slider-chapter-title {
+    color: var(--esp-accent-text);
+    font-weight: 600;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Text                                                                 */
+  /* ------------------------------------------------------------------ */
+
   .esp-skin .media-title {
     font-family: var(--esp-font-heading);
     font-weight: 600;
     letter-spacing: 0.01em;
   }
 
-  /* Morphing icon host */
-  .esp-skin .esp-morph-icon {
-    display: block;
-    color: inherit;
-  }
-
-  .esp-skin .esp-morph-icon > svg,
-  .esp-skin .esp-icon {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-
-  /* Static inline icons that the skin shows and hides per state start hidden
-     the same way the original <media-icon> elements did. */
-  .esp-skin .media-button-icon.esp-icon {
-    grid-row-start: 1;
-    grid-column-start: 1;
-  }
-
-  /* Focus ring: 2px, offset 2px, readable caramel over video */
-  .esp-skin :is(.media-button, .media-slider-thumb, .media-menu-item, button):focus-visible {
+  .esp-skin :is(.media-button, .media-slider-thumb, button):focus-visible {
     outline: 2px solid var(--esp-overlay-accent);
     outline-offset: var(--esp-focus-offset);
   }
 
-  /* Controls bar reveal: soft, no overshoot */
   .esp-skin .video-controls-content,
   .esp-skin .video-controls-backdrop {
     transition-timing-function: var(--esp-ease-enter);
   }
 
-  /* Numbers */
   .esp-skin .media-time-value,
   .esp-skin .media-time-slider-value,
   .esp-skin .media-volume-indicator-value {

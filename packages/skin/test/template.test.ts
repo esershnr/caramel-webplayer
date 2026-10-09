@@ -10,6 +10,13 @@ describe('skin template', () => {
     expect(SKIN_TEMPLATE).toContain('map="data-ended:restart,data-paused:play,*:pause"');
   });
 
+  it('tags inline icons with their name and themes the popups', () => {
+    expect(SKIN_TEMPLATE).toContain('esp-icon esp-icon-chevron');
+    expect(SKIN_TEMPLATE).toContain('esp-icon esp-icon-cast');
+    expect(SKIN_TEMPLATE).toMatch(/<media-menu [^>]*class="[^"]*media-menu-popup[^"]*esp-theme/);
+    expect(SKIN_TEMPLATE).toMatch(/<media-slider-thumbnail [^>]*esp-theme/);
+  });
+
   it('contains only placeholder ids', () => {
     expect(SKIN_TEMPLATE).not.toMatch(/vjs-[A-Za-z0-9_-]{8}-0/);
     expect(SKIN_TEMPLATE).toContain('{{uid}}-0-trigger');

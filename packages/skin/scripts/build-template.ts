@@ -47,7 +47,8 @@ html = html.replace(
     }
     const classMatch = /class="([^"]*)"/.exec(rest);
     const className = classMatch?.[1];
-    return iconToSvg(node, { className: className ? `${className} esp-icon` : 'esp-icon' });
+    const extra = `esp-icon esp-icon-${iconName}`;
+    return iconToSvg(node, { className: className ? `${className} ${extra}` : extra });
   },
 );
 if (missing.size) {
