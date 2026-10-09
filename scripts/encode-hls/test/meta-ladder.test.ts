@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { buildLadder } from '../src/ladder.js';
 import { MetaError, parseMeta } from '../src/meta.js';
-import { keptFrames } from '../src/encode.js';
+import { fixPlaylistPaths, keptFrames } from '../src/encode.js';
 
 const GOOD = `
 slug: openwrt-rehber
@@ -109,5 +109,14 @@ describe('keptFrames', () => {
   it('reads the last progress counter', () => {
     expect(keptFrames('frame=  100 fps=0\rframe=  395 fps=1\rframe=  768 fps=2 q=-0.0 Lsize=N/A')).toBe(768);
     expect(keptFrames('')).toBe(0);
+  });
+});
+
+describe('fixPlaylistPaths', () => {
+  it('turns backslashes in URI lines into slashes and leaves tags alone', () => {
+    const input = ['#EXTM3U', '#EXT-X-STREAM-INF:BANDWIDTH=1,CODECS="a\\b"', '1080p\\stream.m3u8', '', '540p\\stream.m3u8', ''].join('\n');
+    expect(fixPlaylistPaths(input)).toBe(
+      ['#EXTM3U', '#EXT-X-STREAM-INF:BANDWIDTH=1,CODECS="a\\b"', '1080p/stream.m3u8', '', '540p/stream.m3u8', ''].join('\n'),
+    );
   });
 });

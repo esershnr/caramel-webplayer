@@ -111,6 +111,14 @@ function variantArgs(v: Variant, index: number, preset: string): string[] {
   ];
 }
 
+/** Playlist URIs must use forward slashes; ffmpeg on Windows can emit backslashes. */
+export function fixPlaylistPaths(playlist: string): string {
+  return playlist
+    .split('\n')
+    .map((line) => (line.startsWith('#') || line.trim() === '' ? line : line.replace(/\\/g, '/')))
+    .join('\n');
+}
+
 export async function encode(options: EncodeOptions): Promise<EncodeResult> {
   const log = options.log ?? (() => {});
   const ffmpeg = options.ffmpeg ?? 'ffmpeg';
@@ -169,6 +177,9 @@ export async function encode(options: EncodeOptions): Promise<EncodeResult> {
     for (const v of ladder.variants) mkdirSync(path.join(outDir, v.name), { recursive: true });
     log(`Encoding ${ladder.variants.map((v) => `${v.name}@${v.maxrate}k`).join(' + ')} at ${ladder.fps} fps (this takes a while)`);
     await run(ffmpeg, args);
+    // On Windows ffmpeg writes the `%v` folder with a backslash into the master playlist.
+    const master = path.join(outDir, 'master.m3u8');
+    writeFileSync(master, fixPlaylistPaths(readFileSync(master, 'utf8')));
     files.push('master.m3u8', ...ladder.variants.flatMap((v) => [`${v.name}/stream.m3u8`, `${v.name}/stream.m4s`]));
   }
 
