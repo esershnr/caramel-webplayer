@@ -44,6 +44,14 @@ const COPIED_MEDIA_ATTRIBUTES = ['playsinline', 'crossorigin', 'preload'] as con
 const LOOKUP_RETRIES = 30;
 let warnedHls = false;
 
+/** Language of the nearest `lang` ancestor: the `lang` property first (reactive
+ *  elements such as <media-i18n> do not reflect it to the attribute), then the attribute. */
+function langOf(element: Element | null): string {
+  if (!element) return '';
+  const own = (element as HTMLElement).lang;
+  return (typeof own === 'string' && own) || element.getAttribute('lang') || '';
+}
+
 function parseJson(value: string): unknown {
   try {
     return JSON.parse(value);
@@ -471,7 +479,7 @@ export class EspPlaylistElement extends Base {
 
   /** Language the chapters track follows: nearest `lang`, then `<html lang>`. */
   #currentLang(): string | null {
-    const lang = this.closest('[lang]')?.getAttribute('lang') || document.documentElement.lang || null;
+    const lang = langOf(this.closest('[lang]')) || document.documentElement.lang || null;
     this.#appliedLang = lang;
     return lang;
   }
@@ -484,7 +492,7 @@ export class EspPlaylistElement extends Base {
       const player = this.#player;
       if (!item || !player || typeof item.chapters !== 'object') return;
       const previous = this.#appliedLang;
-      const next = this.closest('[lang]')?.getAttribute('lang') || document.documentElement.lang || null;
+      const next = langOf(this.closest('[lang]')) || document.documentElement.lang || null;
       if (next === previous) return;
       const container = player.querySelector('media-container');
       const media = container ? findMedia(container) : null;

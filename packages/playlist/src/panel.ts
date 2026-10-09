@@ -36,6 +36,14 @@ const EMPTY_ITEMS: readonly PlaylistItem[] = [];
  * (light/dark) applies. Strings follow the nearest `lang` attribute, or
  * `<html lang>`, and re-resolve when the document language changes.
  */
+/** Language of the nearest `lang` ancestor: the `lang` property first (reactive
+ *  elements such as <media-i18n> do not reflect it to the attribute), then the attribute. */
+function langOf(element: Element | null): string {
+  if (!element) return '';
+  const own = (element as HTMLElement).lang;
+  return (typeof own === 'string' && own) || element.getAttribute('lang') || '';
+}
+
 export class EspPlaylistPanelElement extends Base {
   static readonly tagName = 'esp-playlist-panel';
 
@@ -173,7 +181,7 @@ export class EspPlaylistPanelElement extends Base {
   }
 
   #resolveLanguage(): void {
-    const lang = this.closest('[lang]')?.getAttribute('lang') || document.documentElement.lang || 'en';
+    const lang = langOf(this.closest('[lang]')) || document.documentElement.lang || 'en';
     if (lang === this.#lang && this.#translator) return;
     this.#lang = lang;
     this.#translator = createPlaylistTranslator(lang);

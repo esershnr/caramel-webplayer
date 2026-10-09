@@ -48,6 +48,14 @@ const LOOKUP_RETRIES = 30;
  *
  * Events: `esp-chapter-select` (detail: ChapterSelectDetail), bubbles.
  */
+/** Language of the nearest `lang` ancestor: the `lang` property first (reactive
+ *  elements such as <media-i18n> do not reflect it to the attribute), then the attribute. */
+function langOf(element: Element | null): string {
+  if (!element) return '';
+  const own = (element as HTMLElement).lang;
+  return (typeof own === 'string' && own) || element.getAttribute('lang') || '';
+}
+
 export class EspChaptersPanelElement extends Base {
   static readonly tagName = 'esp-chapters-panel';
 
@@ -329,7 +337,7 @@ export class EspChaptersPanelElement extends Base {
   // i18n -------------------------------------------------------------------
 
   #effectiveLang(): string {
-    const own = this.closest('[lang]')?.getAttribute('lang');
+    const own = langOf(this.closest('[lang]'));
     const doc = typeof document === 'undefined' ? '' : document.documentElement.lang;
     return own || doc || 'en';
   }
