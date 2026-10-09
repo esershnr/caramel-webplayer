@@ -1,0 +1,178 @@
+/*
+ * <esp-chapters-panel> styles. The panel sits outside the video on a themed
+ * surface, so it uses the page roles (--esp-surface, --esp-raised, ...) and
+ * follows light/dark through the .esp-theme scope on the element itself.
+ *
+ * Host knobs:
+ *   --esp-chapters-max-height   scroll threshold (default 24rem)
+ *   --esp-chapters-padding      panel padding (default 1rem)
+ *   --esp-chapters-gap          space between items (default 0.375rem)
+ */
+@import '@esersahiner/player-theme/tokens.css';
+
+esp-chapters-panel {
+  display: block;
+  box-sizing: border-box;
+  max-height: var(--esp-chapters-max-height, 24rem);
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--esp-divider) transparent;
+  padding: var(--esp-chapters-padding, 1rem);
+  background: var(--esp-surface);
+  color: var(--esp-text);
+  border-radius: var(--esp-radius-panel);
+  font-family: var(--esp-font-body);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+esp-chapters-panel .esp-chapters-heading {
+  margin: 0 0 0.75rem;
+  padding: 0 0.25rem 0.625rem;
+  border-bottom: 1px solid var(--esp-divider);
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+}
+
+esp-chapters-panel .esp-chapters-heading[hidden],
+esp-chapters-panel .esp-chapters-empty[hidden] {
+  display: none;
+}
+
+esp-chapters-panel .esp-chapters-empty {
+  margin: 0;
+  padding: 0.5rem 0.25rem;
+  color: var(--esp-muted);
+}
+
+esp-chapters-panel .esp-chapters-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-chapters-gap, 0.375rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+esp-chapters-panel[data-empty] .esp-chapters-list {
+  display: none;
+}
+
+esp-chapters-panel .esp-chapter {
+  margin: 0;
+  padding: 0;
+}
+
+esp-chapters-panel .esp-chapter-button {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.75rem;
+  align-items: baseline;
+  width: 100%;
+  margin: 0;
+  padding: 0.625rem 0.875rem 0.625rem 1.125rem;
+  border: 0;
+  border-radius: var(--esp-radius-box);
+  background: var(--esp-raised);
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--esp-duration-fast) var(--esp-ease-enter);
+}
+
+/* Left marker: hidden until the chapter is active. Only transform/opacity animate. */
+esp-chapters-panel .esp-chapter-button::before {
+  content: '';
+  position: absolute;
+  inset-block: 0.625rem;
+  inset-inline-start: 0.375rem;
+  width: 3px;
+  border-radius: var(--esp-radius-chip);
+  background: var(--esp-primary);
+  opacity: 0;
+  transform: scaleY(0.4);
+  transition:
+    opacity var(--esp-duration-fast) var(--esp-ease-enter),
+    transform var(--esp-duration-fast) var(--esp-ease-enter);
+}
+
+esp-chapters-panel .esp-chapter-button:hover {
+  background: var(--esp-raised-hover);
+}
+
+esp-chapters-panel .esp-chapter-button:active {
+  transform: scale(0.985);
+  transition-duration: var(--esp-duration-instant);
+}
+
+esp-chapters-panel .esp-chapter-button:focus-visible {
+  outline: var(--esp-focus-ring);
+  outline-offset: var(--esp-focus-offset);
+}
+
+esp-chapters-panel .esp-chapter[data-active] .esp-chapter-button {
+  outline: 2px solid var(--esp-primary);
+  outline-offset: -2px;
+}
+
+esp-chapters-panel .esp-chapter[data-active] .esp-chapter-button:focus-visible {
+  outline-offset: var(--esp-focus-offset);
+}
+
+esp-chapters-panel .esp-chapter[data-active] .esp-chapter-button::before {
+  opacity: 1;
+  transform: none;
+}
+
+esp-chapters-panel .esp-chapter-time {
+  color: var(--esp-muted);
+  font-size: 0.875em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+esp-chapters-panel .esp-chapter[data-active] .esp-chapter-time {
+  color: var(--esp-accent-text);
+}
+
+esp-chapters-panel .esp-chapter-title {
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+esp-chapters-panel .esp-chapter[data-active] .esp-chapter-title {
+  font-weight: 600;
+}
+
+@media (forced-colors: active) {
+  esp-chapters-panel {
+    border: 1px solid CanvasText;
+  }
+
+  esp-chapters-panel .esp-chapter-button {
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  esp-chapters-panel .esp-chapter-button::before {
+    background: Highlight;
+  }
+
+  esp-chapters-panel .esp-chapter[data-active] .esp-chapter-button {
+    outline-color: Highlight;
+  }
+
+  esp-chapters-panel .esp-chapter-time {
+    color: GrayText;
+  }
+
+  esp-chapters-panel .esp-chapter[data-active] .esp-chapter-time {
+    color: CanvasText;
+  }
+}
