@@ -57,8 +57,8 @@
     --media-duration-slider: var(--esp-duration-fill);
     --media-hidden-offset: calc(var(--media-spacing) * 2);
 
-    /* Soft pointer follow for the thumbnail preview and chapter title */
-    --esp-pointer-follow: 45ms;
+    /* Soft pointer follow for the hover dot, preview card and chapter title */
+    --esp-pointer-follow: 25ms;
   }
 
   /* ------------------------------------------------------------------ */
@@ -131,8 +131,41 @@
   }
 
   .esp-skin .media-time-slider[data-dragging] {
-    --esp-pointer-follow: 20ms;
+    --esp-pointer-follow: 10ms;
     --esp-seek-motion: 0ms;
+  }
+
+  /* Hover dot. The skin draws it as a ::before of <media-slider-preview>, but
+     that element is clamped (overflow="clamp") so the card stays inside the
+     player, which kept the dot half a card away from both ends. It is drawn on
+     the slider instead, at the raw pointer position: 0% is the left end of the
+     track, 100% the right end. Only the card is clamped. */
+  .esp-skin .media-time-slider .media-slider-preview::before {
+    display: none;
+  }
+
+  .esp-skin .media-time-slider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: var(--media-slider-pointer, 0%);
+    z-index: 1;
+    width: var(--media-spacing);
+    height: var(--media-spacing);
+    border-radius: var(--media-control-radius);
+    background-color: currentColor;
+    pointer-events: none;
+    opacity: 0;
+    translate: -50% -50%;
+    scale: 0.5;
+    transition-property: opacity, scale;
+    transition-duration: var(--media-duration-slow);
+    transition-timing-function: var(--esp-ease-enter);
+  }
+
+  .esp-skin .media-time-slider[data-pointing]:not([data-dragging])::after {
+    opacity: 1;
+    scale: 1;
   }
 
   /* ------------------------------------------------------------------ */
@@ -406,7 +439,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .media-skin.esp-skin {
+  .media-skin.esp-skin,
+  .media-skin.esp-skin .media-time-slider[data-dragging] {
     --esp-pointer-follow: 0ms;
   }
 }
