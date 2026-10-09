@@ -1,6 +1,7 @@
 {
   "name": "@esersahiner/gen-thumbs",
   "version": "0.1.0",
+  "private": true,
   "description": "Generate timeline thumbnail sprites and a WebVTT storyboard with ffmpeg",
   "license": "MIT",
   "type": "module",
