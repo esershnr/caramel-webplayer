@@ -287,6 +287,41 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* Quality badge on the settings gear: HD / FHD / 2K / 4K for the playing
+     rendition. Override with --esp-quality-badge-bg / -text. Defaults are the
+     overlay accent pair (9.1:1 text, 8:1 against the control bar). */
+  .esp-skin .media-settings-menu-trigger {
+    position: relative;
+  }
+
+  .esp-skin .esp-quality-badge {
+    position: absolute;
+    top: calc(var(--media-spacing) * 0.25);
+    right: calc(var(--media-spacing) * 0.25);
+    z-index: 1;
+    padding: 1px 3px;
+    border-radius: var(--esp-radius-chip);
+    background: var(--esp-quality-badge-bg, var(--esp-overlay-accent));
+    color: var(--esp-quality-badge-text, var(--esp-overlay-on-accent));
+    font-family: var(--esp-font-body);
+    font-size: calc(var(--media-spacing) * 1.9);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    text-shadow: none;
+    pointer-events: none;
+    transform-origin: top right;
+    transition:
+      opacity var(--esp-duration-fast) var(--esp-ease-enter),
+      transform var(--esp-duration-enter) var(--esp-ease-spring);
+  }
+
+  .esp-skin .esp-quality-badge[data-empty],
+  .esp-skin .esp-quality-badge:empty {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
   /* Clickable counter: "01:23 / 05:00" or "-03:37 / 05:00" */
   .esp-skin .esp-time-display {
     display: block;

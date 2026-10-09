@@ -53,6 +53,8 @@
   --esp-overlay-surface-strong: color-mix(in srgb, black 80%, transparent);
   --esp-overlay-text: #ffffff;
   --esp-overlay-accent: #d9ae7e;
+  /* Text placed ON overlay-accent (badges): 9.1:1 against it */
+  --esp-overlay-on-accent: #1a1208;
   --esp-overlay-border: color-mix(in srgb, white 24%, transparent);
 
   /* Focus ring: 2px solid primary, 2px offset */

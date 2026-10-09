@@ -42,3 +42,4 @@ export function renderSkinHtml(mediaHtml: string, uid = 'esp-player'): string {
 }
 export { EspTimeDisplayElement, readTimeDisplayMode, writeTimeDisplayMode, registerTimeDisplayI18n, TIME_DISPLAY_STORAGE_KEY, type TimeDisplayMode } from './time-display.js';
 export { installSeekMotion, SEEK_MOTION_ATTR } from './seek-motion.js';
+export { EspQualityBadgeElement, qualityLabel } from './quality-badge.js';
