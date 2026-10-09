@@ -58,7 +58,7 @@
     --media-hidden-offset: calc(var(--media-spacing) * 2);
 
     /* Soft pointer follow for the thumbnail preview and chapter title */
-    --esp-pointer-follow: 90ms;
+    --esp-pointer-follow: 45ms;
   }
 
   /* ------------------------------------------------------------------ */
@@ -121,7 +121,7 @@
   }
 
   .esp-skin .media-time-slider[data-dragging] {
-    --esp-pointer-follow: 40ms;
+    --esp-pointer-follow: 20ms;
   }
 
   /* ------------------------------------------------------------------ */
