@@ -10,7 +10,7 @@ Copy the shape of `packages/skip-segments`:
 
 | File | Reference | Notes |
 | --- | --- | --- |
-| `package.json` | `packages/skip-segments/package.json:1-55` | `type: module`, `sideEffects` lists CSS and `define` entries, `files: ["dist", "src/styles"]`. Every export has three conditions in this order: `development` (TS source, used by Vite dev and tsc), `types` (dist d.ts), `default` (dist js). Extra exports: `./define`, `./react`, `./<name>.css`, `./package.json`. React is an optional peer (`peerDependenciesMeta`). |
+| `package.json` | `packages/skip-segments/package.json:1-55` | `type: module`, `sideEffects` lists CSS and `define` entries, `files: ["dist", "README.md", "LICENSE"]`. Every export has three conditions in this order: `esp-source` (TS source, enabled only by our tsconfig, Vite and Vitest configs), `types` (dist d.ts), `default` (dist js). CSS exports use `esp-source` for `src/styles` and `default` for `dist/styles`. Never use the `development` condition: Next.js and Vite enable it in consumer dev builds, and the published tarball has no `src`. Extra exports: `./define`, `./react`, `./<name>.css`, `./package.json`. `@videojs/html` (10.0.x) is a peer; React and React DOM (>=19) are optional peers (`peerDependenciesMeta`). `publishConfig.access` is `public`. |
 | `tsconfig.json` | `packages/skip-segments/tsconfig.json` | extends `../../tsconfig.base.json`, `noEmit`, `jsx: react-jsx`, includes `src` and `test`. |
 | `tsconfig.build.json` | `packages/skip-segments/tsconfig.build.json` | `outDir: dist`, `rootDir: src`. |
 | `vitest.config.ts` | `packages/skip-segments/vitest.config.ts` | `test.name`, `environment: node`, `include: ['test/**/*.test.ts']`. The root `vitest.config.ts:5` picks up `packages/*` and `scripts/*` automatically. |
@@ -21,7 +21,7 @@ Copy the shape of `packages/skip-segments`:
 | `src/styles/<name>.css` | `packages/skip-segments/src/styles/skip-segments.css` | See section 4. |
 
 Scripts: `build` (`tsc -p tsconfig.build.json` plus copying `src/styles` to `dist/styles`),
-`typecheck`, `test`. The root `tsconfig.base.json:7` sets `customConditions: ["development"]`
+`typecheck`, `test`. The root `tsconfig.base.json:7` sets `customConditions: ["esp-source"]`
 so workspace imports resolve to TS sources without a build.
 
 Never run `pnpm add` or `pnpm install`. Dependencies are already declared in your

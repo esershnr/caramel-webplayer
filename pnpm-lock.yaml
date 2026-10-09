@@ -103,13 +103,16 @@ importers:
       '@esersahiner/player-theme':
         specifier: workspace:*
         version: link:../theme
-      '@videojs/html':
-        specifier: 10.0.1
-        version: 10.0.1(react@19.3.0)
+      react-dom:
+        specifier: '>=19'
+        version: 19.3.0(react@19.3.0)
     devDependencies:
       '@types/react':
         specifier: ^19.1.0
         version: 19.3.0
+      '@videojs/html':
+        specifier: 10.0.1
+        version: 10.0.1(react@19.3.0)
       react:
         specifier: ^19.2.0
         version: 19.3.0
@@ -128,6 +131,9 @@ importers:
       morphicons:
         specifier: ^1.7.1
         version: 1.7.1(react@19.3.0)
+      react-dom:
+        specifier: '>=19'
+        version: 19.3.0(react@19.3.0)
     devDependencies:
       '@types/react':
         specifier: ^19.1.0
@@ -153,13 +159,16 @@ importers:
       '@esersahiner/player-theme':
         specifier: workspace:*
         version: link:../theme
-      '@videojs/html':
-        specifier: 10.0.1
-        version: 10.0.1(react@19.3.0)
+      react-dom:
+        specifier: '>=19'
+        version: 19.3.0(react@19.3.0)
     devDependencies:
       '@types/react':
         specifier: ^19.1.0
         version: 19.3.0
+      '@videojs/html':
+        specifier: 10.0.1
+        version: 10.0.1(react@19.3.0)
       react:
         specifier: ^19.2.0
         version: 19.3.0
@@ -178,9 +187,9 @@ importers:
       '@esersahiner/player-theme':
         specifier: workspace:*
         version: link:../theme
-      '@videojs/html':
-        specifier: 10.0.1
-        version: 10.0.1(react@19.3.0)
+      react-dom:
+        specifier: '>=19'
+        version: 19.3.0(react@19.3.0)
     devDependencies:
       '@types/node':
         specifier: ^26.6.0
@@ -188,6 +197,9 @@ importers:
       '@types/react':
         specifier: ^19.1.0
         version: 19.3.0
+      '@videojs/html':
+        specifier: 10.0.1
+        version: 10.0.1(react@19.3.0)
       react:
         specifier: ^19.2.0
         version: 19.3.0
@@ -209,13 +221,16 @@ importers:
       '@esersahiner/player-theme':
         specifier: workspace:*
         version: link:../theme
-      '@videojs/html':
-        specifier: 10.0.1
-        version: 10.0.1(react@19.3.0)
+      react-dom:
+        specifier: '>=19'
+        version: 19.3.0(react@19.3.0)
     devDependencies:
       '@types/react':
         specifier: ^19.1.0
         version: 19.3.0
+      '@videojs/html':
+        specifier: 10.0.1
+        version: 10.0.1(react@19.3.0)
       react:
         specifier: ^19.2.0
         version: 19.3.0

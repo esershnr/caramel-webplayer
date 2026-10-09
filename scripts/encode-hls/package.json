@@ -13,7 +13,7 @@
   ],
   "exports": {
     ".": {
-      "development": "./src/index.ts",
+      "esp-source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
@@ -23,7 +23,7 @@
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
-    "start": "node --conditions=development --import tsx src/cli.ts"
+    "start": "node --conditions=esp-source --import tsx src/cli.ts"
   },
   "dependencies": {
     "@esersahiner/gen-thumbs": "workspace:*",

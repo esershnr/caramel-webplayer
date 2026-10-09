@@ -2,58 +2,86 @@
   "name": "@esersahiner/player-chapters",
   "version": "0.1.0",
   "description": "Chapter list panel for Video.js 10, fed by the player's chapters track",
+  "keywords": [
+    "videojs",
+    "video.js",
+    "videojs-10",
+    "video-player",
+    "web-components",
+    "custom-elements",
+    "chapters",
+    "webvtt",
+    "chapter-list",
+    "react"
+  ],
   "license": "MIT",
+  "author": "Eser Şahiner (https://esersahiner.com)",
   "type": "module",
   "sideEffects": [
     "*.css",
-    "./src/define.ts",
-    "./dist/define.js"
+    "./dist/define.js",
+    "./src/define.ts"
   ],
   "files": [
     "dist",
-    "src/styles"
+    "README.md",
+    "LICENSE"
   ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "development": "./src/index.ts",
+      "esp-source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
     "./define": {
-      "development": "./src/define.ts",
+      "esp-source": "./src/define.ts",
       "types": "./dist/define.d.ts",
       "default": "./dist/define.js"
     },
     "./react": {
-      "development": "./src/react.tsx",
+      "esp-source": "./src/react.tsx",
       "types": "./dist/react.d.ts",
       "default": "./dist/react.js"
     },
-    "./chapters.css": "./src/styles/chapters.css",
+    "./chapters.css": {
+      "esp-source": "./src/styles/chapters.css",
+      "default": "./dist/styles/chapters.css"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json && node -e \"require('node:fs').cpSync('src/styles','dist/styles',{recursive:true})\"",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
     "@esersahiner/player-icons": "workspace:*",
-    "@esersahiner/player-theme": "workspace:*",
-    "@videojs/html": "10.0.1"
+    "@esersahiner/player-theme": "workspace:*"
   },
   "peerDependencies": {
-    "react": ">=18"
+    "@videojs/html": "10.0.x",
+    "react": ">=19",
+    "react-dom": ">=19"
   },
   "peerDependenciesMeta": {
     "react": {
+      "optional": true
+    },
+    "react-dom": {
       "optional": true
     }
   },
   "devDependencies": {
     "@types/react": "^19.1.0",
+    "@videojs/html": "10.0.1",
     "react": "^19.2.0",
     "typescript": "^5.9.0",
     "vitest": "^5.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

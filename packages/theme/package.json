@@ -1,8 +1,21 @@
 {
   "name": "@esersahiner/player-theme",
   "version": "0.1.0",
-  "description": "esersahiner.com design tokens (--esp-*) for the web player: light/dark palette, motion, typography",
+  "description": "Design tokens (--esp-*) for the esersahiner Video.js 10 player: light/dark palette, segment colors, motion, typography, presets",
+  "keywords": [
+    "videojs",
+    "video.js",
+    "videojs-10",
+    "video-player",
+    "web-components",
+    "custom-elements",
+    "design-tokens",
+    "css-variables",
+    "theme",
+    "dark-mode"
+  ],
   "license": "MIT",
+  "author": "Eser Şahiner (https://esersahiner.com)",
   "type": "module",
   "sideEffects": [
     "*.css"
@@ -10,11 +23,15 @@
   "files": [
     "dist",
     "styles",
-    "presets"
+    "presets",
+    "README.md",
+    "LICENSE"
   ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "development": "./src/index.ts",
+      "esp-source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
@@ -26,14 +43,18 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepublishOnly": "pnpm run build"
+  },
+  "dependencies": {
+    "@fontsource-variable/montserrat": "^5.3.0",
+    "@fontsource-variable/quicksand": "^5.3.0"
   },
   "devDependencies": {
     "typescript": "^5.9.0",
     "vitest": "^5.0.3"
   },
-  "dependencies": {
-    "@fontsource-variable/montserrat": "^5.3.0",
-    "@fontsource-variable/quicksand": "^5.3.0"
+  "publishConfig": {
+    "access": "public"
   }
 }
