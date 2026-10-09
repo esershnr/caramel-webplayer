@@ -93,6 +93,20 @@
     transform: scale(1.06);
   }
 
+  /* Spinner (buffering, thumbnail loading). Video.js animates its own spinner
+     from a <style> inside that svg; the inlined Lucide loader has none, so it
+     spins here. The skin turns --media-spinner-animation to `none` while the
+     indicator is hidden and under reduced motion, which stops it too. */
+  .esp-skin .esp-icon-spinner {
+    animation: var(--media-spinner-animation, esp-spinner-turn 0.9s linear infinite);
+  }
+
+  @keyframes esp-spinner-turn {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
   /* On-screen indicators (arrow keys, c / f / i): one icon that morphs with
      the indicator's state, same mapping as the control bar buttons. */
   .esp-skin :is(.media-volume-indicator-icon, .media-status-indicator-icon) {
