@@ -13,6 +13,7 @@ type Choice = 'light' | 'dark' | 'system';
 
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 const NO_SEGMENTS: Segment[] = [];
+const R2_MANIFEST = 'https://cdn.esersahiner.com/videos/openwrt-rehber/v1/manifest.json';
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -42,8 +43,11 @@ export function App() {
   // encode-hls output, when present (served from repo out/ by the Vite plugin).
   useEffect(() => {
     let cancelled = false;
-    void loadManifest('/out/openwrt-rehber/manifest.json', `${location.origin}/out/openwrt-rehber/`).then((item) => {
-      if (item && !cancelled) setItems([...PLAYLIST, item]);
+    void Promise.all([
+      loadManifest('/out/openwrt-rehber/manifest.json', `${location.origin}/out/openwrt-rehber/`),
+      loadManifest(R2_MANIFEST).then((item) => (item ? { ...item, id: `${item.id}-r2`, title: `${item.title} (R2)` } : null)),
+    ]).then((extra) => {
+      if (!cancelled) setItems([...PLAYLIST, ...extra.filter((item): item is PlaylistItem => item !== null)]);
     });
     return () => {
       cancelled = true;
