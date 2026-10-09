@@ -79,6 +79,16 @@ export function findActiveIndex(segments: readonly Segment[], time: number): num
 }
 
 /**
+ * Segment under a timeline position given as a 0 to 1 ratio of the track
+ * width (the hovered point of the preview card), or null.
+ */
+export function segmentAtRatio(segments: readonly Segment[], ratio: number, duration: number): Segment | null {
+  if (!Number.isFinite(ratio) || !Number.isFinite(duration) || duration <= 0) return null;
+  const time = Math.min(1, Math.max(0, ratio)) * duration;
+  return segments[findActiveIndex(segments, time)] ?? null;
+}
+
+/**
  * Where a skip lands. Never beyond the media duration. A segment that runs to
  * the very end (an outro) seeks to the end so `ended` fires and a playlist can
  * advance.

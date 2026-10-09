@@ -160,3 +160,28 @@ body {
 .demo-log li {
   color: var(--esp-muted);
 }
+
+/* Segment band legend: same tokens, ring and stripes as the timeline */
+.demo-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.demo-swatch {
+  flex: none;
+  width: 2.25rem;
+  height: 0.5rem;
+  border-radius: var(--esp-radius-chip);
+  background-color: var(--demo-swatch);
+  box-shadow: 0 0 0 1px var(--esp-segment-ring);
+}
+
+.demo-swatch[data-auto] {
+  background-image: repeating-linear-gradient(-45deg, var(--esp-segment-hatch) 0 2px, transparent 2px 4px);
+}
+
+.demo-swatch[data-type='intro'] { --demo-swatch: var(--esp-segment-intro); }
+.demo-swatch[data-type='recap'] { --demo-swatch: var(--esp-segment-recap); }
+.demo-swatch[data-type='outro'] { --demo-swatch: var(--esp-segment-outro); }
+.demo-swatch[data-type='sponsor'] { --demo-swatch: var(--esp-segment-sponsor); }

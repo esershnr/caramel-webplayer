@@ -53,6 +53,32 @@
   --esp-overlay-on-accent: color-mix(in srgb, var(--esp-accent), black 85%);
   --esp-overlay-border: color-mix(in srgb, white 24%, transparent);
 
+  /* Timeline segment bands (skip-segments). They sit on the video like the
+     other overlay roles, so one value serves both schemes. Hues follow the
+     SponsorBlock convention (sponsor green, intro teal, outro blue, recap
+     violet) with the saturation lowered to sit next to the caramel palette.
+
+     Contrast (WCAG, computed). Unplayed track = white 20% over the dark
+     control scrim, about #333333. Played fill = --esp-accent #c9945c.
+                 band/track  band/fill  band/ring  chip text
+       intro       6.1        1.3        7.9        8.4
+       recap       5.0        1.1        6.5        7.0
+       outro       5.3        1.1        6.8        7.3
+       sponsor     6.1        1.3        7.9        8.3
+     No single color can reach 3:1 against both the dark track (needs a
+     luminance of 0.20 or more) and the caramel fill (needs 0.08 or less), so
+     every band carries a 1px --esp-segment-ring (black 80%): ring/fill 6.1,
+     band/ring column above. The band reads on the track by its own color
+     and on the played fill by the ring. Chip text is
+     color-mix(band, black 85%) on the band. */
+  --esp-segment-intro: #5ec4c0;
+  --esp-segment-recap: #b294ee;
+  --esp-segment-outro: #7fa7f5;
+  --esp-segment-sponsor: #72c67e;
+  --esp-segment-ring: color-mix(in srgb, black 80%, transparent);
+  /* Stripes on bands of auto-skipped types */
+  --esp-segment-hatch: color-mix(in srgb, black 40%, transparent);
+
   /* Focus ring: 2px solid primary, 2px offset */
   --esp-focus-ring: 2px solid var(--esp-primary);
   --esp-focus-offset: 2px;

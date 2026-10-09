@@ -161,7 +161,8 @@
     position: absolute;
     top: 50%;
     left: var(--media-slider-pointer, 0%);
-    z-index: 1;
+    /* Above the skip-segments bands (2), below the thumb (10). */
+    z-index: 5;
     width: var(--media-spacing);
     height: var(--media-spacing);
     border-radius: var(--media-control-radius);

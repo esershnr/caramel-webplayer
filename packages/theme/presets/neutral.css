@@ -12,6 +12,11 @@
  *          accent-text/surface 11.1  primary/surface 13.1  border/raised 4.6
  *          solid-contrast/solid 14.9
  * Targets: text 4.5:1 (aim 7:1), icons and borders 3:1. All pass.
+ *
+ * Segment bands keep the default hues (color is their only job here; a grey
+ * set would not tell the types apart). band/track (#333333): 5.3 to 6.1.
+ * Ring (black 80%) over the grey fill: 5.9, ring/band 6.6 or more.
+ * Chip text 7.0 or more.
  */
 :root {
   --esp-bg: light-dark(#fafafa, #121212);
@@ -25,4 +30,8 @@
   --esp-solid: light-dark(#262626, #e5e5e5);
   --esp-accent: #9a9a9a;
   --esp-accent-text: light-dark(#404040, #d4d4d4);
+  --esp-segment-intro: #5ec4c0;
+  --esp-segment-recap: #b294ee;
+  --esp-segment-outro: #7fa7f5;
+  --esp-segment-sponsor: #72c67e;
 }

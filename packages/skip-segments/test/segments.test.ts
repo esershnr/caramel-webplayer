@@ -3,6 +3,7 @@ import {
   findActiveIndex,
   normalizeSegments,
   parseAutoSkip,
+  segmentAtRatio,
   segmentGeometry,
   skipTarget,
 } from '../src/segments.js';
@@ -87,5 +88,29 @@ describe('skipTarget and segmentGeometry', () => {
       width: 100 - 100 / 1.2,
     });
     expect(segmentGeometry({ start: 0, end: 10, type: 'intro' }, 0)).toBeNull();
+  });
+});
+
+describe('segmentAtRatio', () => {
+  const segments = normalizeSegments([
+    { start: 0, end: 6, type: 'intro' },
+    { start: 18, end: 23, type: 'sponsor' },
+  ]);
+
+  it('finds the band under a timeline position', () => {
+    expect(segmentAtRatio(segments, 0, 100)?.type).toBe('intro');
+    expect(segmentAtRatio(segments, 0.2, 100)?.type).toBe('sponsor');
+  });
+
+  it('returns null between bands, at the end and without a duration', () => {
+    expect(segmentAtRatio(segments, 0.1, 100)).toBeNull();
+    expect(segmentAtRatio(segments, 0.23, 100)).toBeNull();
+    expect(segmentAtRatio(segments, 1, 100)).toBeNull();
+    expect(segmentAtRatio(segments, 0.5, 0)).toBeNull();
+    expect(segmentAtRatio(segments, Number.NaN, 100)).toBeNull();
+  });
+
+  it('clamps positions outside the track', () => {
+    expect(segmentAtRatio(segments, -0.3, 100)?.type).toBe('intro');
   });
 });

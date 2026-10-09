@@ -24,6 +24,28 @@ const TR: Record<SegmentType, string> = {
   sponsor: 'Sponsoru atla',
 };
 
+/** Keys for the short type name shown in the timeline preview card. */
+export const SEGMENT_KEYS: Record<SegmentType, string> = {
+  intro: 'esp.segment.intro',
+  recap: 'esp.segment.recap',
+  outro: 'esp.segment.outro',
+  sponsor: 'esp.segment.sponsor',
+};
+
+export const SEGMENT_DEFAULTS: Record<SegmentType, string> = {
+  intro: 'Intro',
+  recap: 'Recap',
+  outro: 'Outro',
+  sponsor: 'Sponsor',
+};
+
+const SEGMENT_TR: Record<SegmentType, string> = {
+  intro: 'İntro',
+  recap: 'Özet',
+  outro: 'Jenerik',
+  sponsor: 'Sponsor',
+};
+
 let registered = false;
 
 /**
@@ -35,6 +57,6 @@ export function registerSkipSegmentsI18n(): void {
   if (registered) return;
   registered = true;
   const register = registerI18n as unknown as (locale: string, translations: Record<string, unknown>) => void;
-  register('tr', { esp: { skip: TR } });
-  register('en', { esp: { skip: SKIP_DEFAULTS } });
+  register('tr', { esp: { skip: TR, segment: SEGMENT_TR } });
+  register('en', { esp: { skip: SKIP_DEFAULTS, segment: SEGMENT_DEFAULTS } });
 }

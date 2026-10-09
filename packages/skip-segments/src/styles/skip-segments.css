@@ -1,16 +1,9 @@
 /*
  * <esp-skip-segments> styles. Overlay roles only: the button sits on the video
- * and stays dark in both themes. Segment colors derive from the accent token so
- * host pages can retune them with --esp-segment-*.
+ * and stays dark in both themes. Band colors are the --esp-segment-* tokens
+ * from @esersahiner/player-theme (contrast table in tokens.css).
  */
 @import '@esersahiner/player-theme/tokens.css';
-
-:root {
-  --esp-segment-intro: var(--esp-accent);
-  --esp-segment-recap: color-mix(in srgb, var(--esp-accent) 70%, white);
-  --esp-segment-outro: color-mix(in srgb, var(--esp-accent) 60%, black);
-  --esp-segment-sponsor: color-mix(in srgb, var(--esp-accent) 45%, transparent);
-}
 
 esp-skip-segments {
   position: absolute;
@@ -94,12 +87,30 @@ esp-skip-segments {
   display: block;
 }
 
-/* Timeline markers, injected into <media-time-slider> */
-.esp-segment-markers {
+/* Timeline bands, injected into <media-time-slider>. Two identical layers:
+   the base layer shows the unplayed look, the [data-played] layer is clipped
+   to the played part and shows a lighter tint, so progress inside a band
+   stays visible. Each band has a dark 1px ring that separates it from the
+   caramel fill (no band color can contrast with both the fill and the dark
+   track on its own, see tokens.css). */
+.esp-segment-markers,
+.esp-segment-layer {
   position: absolute;
   inset: 0;
   pointer-events: none;
+}
+
+.esp-segment-markers {
   z-index: 2;
+}
+
+.esp-segment-layer[data-played] {
+  clip-path: inset(-4px calc(100% - var(--media-slider-fill, 0%)) -4px -4px);
+}
+
+/* While dragging, the skin shows the fill at the pointer; follow it. */
+media-time-slider[data-dragging] .esp-segment-layer[data-played] {
+  clip-path: inset(-4px calc(100% - var(--media-slider-pointer, 0%)) -4px -4px);
 }
 
 .esp-segment-marker {
@@ -110,29 +121,61 @@ esp-skip-segments {
   height: var(--media-spacing, 4px);
   translate: 0 -50%;
   border-radius: var(--esp-radius-chip);
-  background: var(--esp-segment-color, var(--esp-accent));
-  opacity: 0.85;
-  transition: opacity var(--esp-duration-fast) var(--esp-ease-enter);
+  background-color: var(--esp-segment-color);
+  box-shadow: 0 0 0 1px var(--esp-segment-ring);
+  transition: scale var(--esp-duration-fast) var(--esp-ease-enter);
 }
 
-.esp-segment-marker[data-type='intro'] {
-  --esp-segment-color: var(--esp-segment-intro);
+.esp-segment-layer[data-played] .esp-segment-marker {
+  background-color: color-mix(in srgb, var(--esp-segment-color), white 55%);
 }
 
-.esp-segment-marker[data-type='recap'] {
-  --esp-segment-color: var(--esp-segment-recap);
-}
-
-.esp-segment-marker[data-type='outro'] {
-  --esp-segment-color: var(--esp-segment-outro);
-}
-
-.esp-segment-marker[data-type='sponsor'] {
-  --esp-segment-color: var(--esp-segment-sponsor);
+/* Auto-skipped types: static diagonal stripes (no motion, so nothing to
+   reduce). Manually skipped types stay a flat color. */
+.esp-segment-marker[data-auto] {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--esp-segment-hatch) 0 2px,
+    transparent 2px 4px
+  );
 }
 
 .esp-segment-marker[data-active] {
-  opacity: 1;
+  scale: 1 1.5;
+}
+
+:is(.esp-segment-marker, .esp-preview-segment)[data-type='intro'] {
+  --esp-segment-color: var(--esp-segment-intro);
+}
+
+:is(.esp-segment-marker, .esp-preview-segment)[data-type='recap'] {
+  --esp-segment-color: var(--esp-segment-recap);
+}
+
+:is(.esp-segment-marker, .esp-preview-segment)[data-type='outro'] {
+  --esp-segment-color: var(--esp-segment-outro);
+}
+
+:is(.esp-segment-marker, .esp-preview-segment)[data-type='sponsor'] {
+  --esp-segment-color: var(--esp-segment-sponsor);
+}
+
+/* Type chip in the skin's preview card, after "time · chapter title". */
+.esp-preview-segment {
+  flex: none;
+  align-self: center;
+  padding: 0.15em 0.6em;
+  border-radius: var(--esp-radius-chip);
+  background: var(--esp-segment-color);
+  color: color-mix(in srgb, var(--esp-segment-color), black 85%);
+  font-size: 0.82em;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+}
+
+.esp-preview-segment[hidden] {
+  display: none;
 }
 
 @media (forced-colors: active) {
@@ -144,5 +187,16 @@ esp-skip-segments {
 
   .esp-segment-marker {
     background: Highlight;
+    box-shadow: none;
+  }
+
+  .esp-segment-layer[data-played] .esp-segment-marker {
+    background: Highlight;
+  }
+
+  .esp-preview-segment {
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
   }
 }

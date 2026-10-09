@@ -133,6 +133,18 @@ export function App() {
         <aside className="demo-side">
           <PlaylistPanel for="playlist" className="demo-playlist" />
           <section className="demo-panel">
+            <h2 className="esp-heading">Zaman çizelgesi bantları</h2>
+            <p className="demo-muted">
+              Çizgili bant otomatik atlanır (demo: özet). Önizleme kartı fare bandın üstündeyken türü gösterir.
+            </p>
+            <ul className="demo-list demo-legend">
+              <li><span className="demo-swatch" data-type="intro" />İntro</li>
+              <li><span className="demo-swatch" data-type="recap" data-auto="" />Özet (otomatik atlanır)</li>
+              <li><span className="demo-swatch" data-type="outro" />Jenerik</li>
+              <li><span className="demo-swatch" data-type="sponsor" />Sponsor</li>
+            </ul>
+          </section>
+          <section className="demo-panel">
             <h2 className="esp-heading">Olaylar</h2>
             <ol className="demo-list demo-log esp-tabular">
               {log.map((line, i) => (

@@ -18,6 +18,11 @@
  *          accent-text/surface 5.4  primary/raised 3.8 (indicator)  border/raised 3.7
  *          solid-contrast/solid 5.0
  * Targets: text 4.5:1, icons and borders 3:1. All pass.
+ *
+ * Segment bands use Mocha teal / mauve / blue / green (they sit on the video,
+ * one value for both schemes). band/track (#333333): intro 8.5, recap 6.2,
+ * outro 6.0, sponsor 8.5. Ring (black 80%) over the peach fill: 8.5 (Mocha),
+ * 5.7 (Latte), ring/band 7.1 or more. Chip text 8.2 or more.
  */
 :root {
   --esp-bg: light-dark(#eff1f5, #1e1e2e);
@@ -32,4 +37,8 @@
   --esp-solid-contrast: light-dark(#ffffff, #1e1e2e);
   --esp-accent: light-dark(#fe640b, #fab387);
   --esp-accent-text: light-dark(#a53b06, #fab387);
+  --esp-segment-intro: #94e2d5;
+  --esp-segment-recap: #cba6f7;
+  --esp-segment-outro: #89b4fa;
+  --esp-segment-sponsor: #a6e3a1;
 }

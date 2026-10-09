@@ -9,9 +9,9 @@ import {
   type PropertyValues,
 } from '@videojs/html';
 import { createIconElement, icons } from '@esersahiner/player-icons';
-import { SKIP_DEFAULTS, SKIP_KEYS, registerSkipSegmentsI18n } from './i18n.js';
+import { SEGMENT_DEFAULTS, SEGMENT_KEYS, SKIP_DEFAULTS, SKIP_KEYS, registerSkipSegmentsI18n } from './i18n.js';
 import { SkipModel } from './model.js';
-import { parseAutoSkip, segmentGeometry, type AutoSkipConfig, type Segment } from './segments.js';
+import { parseAutoSkip, segmentAtRatio, segmentGeometry, type AutoSkipConfig, type Segment } from './segments.js';
 
 /** HTMLElement stand-in so the module can be imported during SSR. */
 const Base: typeof UIElement =
@@ -62,6 +62,9 @@ export class EspSkipSegmentsElement extends Base {
   #label: HTMLSpanElement | null = null;
   #markers: HTMLDivElement | null = null;
   #markerDuration = 0;
+  /** Pointer listeners on the time slider, for the preview card chip. */
+  #sliderEvents: AbortController | null = null;
+  #chip: HTMLSpanElement | null = null;
   #lastSrc: string | null = null;
   #lastDuration = 0;
   #disconnect: AbortController | null = null;
@@ -92,6 +95,8 @@ export class EspSkipSegmentsElement extends Base {
 
   set autoSkip(value: AutoSkipConfig) {
     this.#model.setOptions({ autoSkip: value });
+    this.#markerDuration = 0;
+    this.requestUpdate();
   }
 
   override connectedCallback(): void {
@@ -121,9 +126,7 @@ export class EspSkipSegmentsElement extends Base {
     super.disconnectedCallback();
     this.#disconnect?.abort();
     this.#disconnect = null;
-    this.#markers?.remove();
-    this.#markers = null;
-    this.#markerDuration = 0;
+    this.#removeMarkers();
   }
 
   override attributeChangedCallback(name: string, old: string | null, value: string | null): void {
@@ -199,6 +202,7 @@ export class EspSkipSegmentsElement extends Base {
       autoSkip: parseAutoSkip(this.getAttribute('auto-skip')),
       hideAfter: Number.isFinite(hideAfter) ? hideAfter : 0,
     });
+    this.#markerDuration = 0;
     this.requestUpdate();
   }
 
@@ -235,46 +239,109 @@ export class EspSkipSegmentsElement extends Base {
     button.setAttribute('aria-hidden', visible ? 'false' : 'true');
   }
 
+  /**
+   * Paints the bands into `<media-time-slider>` as two identical layers: the
+   * base layer for the unplayed part and a lighter one clipped to the played
+   * part (`--media-slider-fill`), so progress stays readable inside a band.
+   * Bands of auto-skipped types carry `data-auto` (striped).
+   */
   #renderMarkers(duration: number, active: Segment | null): void {
     if (this.hasAttribute('no-markers')) {
-      this.#markers?.remove();
-      this.#markers = null;
-      this.#markerDuration = 0;
+      this.#removeMarkers();
       return;
     }
-    const slider = this.closest('video-player')?.querySelector('media-time-slider');
+    const slider = this.closest('video-player')?.querySelector<HTMLElement>('media-time-slider');
     if (!slider) return;
 
     if (!this.#markers || this.#markers.parentElement !== slider) {
-      this.#markers?.remove();
+      this.#removeMarkers();
       this.#markers = document.createElement('div');
       this.#markers.className = 'esp-segment-markers';
       this.#markers.setAttribute('aria-hidden', 'true');
       slider.append(this.#markers);
-      this.#markerDuration = 0;
+      this.#listenToSlider(slider);
     }
 
     if (duration !== this.#markerDuration) {
       this.#markerDuration = duration;
-      const nodes: HTMLSpanElement[] = [];
-      for (const segment of this.#model.segments) {
-        const geo = segmentGeometry(segment, duration);
-        if (!geo || geo.width <= 0) continue;
-        const marker = document.createElement('span');
-        marker.className = 'esp-segment-marker';
-        marker.dataset['type'] = segment.type;
-        marker.style.setProperty('--esp-seg-start', `${geo.start}%`);
-        marker.style.setProperty('--esp-seg-width', `${geo.width}%`);
-        nodes.push(marker);
-      }
-      this.#markers.replaceChildren(...nodes);
+      const auto = this.#model.options.autoSkip;
+      const layers = [false, true].map((played) => {
+        const layer = document.createElement('div');
+        layer.className = 'esp-segment-layer';
+        if (played) layer.dataset['played'] = '';
+        for (const segment of this.#model.segments) {
+          const geo = segmentGeometry(segment, duration);
+          if (!geo || geo.width <= 0) continue;
+          const marker = document.createElement('span');
+          marker.className = 'esp-segment-marker';
+          marker.dataset['type'] = segment.type;
+          if (auto[segment.type]) marker.dataset['auto'] = '';
+          marker.style.setProperty('--esp-seg-start', `${geo.start}%`);
+          marker.style.setProperty('--esp-seg-width', `${geo.width}%`);
+          layer.append(marker);
+        }
+        return layer;
+      });
+      this.#markers.replaceChildren(...layers);
     }
 
-    const children = this.#markers.children;
     const segments = this.#model.segments.filter((s) => segmentGeometry(s, duration)?.width);
-    for (let i = 0; i < children.length; i++) {
-      children[i]?.toggleAttribute('data-active', segments[i] === active);
+    for (const layer of this.#markers.children) {
+      const children = layer.children;
+      for (let i = 0; i < children.length; i++) {
+        children[i]?.toggleAttribute('data-active', segments[i] === active);
+      }
     }
+  }
+
+  #removeMarkers(): void {
+    this.#markers?.remove();
+    this.#markers = null;
+    this.#markerDuration = 0;
+    this.#sliderEvents?.abort();
+    this.#sliderEvents = null;
+    this.#chip?.remove();
+    this.#chip = null;
+  }
+
+  /**
+   * Type chip in the skin's preview card (`.esp-preview-label`): while the
+   * pointer is over a band the card shows "İntro", "Sponsor", ... in the band
+   * color next to the time and chapter title.
+   */
+  #listenToSlider(slider: HTMLElement): void {
+    this.#sliderEvents?.abort();
+    this.#sliderEvents = new AbortController();
+    const { signal } = this.#sliderEvents;
+    const update = (event: PointerEvent) => {
+      const rect = slider.getBoundingClientRect();
+      const ratio = rect.width > 0 ? (event.clientX - rect.left) / rect.width : NaN;
+      this.#renderChip(segmentAtRatio(this.#model.segments, ratio, this.#markerDuration));
+    };
+    slider.addEventListener('pointermove', update, { signal });
+    slider.addEventListener('pointerdown', update, { signal });
+    slider.addEventListener('pointerleave', () => this.#renderChip(null), { signal });
+  }
+
+  #renderChip(segment: Segment | null): void {
+    const label = this.#markers?.parentElement?.querySelector('.esp-preview-label');
+    if (!label) return;
+    if (!this.#chip || this.#chip.parentElement !== label) {
+      this.#chip?.remove();
+      this.#chip = document.createElement('span');
+      this.#chip.className = 'esp-preview-segment';
+      this.#chip.hidden = true;
+      label.append(this.#chip);
+    }
+    const chip = this.#chip;
+    if (!segment) {
+      chip.hidden = true;
+      return;
+    }
+    const text = this.#i18n.value(SEGMENT_KEYS[segment.type], { default: SEGMENT_DEFAULTS[segment.type] });
+    if (chip.textContent !== text) chip.textContent = text;
+    chip.dataset['type'] = segment.type;
+    chip.hidden = false;
   }
 
   #emit(type: string, detail: unknown): void {

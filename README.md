@@ -113,11 +113,15 @@ yüklenmelidir.
 | `--esp-solid` | filled button, active item | `#5e3310` | `#8a5a2b` |
 | `--esp-accent` | decoration only: progress fill, lines, badges. Never text. | `#c9945c` | `#c9945c` |
 | `--esp-accent-text` | readable accent for text and icons | `#653d19` | `#d9ae7e` |
+| `--esp-segment-intro` | timeline band: intro (teal) | `#5ec4c0` | same |
+| `--esp-segment-recap` | timeline band: recap (violet) | `#b294ee` | same |
+| `--esp-segment-outro` | timeline band: outro (blue) | `#7fa7f5` | same |
+| `--esp-segment-sponsor` | timeline band: sponsor (green) | `#72c67e` | same |
 
 Derived (override only if you need to): `--esp-raised-hover`, `--esp-primary-hover`,
 `--esp-primary-contrast`, `--esp-solid-hover`, `--esp-solid-contrast`,
 `--esp-overlay-accent`, `--esp-overlay-on-accent`, `--esp-quality-badge-bg`,
-`--esp-quality-badge-text`, `--esp-segment-*`. Non-color tokens: radii
+`--esp-quality-badge-text`, `--esp-segment-ring`, `--esp-segment-hatch`. Non-color tokens: radii
 (`--esp-radius-panel/box/chip`), motion (`--esp-ease-*`, `--esp-duration-*`),
 fonts (`--esp-font-heading/body`), focus ring (`--esp-focus-ring/offset`),
 timeline preview card width (`--esp-preview-width`, unset by default: the
@@ -132,8 +136,8 @@ sprite tile width, or 240px without thumbnails).
 }
 ```
 
-The progress fill, segment markers, the quality badge and the overlay accent all
-follow.
+The progress fill, the quality badge and the overlay accent all follow. The
+segment bands have their own tokens (below).
 
 ### Example 2: separate light and dark values
 
@@ -182,6 +186,28 @@ element or an ancestor, then `data-theme` / `.dark` / `.light` on `<html>`,
 then `prefers-color-scheme`. `watchTheme()` from `@esersahiner/player-theme`
 reports changes to JavaScript.
 
+### Timeline segment bands
+
+`<esp-skip-segments>` paints intro / recap / outro / sponsor ranges onto the
+timeline. Each type has its own color, in the SponsorBlock language with a
+softer saturation: intro teal, recap violet, outro blue, sponsor green. They
+sit on the video, so one value serves both schemes.
+
+- Every band has a 1px dark ring (`--esp-segment-ring`). A band color cannot
+  contrast 3:1 with both the dark unplayed track and the caramel played fill
+  (one needs a light color, the other a dark one), so the band contrasts with
+  the track (5:1 or more) and the ring with the fill (6.1:1). The table is in
+  `packages/theme/styles/tokens.css`.
+- The played part of a band is a lighter tint of the same color, so progress
+  stays visible inside it.
+- Types that are auto-skipped (`auto-skip="recap"`) get static diagonal stripes
+  (`--esp-segment-hatch`); types you skip with the button stay flat.
+- Hovering a band adds a small type chip ("İntro", "Sponsor"; "Intro",
+  "Sponsor" in English) in the band color to the preview card.
+
+TR: Bant renkleri `--esp-segment-intro/recap/outro/sponsor` ile değişir. Çizgili
+bant otomatik atlanan türdür, düz bant elle atlanan.
+
 ### Controls over the video stay dark
 
 Everything drawn on top of the frame (control bar, skip button, tooltips) uses
@@ -203,6 +229,8 @@ When you change colors, keep these pairs (WCAG):
 | `--esp-primary` on surface / raised (indicator, ring) | 3:1 |
 | `--esp-border` on surface / raised | 3:1 |
 | `--esp-quality-badge-text` on `--esp-quality-badge-bg` | 4.5:1 |
+| `--esp-segment-*` on the unplayed track (about `#333333`) | 3:1 |
+| `--esp-segment-ring` on `--esp-accent` (played fill) | 3:1 |
 
 `--esp-accent` is decorative and has no contrast requirement, which is why it
 must not be used for text.
