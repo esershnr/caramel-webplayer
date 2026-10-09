@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useMemo, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useId, useMemo, useState, type CSSProperties, type ReactNode } from 'react';
 import { SKIN_TEMPLATE } from './template.js';
 import { applyUid, parseOpenTag, sanitizeUid, splitContainer } from './template-utils.js';
 
@@ -25,9 +25,19 @@ export interface EspVideoSkinProps {
  */
 export function EspVideoSkin({ children, title, poster, lang, className, style, extras }: EspVideoSkinProps) {
   const uid = sanitizeUid(useId());
+  // The media mounts only after the player and skin elements are registered.
+  // Otherwise the media element connects before <video-player> upgrades and
+  // the store misses its first state (mute availability, tracks).
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    void import('./define.js');
+    let cancelled = false;
+    void import('./define.js').then(() => {
+      if (!cancelled) setReady(true);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const { attrs, inner } = useMemo(() => {
@@ -40,7 +50,7 @@ export function EspVideoSkin({ children, title, poster, lang, className, style, 
   const player = (
     <video-player content-title={title} poster={poster} style={style}>
       <media-container class={containerClass} data-theme={attrs['data-theme']} data-preset={attrs['data-preset']}>
-        {children}
+        {ready ? children : null}
         <div style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: inner }} />
         {extras}
       </media-container>
