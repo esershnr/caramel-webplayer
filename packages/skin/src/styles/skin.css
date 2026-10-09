@@ -356,6 +356,23 @@
     outline-offset: var(--esp-focus-offset);
   }
 
+  /* After a pointer press inside the player (space-key.ts sets the flag, Tab
+     clears it) a focused control shows no ring, even once Space or an arrow
+     key has made it :focus-visible. Keyboard navigation keeps its rings. */
+  .media-skin.esp-skin[data-esp-pointer-focus]:focus-visible,
+  .media-skin.esp-skin[data-esp-pointer-focus] :focus-visible {
+    outline-color: transparent;
+  }
+
+  .media-skin.esp-skin[data-esp-pointer-focus] .media-slider-thumb:focus-visible::after {
+    opacity: 0;
+  }
+
+  /* The skin also opens the timeline preview for a focus-visible slider. */
+  .media-skin.esp-skin[data-esp-pointer-focus] .media-slider:not([data-pointing], [data-dragging]) .media-slider-preview-content {
+    opacity: 0;
+  }
+
   .esp-skin .video-controls-content,
   .esp-skin .video-controls-backdrop {
     transition-timing-function: var(--esp-ease-enter);

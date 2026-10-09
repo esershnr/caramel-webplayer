@@ -46,3 +46,4 @@ export { EspQualityBadgeElement, qualityLabel } from './quality-badge.js';
 export { EspPreviewSizeElement, previewTileWidth, tileWidthFromCue, PREVIEW_NATURAL_WIDTH_VAR } from './preview-size.js';
 export { EspQualityRadioGroupElement, orderQualityValues, QUALITY_AUTO_VALUE, type RenditionLike } from './quality-order.js';
 export { EspSeekIndicatorElement, formatSeekLabel, registerSeekIndicatorI18n, type SeekDirection } from './seek-indicator.js';
+export { installSpaceKey, shouldRedirectSpace, POINTER_FOCUS_ATTR, type SpaceTarget } from './space-key.js';
