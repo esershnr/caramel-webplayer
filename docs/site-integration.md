@@ -1,11 +1,18 @@
-# Site entegrasyonu (esersahiner-next-js)
+# Caramel Webplayer: site entegrasyonu (esersahiner-next-js)
 
-Bu fazda siteye dokunulmadı. Aşağıdakiler, player'ı Next.js App Router sitesine
-eklerken yapılacaklar.
+Bu fazda siteye dokunulmadı. Aşağıdakiler, Caramel Webplayer'ı Next.js App Router
+sitesine eklerken yapılacaklar.
 
 ## 1. Paketler
 
-npm'den 0.1.0 sürümleri:
+npm'den 0.1.0 sürümleri. En kısa yol şemsiye paket (altı paketi de getirir;
+`/react` tüm sarmalayıcıları, `/webplayer.css` token'lar + skin CSS'ini verir):
+
+```sh
+npm install @esershnr/caramel-webplayer@0.1.0 @videojs/html@10.0.1
+```
+
+Yalnız gerekenleri kurmak için modüler kurulum:
 
 ```sh
 npm install @esershnr/caramel-theme@0.1.0 @esershnr/caramel-skin@0.1.0 \

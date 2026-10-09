@@ -1,6 +1,6 @@
 # @esershnr/caramel-icons
 
-Lucide icon data for the esersahiner Video.js 10 player and `<caramel-morph-icon>`,
+Lucide icon data for Caramel Webplayer (Video.js 10) and `<caramel-morph-icon>`,
 an icon that morphs (Morphicons springs) when attributes on its parent change.
 
 ```sh

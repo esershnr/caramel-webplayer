@@ -21,7 +21,7 @@ export interface CaramelVideoSkinProps {
 }
 
 /**
- * Video.js 10 player with the esersahiner skin, for React 19 and the Next.js
+ * Video.js 10 player with the Caramel skin, for React 19 and the Next.js
  * App Router. Renders custom elements; registration happens in the browser
  * only so server rendering and hydration stay clean.
  */

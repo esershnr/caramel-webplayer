@@ -65,7 +65,7 @@ import '@videojs/html/ui/status-indicator';
 import '@videojs/html/ui/status-indicator-value';
 import '@videojs/html/ui/seek-indicator';
 import '@videojs/html/ui/seek-indicator-value';
-// esersahiner theme and motion overrides (layer: components)
+// Caramel theme and motion overrides (layer: components)
 import '../../../styles/skin.css';
 // Lucide morphing icons used by the buttons; static icons are inlined in the template
 import '@esershnr/caramel-icons/define';

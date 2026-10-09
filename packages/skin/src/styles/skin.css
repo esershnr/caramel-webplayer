@@ -1,5 +1,5 @@
 /*
- * esersahiner overrides for the Video.js 10 default video skin.
+ * Caramel overrides for the Video.js 10 default video skin.
  *
  * Loaded after the skin source. Lives in the `components` layer, which the skin
  * declares after `base`, so these rules win over the skin's tokens while staying

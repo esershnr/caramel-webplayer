@@ -1,7 +1,7 @@
 {
   "name": "@esershnr/caramel-theme",
   "version": "0.1.0",
-  "description": "Design tokens (--caramel-*) for the esersahiner Video.js 10 player: light/dark palette, segment colors, motion, typography, presets",
+  "description": "Design tokens (--caramel-*) for Caramel Webplayer (Video.js 10): light/dark palette, segment colors, motion, typography, presets",
   "keywords": [
     "videojs",
     "video.js",

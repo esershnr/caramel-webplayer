@@ -1,6 +1,6 @@
 # @esershnr/caramel-theme
 
-Design tokens for the esersahiner Video.js 10 player: `--caramel-*` custom
+Design tokens for Caramel Webplayer (Video.js 10): `--caramel-*` custom
 properties for the light (latte) and dark (bitter) palette, timeline segment
 colors, motion, radii and typography, plus Catppuccin and neutral presets.
 
