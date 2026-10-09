@@ -198,9 +198,10 @@ export async function encode(options: EncodeOptions): Promise<EncodeResult> {
     columns: 10,
     out: path.join(outDir, 'thumbs'),
     name: 'sprite',
-    // Sprite URLs stay relative to thumbnails.vtt, so the same files work from
-    // the CDN and from a local dev server.
-    baseUrl: undefined,
+    // Sprite URLs are absolute: the player resolves cue URLs against the track
+    // element's src, which <hls-video> does not expose, so a relative cue would
+    // resolve against the page instead of the VTT.
+    baseUrl: url('thumbs'),
     ffmpeg,
     ffprobe,
   });
