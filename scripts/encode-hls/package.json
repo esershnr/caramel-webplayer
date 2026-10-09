@@ -5,6 +5,9 @@
   "description": "Turn media/<slug> (source video, SRT subtitles, meta.yaml) into publish-ready HLS, poster, thumbnails, chapters, subtitles and a playlist manifest",
   "license": "MIT",
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "bin": {
     "caramel-encode-hls": "./dist/cli.js"
   },

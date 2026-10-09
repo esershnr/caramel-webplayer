@@ -21,6 +21,13 @@
     "url": "git+https://github.com/esershnr/caramel-webplayer.git",
     "directory": "packages/theme"
   },
+  "homepage": "https://github.com/esershnr/caramel-webplayer/tree/main/packages/theme#readme",
+  "bugs": {
+    "url": "https://github.com/esershnr/caramel-webplayer/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
   "type": "module",
   "sideEffects": [
     "*.css"

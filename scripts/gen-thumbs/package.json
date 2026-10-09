@@ -5,6 +5,9 @@
   "description": "Generate timeline thumbnail sprites and a WebVTT storyboard with ffmpeg",
   "license": "MIT",
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "bin": {
     "caramel-gen-thumbs": "./dist/cli.js"
   },
