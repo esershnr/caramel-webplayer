@@ -10,10 +10,13 @@ import { installSeekMotion } from './seek-motion.js';
 import { EspTimeDisplayElement } from './time-display.js';
 import { EspQualityBadgeElement } from './quality-badge.js';
 import { EspPreviewSizeElement } from './preview-size.js';
+import { EspQualityRadioGroupElement } from './quality-order.js';
 
 if (typeof document !== 'undefined') {
   installSeekMotion();
   for (const Element of [EspTimeDisplayElement, EspQualityBadgeElement, EspPreviewSizeElement]) {
     if (!customElements.get(Element.tagName)) customElements.define(Element.tagName, Element);
   }
+  const quality = EspQualityRadioGroupElement.espTagName;
+  if (!customElements.get(quality)) customElements.define(quality, EspQualityRadioGroupElement);
 }
