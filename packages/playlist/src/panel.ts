@@ -195,7 +195,6 @@ export class CaramelPlaylistPanelElement extends Base {
 
   #ensureSkeleton(): void {
     if (this.#listEl) return;
-    const signal = this.#disconnect?.signal ?? new AbortController().signal;
 
     const heading = document.createElement('h2');
     heading.className = 'caramel-playlist-heading caramel-heading';
@@ -404,7 +403,7 @@ export class CaramelPlaylistPanelElement extends Base {
   #onListKeydown(event: KeyboardEvent): void {
     const buttons = this.#buttons();
     if (buttons.length === 0) return;
-    const current = buttons.findIndex((button) => button === document.activeElement);
+    const current = buttons.indexOf(document.activeElement as HTMLButtonElement);
     const from = current >= 0 ? current : Math.max(this.#focusIndex, 0);
     let to: number;
     switch (event.key) {

@@ -17,10 +17,14 @@
     "typecheck": "pnpm -r run typecheck",
     "test": "vitest run",
     "test:watch": "vitest",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
     "dev:vanilla": "pnpm --filter @esershnr/caramel-example-vanilla dev",
     "dev:react": "pnpm --filter @esershnr/caramel-example-react dev"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.5.15",
     "playwright": "1.64.0",
     "typescript": "^5.9.0",
     "vitest": "^5.0.3"

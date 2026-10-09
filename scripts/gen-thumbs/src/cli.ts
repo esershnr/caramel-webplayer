@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { HELP, parseCliArgs } from './args.js';
+import { HELP, type ParsedArgs, parseCliArgs } from './args.js';
 import { CommandError, MissingBinaryError } from './ffmpeg.js';
 import { generateThumbnails } from './generate.js';
 
@@ -10,7 +10,7 @@ const INSTALL_HINT = `Install ffmpeg (it ships ffprobe too):
 Or pass the binary explicitly with --ffmpeg <path> (and --ffprobe <path>).`;
 
 async function main(argv: string[]): Promise<number> {
-  let parsed;
+  let parsed: ParsedArgs;
   try {
     parsed = parseCliArgs(argv);
   } catch (err) {

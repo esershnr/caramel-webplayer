@@ -144,7 +144,7 @@ export class CaramelSkipSegmentsElement extends Base {
    * that would shadow the accessor. Re-route it through the setter.
    */
   #upgradeProperty(name: 'segments' | 'autoSkip'): void {
-    if (!Object.prototype.hasOwnProperty.call(this, name)) return;
+    if (!Object.hasOwn(this, name)) return;
     const value = (this as unknown as Record<string, unknown>)[name];
     delete (this as unknown as Record<string, unknown>)[name];
     (this as unknown as Record<string, unknown>)[name] = value;

@@ -61,7 +61,7 @@ async function probeSource(ffprobe: string, input: string): Promise<Probe> {
   };
   const video = data.streams?.find((s) => s.codec_type === 'video');
   const audio = data.streams?.find((s) => s.codec_type === 'audio');
-  if (!video || !video.width || !video.height) throw new Error('the source has no video stream');
+  if (!video?.width || !video.height) throw new Error('the source has no video stream');
   const [num, den] = (video.avg_frame_rate ?? '30/1').split('/').map(Number);
   const fps = den ? num! / den : num!;
   return {
@@ -225,7 +225,7 @@ export async function encode(options: EncodeOptions): Promise<EncodeResult> {
     files.push(name);
     return { src: url(name), srclang: sub.lang, label: sub.label, ...(sub.default ? { default: true } : {}) };
   });
-  writeFileSync(path.join(outDir, 'segments.json'), JSON.stringify(meta.segments, null, 2) + '\n');
+  writeFileSync(path.join(outDir, 'segments.json'), `${JSON.stringify(meta.segments, null, 2)}\n`);
   files.push('segments.json');
 
   // Manifest ----------------------------------------------------------------
@@ -243,7 +243,7 @@ export async function encode(options: EncodeOptions): Promise<EncodeResult> {
     duration: Math.round(duration * 1000) / 1000,
   };
   const manifestPath = path.join(outDir, 'manifest.json');
-  writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
+  writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
   files.push('manifest.json');
 
   const report = {
@@ -256,7 +256,7 @@ export async function encode(options: EncodeOptions): Promise<EncodeResult> {
     files,
     generatedAt: new Date().toISOString(),
   };
-  writeFileSync(path.join(outDir, 'encode-report.json'), JSON.stringify(report, null, 2) + '\n');
+  writeFileSync(path.join(outDir, 'encode-report.json'), `${JSON.stringify(report, null, 2)}\n`);
 
   return { outDir, manifestPath, manifest, ladder, files };
 }

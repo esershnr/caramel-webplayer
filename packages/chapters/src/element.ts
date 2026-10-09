@@ -266,7 +266,6 @@ export class CaramelChaptersPanelElement extends Base {
 
   #ensureSkeleton(): void {
     if (this.#list) return;
-    const signal = this.#disconnect?.signal ?? new AbortController().signal;
 
     const heading = document.createElement('h2');
     heading.className = 'caramel-chapters-heading caramel-heading';

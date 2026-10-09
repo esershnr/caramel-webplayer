@@ -48,6 +48,7 @@ export function Icon({ name, size, strokeWidth, className, label }: IconProps) {
   const node = getIcon(name);
   if (!node) return null;
   const html = iconToSvg(node, { size, strokeWidth, className, label });
+  // biome-ignore lint/security/noDangerouslySetInnerHtml: markup built by iconToSvg from the bundled icon data
   return <span className="caramel-icon" dangerouslySetInnerHTML={{ __html: html }} />;
 }
 

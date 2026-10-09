@@ -53,6 +53,7 @@ export function CaramelVideoSkin({ children, id, title, poster, lang, className,
     <video-player id={id} content-title={title} poster={poster} style={style}>
       <media-container class={containerClass} data-theme={attrs['data-theme']} data-preset={attrs['data-preset']}>
         {ready ? children : null}
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: template generated at build time from skin.html */}
         <div style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: inner }} />
         {extras}
       </media-container>
