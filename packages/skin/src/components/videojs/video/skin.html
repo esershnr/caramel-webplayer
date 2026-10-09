@@ -62,8 +62,17 @@
 </media-volume-slider>
 </media-volume-popover>
 <media-controls-group class="video-time-slider-group">
-<media-time class="media-time-value video-time-value" type="current">
+<esp-time-display class="esp-time-display video-time-value">
+<button type="button" class="esp-time-button esp-tabular">
+<media-time class="esp-time-current" type="current">
 </media-time>
+<media-time class="esp-time-remaining" type="remaining">
+</media-time>
+<span class="esp-time-sep" aria-hidden="true">/</span>
+<media-time class="esp-time-duration" type="duration">
+</media-time>
+</button>
+</esp-time-display>
 <media-time-slider class="media-slider media-time-slider">
 <media-time-slider-chapters class="media-time-slider-chapters">
 <template>
@@ -96,8 +105,6 @@
 </div>
 </media-slider-preview>
 </media-time-slider>
-<media-time class="media-time-toggle video-time-value" type="remaining" toggle>
-</media-time>
 </media-controls-group>
 <media-captions-button class="media-button media-captions-button video-controls-captions-button" id="vjs-6EpYm0RN-0-3-trigger">
 <esp-morph-icon class="media-button-icon esp-morph-icon" map="data-active:captions-on,*:captions-off">

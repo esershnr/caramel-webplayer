@@ -7,5 +7,11 @@ import './components/videojs/video/skin.js';
 import '@videojs/html/i18n/locales/tr/register';
 import '@videojs/html/i18n/locales/en/register';
 import { installSeekMotion } from './seek-motion.js';
+import { EspTimeDisplayElement } from './time-display.js';
 
-if (typeof document !== 'undefined') installSeekMotion();
+if (typeof document !== 'undefined') {
+  installSeekMotion();
+  if (!customElements.get(EspTimeDisplayElement.tagName)) {
+    customElements.define(EspTimeDisplayElement.tagName, EspTimeDisplayElement);
+  }
+}

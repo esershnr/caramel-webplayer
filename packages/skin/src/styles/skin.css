@@ -286,6 +286,44 @@
   .esp-skin .media-volume-indicator-value {
     font-variant-numeric: tabular-nums;
   }
+
+  /* Clickable counter: "01:23 / 05:00" or "-03:37 / 05:00" */
+  .esp-skin .esp-time-display {
+    display: block;
+    flex: none;
+  }
+
+  .esp-skin .esp-time-button {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35em;
+    padding: calc(var(--media-spacing) * 1) calc(var(--media-spacing) * 1.5);
+    border: 0;
+    border-radius: var(--esp-radius-chip);
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    cursor: pointer;
+    text-shadow: inherit;
+  }
+
+  .esp-skin .esp-time-button:focus-visible {
+    outline: 2px solid var(--esp-overlay-accent);
+    outline-offset: var(--esp-focus-offset);
+  }
+
+  .esp-skin .esp-time-sep,
+  .esp-skin .esp-time-duration {
+    color: color-mix(in srgb, currentColor 72%, transparent);
+  }
+
+  .esp-skin .esp-time-display[data-mode='elapsed'] .esp-time-remaining,
+  .esp-skin .esp-time-display[data-mode='remaining'] .esp-time-current,
+  .esp-skin .esp-time-display:not([data-mode]) .esp-time-remaining {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
