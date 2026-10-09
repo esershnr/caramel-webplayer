@@ -44,7 +44,7 @@ ffmpeg ve ffprobe PATH'te olmalı (`winget install Gyan.FFmpeg`). Yoksa komut
 exit 2 ile ne aradığını ve nasıl kuracağını söyler. 28 dakikalık 1080p bir video
 için encode birkaç dakika sürer; ilerleme stderr'e yazılır.
 
-Seçenekler: `--out <dir>` (varsayılan `out`), `--fps auto|30|60`, `--preset <x264>`,
+Seçenekler: `--out <dir>` (varsayılan: `media/` klasörünün yanındaki `out/`), `--fps auto|30|60`, `--preset <x264>`,
 `--thumb-interval <sn>`, `--skip-video` (HLS hariç her şeyi yeniden üretir),
 `--ffmpeg <yol>`, `--ffprobe <yol>`.
 

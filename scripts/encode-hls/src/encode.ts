@@ -11,7 +11,7 @@ export interface EncodeOptions {
   input: string;
   /** Public URL prefix for every file, ends with `/`. */
   baseUrl: string;
-  /** Output root, default `out`. */
+  /** Output root. Default: the `out` folder next to the `media` folder of the input. */
   outRoot?: string | undefined;
   ffmpeg?: string | undefined;
   ffprobe?: string | undefined;
@@ -132,7 +132,8 @@ export async function encode(options: EncodeOptions): Promise<EncodeResult> {
     fileExists: (rel) => existsSync(path.join(folder, rel)),
   });
 
-  const outDir = path.resolve(options.outRoot ?? 'out', meta.slug);
+  // `media/<slug>` -> `<repo>/out/<slug>` regardless of the current directory.
+  const outDir = path.resolve(options.outRoot ?? path.join(folder, '..', '..', 'out'), meta.slug);
   mkdirSync(path.join(outDir, 'subs'), { recursive: true });
   mkdirSync(path.join(outDir, 'thumbs'), { recursive: true });
   const files: string[] = [];

@@ -13,7 +13,7 @@ segments.json and manifest.json (a PlaylistItem with absolute URLs).
 
 Options:
   --base-url <url>     Public URL prefix written into every playlist item URL (required)
-  --out <dir>          Output root (default: out)
+  --out <dir>          Output root (default: the out/ folder next to media/)
   --fps <auto|n>       Frame rate: auto measures motion and halves 60 fps when frames repeat (default: auto)
   --preset <name>      x264 preset (default: medium)
   --thumb-interval <s> Seconds between thumbnails (default: 10)
