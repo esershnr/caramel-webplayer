@@ -18,6 +18,13 @@ describe('skin template', () => {
     expect(SKIN_TEMPLATE).toMatch(/<media-slider-preview [^>]*overflow="clamp"/);
   });
 
+  it('draws one morphing icon per on-screen indicator', () => {
+    expect(SKIN_TEMPLATE).toContain('target="media-volume-indicator" map="data-level=off:volume-off,data-level=low:volume-low,*:volume-high"');
+    expect(SKIN_TEMPLATE).toMatch(/target="media-status-indicator" map="data-status=captions-on:captions-on,/);
+    expect(SKIN_TEMPLATE).not.toMatch(/media-volume-indicator-(high|low|off)-icon/);
+    expect(SKIN_TEMPLATE).not.toMatch(/media-status-indicator-(captions|fullscreen|pip)-[a-z]+-icon/);
+  });
+
   it('contains only placeholder ids', () => {
     expect(SKIN_TEMPLATE).not.toMatch(/vjs-[A-Za-z0-9_-]{8}-0/);
     expect(SKIN_TEMPLATE).toContain('{{uid}}-0-trigger');

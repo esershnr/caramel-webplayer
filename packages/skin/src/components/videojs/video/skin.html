@@ -367,30 +367,16 @@
 <div class="video-status-indicators">
 <media-volume-indicator class="media-indicator media-volume-indicator">
 <media-volume-indicator-fill class="media-indicator-content media-volume-indicator-fill">
-<media-icon name="volume-high" class="media-volume-indicator-high-icon">
-</media-icon>
-<media-icon name="volume-low" class="media-volume-indicator-low-icon">
-</media-icon>
-<media-icon name="volume-off" class="media-volume-indicator-off-icon">
-</media-icon>
+<esp-morph-icon class="media-volume-indicator-icon esp-morph-icon" target="media-volume-indicator" map="data-level=off:volume-off,data-level=low:volume-low,*:volume-high">
+</esp-morph-icon>
 <media-volume-indicator-value class="media-volume-indicator-value">
 </media-volume-indicator-value>
 </media-volume-indicator-fill>
 </media-volume-indicator>
 <media-status-indicator actions="toggleSubtitles,toggleFullscreen,togglePictureInPicture" class="media-indicator media-status-indicator">
 <div class="media-indicator-content media-status-indicator-content">
-<media-icon name="captions-on" class="media-status-indicator-captions-on-icon">
-</media-icon>
-<media-icon name="captions-off" class="media-status-indicator-captions-off-icon">
-</media-icon>
-<media-icon name="fullscreen-enter" class="media-status-indicator-fullscreen-enter-icon">
-</media-icon>
-<media-icon name="fullscreen-exit" class="media-status-indicator-fullscreen-exit-icon">
-</media-icon>
-<media-icon name="pip-enter" class="media-status-indicator-pip-enter-icon">
-</media-icon>
-<media-icon name="pip-exit" class="media-status-indicator-pip-exit-icon">
-</media-icon>
+<esp-morph-icon class="media-status-indicator-icon esp-morph-icon" target="media-status-indicator" map="data-status=captions-on:captions-on,data-status=captions-off:captions-off,data-status=fullscreen:fullscreen-enter,data-status=exit-fullscreen:fullscreen-exit,data-status=pip:pip-enter,data-status=exit-pip:pip-exit">
+</esp-morph-icon>
 <media-status-indicator-value class="media-status-indicator-value">
 </media-status-indicator-value>
 </div>

@@ -67,8 +67,11 @@
 
   /* Inline Lucide icons are the sized box themselves: the skin's per-class
      width/height rules (`.media-button-icon`, `.media-menu-trigger-item-icon`,
-     chevrons, indicators) apply to the <svg>, so no size is set here. */
-  .esp-skin .esp-icon {
+     chevrons, indicators) apply to the <svg>, so no size is set here.
+     Zero specificity on purpose: the skin hides state icons with
+     `.media-*-icon { display: none }` (0,1,0) and shows one per state; a
+     stronger `display: block` here once made every OSD icon visible at once. */
+  :where(.esp-skin .esp-icon) {
     display: block;
     transform-origin: center;
   }
@@ -98,6 +101,15 @@
   .esp-skin :is(.esp-icon-settings, .esp-icon-speed, .esp-icon-restart),
   .esp-skin .esp-morph-icon:is([data-icon='settings'], [data-icon='close'], [data-icon='restart']) > svg {
     transform: scale(1.06);
+  }
+
+  /* On-screen indicators (arrow keys, c / f / i): one icon that morphs with
+     the indicator's state, same mapping as the control bar buttons. */
+  .esp-skin :is(.media-volume-indicator-icon, .media-status-indicator-icon) {
+    flex-shrink: 0;
+    width: var(--media-icon-size, calc(var(--media-spacing) * 4.5));
+    height: var(--media-icon-size, calc(var(--media-spacing) * 4.5));
+    mix-blend-mode: difference;
   }
 
   /* Cast and AirPlay only when the platform reports a target right now. */
