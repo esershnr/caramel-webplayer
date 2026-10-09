@@ -1,0 +1,11 @@
+{
+  "name": "@esersahiner/player-skin",
+  "version": "0.1.0",
+  "description": "Video.js 10 video skin source themed for esersahiner.com with Lucide morphing icons",
+  "license": "MIT",
+  "type": "module",
+  "private": false,
+  "dependencies": {
+    "@videojs/html": "10.0.1"
+  }
+}
