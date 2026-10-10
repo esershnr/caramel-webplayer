@@ -1,13 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Caramel Webplayer">
   <defs>
-    <linearGradient id="caramel" x1="0.2" y1="0" x2="0.8" y2="1">
-      <stop offset="0" stop-color="#e9b676"/>
-      <stop offset="0.55" stop-color="#cc8f4c"/>
-      <stop offset="1" stop-color="#7a4a1e"/>
+    <linearGradient id="caramel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d9a466"/>
+      <stop offset="1" stop-color="#9a6330"/>
     </linearGradient>
   </defs>
-  <path d="M32 3C26 12 11 26 11 40a21 21 0 0 0 42 0C53 26 38 12 32 3Z" fill="url(#caramel)"/>
-  <path d="M32 3C26 12 11 26 11 40a21 21 0 0 0 42 0C53 26 38 12 32 3Z" fill="none" stroke="#5e3310" stroke-opacity="0.35" stroke-width="1.5"/>
-  <path d="M19 33c1.5-6 5-11.5 8.5-16" fill="none" stroke="#fff" stroke-opacity="0.45" stroke-width="3" stroke-linecap="round"/>
-  <path d="M27.5 31.2v17.6a1.6 1.6 0 0 0 2.4 1.4l14-8.8a1.6 1.6 0 0 0 0-2.8l-14-8.8a1.6 1.6 0 0 0-2.4 1.4Z" fill="#fbf7f0"/>
+  <rect x="1" y="1" width="62" height="62" rx="14" fill="#ffffff" stroke="#e4d9ca" stroke-width="1.5"/>
+  <circle cx="32" cy="32" r="20" fill="url(#caramel)"/>
+  <path d="M27.5 23.6v16.8a1.6 1.6 0 0 0 2.4 1.4l13.4-8.4a1.6 1.6 0 0 0 0-2.8l-13.4-8.4a1.6 1.6 0 0 0-2.4 1.4Z" fill="#ffffff"/>
 </svg>
