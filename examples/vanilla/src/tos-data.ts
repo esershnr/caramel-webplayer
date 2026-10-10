@@ -24,10 +24,10 @@ function clip(name: string, title: string, duration: number, segments: PlaylistI
 
 /** Three Tears of Steel clips that exercise every segment type, chapters and subtitles. */
 export const TOS_PLAYLIST: PlaylistItem[] = [
-  clip('opening', 'Tears of Steel: açılış', 50, [
+  clip('opening', 'Tears of Steel: opening', 50, [
     { start: 0, end: 9, type: 'intro' },
     { start: 16, end: 22, type: 'sponsor' },
   ]),
-  clip('simulation', 'Tears of Steel: simülasyon', 42, [{ start: 0, end: 7, type: 'recap' }]),
-  clip('finale', 'Tears of Steel: final', 50, [{ start: 36, end: 50, type: 'outro' }]),
+  clip('simulation', 'Tears of Steel: simulation', 42, [{ start: 0, end: 7, type: 'recap' }]),
+  clip('finale', 'Tears of Steel: finale', 50, [{ start: 36, end: 50, type: 'outro' }]),
 ];

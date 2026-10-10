@@ -21,7 +21,7 @@
 <a href="https://esershnr.github.io/caramel-webplayer/">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset=".github/assets/screenshot-dark.webp">
-    <img src=".github/assets/screenshot-light.webp" alt="Caramel Webplayer demo: the player with Turkish subtitles, the chapter list and the playlist panel">
+    <img src=".github/assets/screenshot-light.webp" alt="Caramel Webplayer demo: the player with subtitles, the chapter list and the playlist panel">
   </picture>
 </a>
 
@@ -328,7 +328,7 @@ pnpm test            # Vitest, pure logic plus a few happy-dom tests
 pnpm typecheck
 pnpm build           # dist/ for every package (needed before `vite build` in examples)
 node tools/tos-demo.mjs  # demo clips (Tears of Steel), once; needs ffmpeg
-pnpm dev:vanilla     # http://localhost:5173  (?theme=light|dark)
+pnpm dev:vanilla     # http://localhost:5173  (?theme=light|dark, ?dev adds the test streams)
 pnpm dev:react       # http://localhost:5174
 ```
 
