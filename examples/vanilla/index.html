@@ -3,13 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Caramel Webplayer, vanilla demo</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Ccircle cx=%2712%27 cy=%2712%27 r=%2712%27 fill=%27%235e3310%27/%3E%3Cpath d=%27M9 7l8 5-8 5z%27 fill=%27%23c9945c%27/%3E%3C/svg%3E" />
+    <title>Caramel Webplayer demo</title>
+    <meta name="description" content="A themed Video.js 10 player: morphing icons, skip intro / recap / outro / sponsor, chapters, playlist with resume." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/src/demo.css" />
   </head>
   <body class="caramel-theme">
     <header class="demo-header">
-      <h1 class="caramel-heading">Player demo (HTML)</h1>
+      <a class="demo-brand" href="https://github.com/esershnr/caramel-webplayer">
+        <img src="/favicon.svg" alt="" width="28" height="28" />
+        <h1 class="caramel-heading">Caramel Webplayer</h1>
+      </a>
       <div class="demo-theme" role="group" aria-label="Tema">
         <button type="button" data-theme-choice="light">Açık</button>
         <button type="button" data-theme-choice="dark">Koyu</button>
@@ -48,6 +52,12 @@
         </section>
       </aside>
     </main>
+
+    <footer class="demo-footer">
+      <a href="https://github.com/esershnr/caramel-webplayer">GitHub</a>
+      <a href="https://www.npmjs.com/package/@esershnr/caramel-webplayer">npm</a>
+      <span>Video: <a href="https://mango.blender.org">Tears of Steel</a> (CC) Blender Foundation, <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></span>
+    </footer>
 
     <script type="module" src="/src/main.ts"></script>
   </body>

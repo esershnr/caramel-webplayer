@@ -10,6 +10,7 @@ import { watchTheme } from '@esershnr/caramel-theme';
 import type { Segment, SkipEventDetail } from '@esershnr/caramel-skip-segments';
 import type { PlaylistItem } from '@esershnr/caramel-playlist';
 import { PLAYLIST } from './playlist-data';
+import { TOS_PLAYLIST } from './tos-data';
 import { loadManifest } from './manifest';
 
 // Player ------------------------------------------------------------------
@@ -28,21 +29,26 @@ skip.setAttribute('auto-skip', 'recap');
 const playlist = document.createElement('caramel-playlist');
 playlist.id = 'playlist';
 playlist.setAttribute('list-id', 'demo');
-playlist.items = PLAYLIST;
+// The published demo (GitHub Pages) plays the Tears of Steel clips only; the dev
+// server adds the Mux test streams and any local encode-hls output.
+const BASE_ITEMS = import.meta.env.DEV ? [...TOS_PLAYLIST, ...PLAYLIST] : TOS_PLAYLIST;
+playlist.items = BASE_ITEMS;
 
 mountSkin(player, { media, extras: [skip, playlist], uid: 'demo' });
 
 // encode-hls output, when present: `pnpm --filter @esershnr/caramel-encode-hls start -- media/<slug> --base-url ...`
 // The Vite plugin serves repo `out/` under /out/ with Range support.
 const R2_MANIFEST = 'https://cdn.esersahiner.com/videos/openwrt-rehber/v1/manifest.json';
-void Promise.all([
-  loadManifest('/out/openwrt-rehber/manifest.json', `${location.origin}/out/openwrt-rehber/`),
-  loadManifest(R2_MANIFEST).then((item) =>
-    item ? { ...item, id: `${item.id}-r2`, title: `${item.title} (R2)` } : null,
-  ),
-]).then((extra) => {
-  playlist.items = [...PLAYLIST, ...extra.filter((item): item is NonNullable<typeof item> => item !== null)];
-});
+if (import.meta.env.DEV) {
+  void Promise.all([
+    loadManifest('/out/openwrt-rehber/manifest.json', `${location.origin}/out/openwrt-rehber/`),
+    loadManifest(R2_MANIFEST).then((item) =>
+      item ? { ...item, id: `${item.id}-r2`, title: `${item.title} (R2)` } : null,
+    ),
+  ]).then((extra) => {
+    playlist.items = [...BASE_ITEMS, ...extra.filter((item): item is NonNullable<typeof item> => item !== null)];
+  });
+}
 
 // Event log ---------------------------------------------------------------
 const log = document.querySelector<HTMLOListElement>('#event-log')!;

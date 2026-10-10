@@ -8,3 +8,5 @@ Thumbs.db
 *.log
 media/
 out/
+# Demo media, built by tools/tos-demo.mjs
+examples/vanilla/public/tos/
