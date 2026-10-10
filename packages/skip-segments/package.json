@@ -1,6 +1,6 @@
 {
   "name": "@esershnr/caramel-skip-segments",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Skip intro / recap / outro / sponsor segments for Video.js 10: skip button, auto-skip and colored timeline bands",
   "keywords": [
     "videojs",
