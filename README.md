@@ -25,7 +25,7 @@
   </picture>
 </a>
 
-<!-- DEMO_VIDEO: replace this line with the user-attachments video URL -->
+https://github.com/user-attachments/assets/9d378b7f-71d3-46bc-96da-5ce669c75c35
 
 A themed Video.js 10 player, built for esersahiner.com: skin with morphing
 Lucide icons, skip intro / recap / outro / sponsor, chapter list, playlist with
