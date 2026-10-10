@@ -1,6 +1,6 @@
 /*
  * esersahiner.com player tokens (--caramel-*).
- * Source of truth for colors: esersahiner-next-js/lib/theme.js (latte D3 / bitter).
+ * Source of truth for colors: the esersahiner.com site theme (latte D3 / bitter).
  *
  * Every color is declared once with light-dark(); the active scheme is decided
  * on the `.caramel-theme` scope so the host page's own color-scheme is left alone.
