@@ -1,18 +1,21 @@
-# Caramel Webplayer: site entegrasyonu (esersahiner-next-js)
+English | [Türkçe](site-integration.tr.md)
 
-Bu fazda siteye dokunulmadı. Aşağıdakiler, Caramel Webplayer'ı Next.js App Router
-sitesine eklerken yapılacaklar.
+# Caramel Webplayer: site integration
 
-## 1. Paketler
+The site was not touched in this phase. The steps below describe what to do when
+adding Caramel Webplayer to the esersahiner.com site (Next.js App Router).
 
-npm'den 0.1.0 sürümleri. En kısa yol şemsiye paket (altı paketi de getirir;
-`/react` tüm sarmalayıcıları, `/webplayer.css` token'lar + skin CSS'ini verir):
+## 1. Packages
+
+Version 0.1.0 from npm. The shortest path is the umbrella package (it pulls in all
+six packages; `/react` exposes every wrapper, `/webplayer.css` provides the tokens
+plus the skin CSS):
 
 ```sh
 npm install @esershnr/caramel-webplayer@0.1.0 @videojs/html@10.0.1
 ```
 
-Yalnız gerekenleri kurmak için modüler kurulum:
+Modular install, if you only want what you need:
 
 ```sh
 npm install @esershnr/caramel-theme@0.1.0 @esershnr/caramel-skin@0.1.0 \
@@ -20,44 +23,44 @@ npm install @esershnr/caramel-theme@0.1.0 @esershnr/caramel-skin@0.1.0 \
   @esershnr/caramel-playlist@0.1.0 @videojs/html@10.0.1
 ```
 
-`@videojs/html` (10.0.x) peer dependency'dir, bu yüzden açıkça kurulur. `react` ve
-`react-dom` (>= 19) isteğe bağlı peer'lerdir; sitede zaten var.
-`@esershnr/caramel-icons` skin'in bağımlılığı olarak kendiliğinden gelir.
+`@videojs/html` (10.0.x) is a peer dependency, so it is installed explicitly.
+`react` and `react-dom` (>= 19) are optional peers; the site already has them.
+`@esershnr/caramel-icons` comes in automatically as a dependency of the skin.
 
-Yayınlanan paketlerde `exports` yalnız `dist/`'i gösterir. Next.js (webpack ve
-Turbopack) dev modunda `development` koşulunu ETKİNLEŞTİRİR; bu yüzden paketler
-o koşulu kullanmaz. Kaynak (`src/*.ts`) yalnız monorepo içinde, özel
-`caramel-source` koşuluyla çözülür (tsconfig, örneklerin Vite ve Vitest
-config'leri); Next bu koşulu hiçbir modda açmadığı için site her zaman
-`dist/`'i alır.
+In the published packages, `exports` only points at `dist/`. Next.js (webpack and
+Turbopack) ENABLES the `development` condition in dev mode, so the packages do
+not use that condition. Source (`src/*.ts`) is only resolved inside the monorepo,
+through the custom `caramel-source` condition (tsconfig, the examples' Vite and
+Vitest configs); Next never enables that condition in any mode, so the site
+always gets `dist/`.
 
-## 2. CSP (Content-Security-Policy) ekleri
+## 2. CSP (Content-Security-Policy) additions
 
-Mevcut politikaya şu kaynakları ekle (CDN alan adı `cdn.esersahiner.com`):
+Add these sources to the existing policy (CDN domain `cdn.esersahiner.com`):
 
-| Yönerge | Ek | Neden |
+| Directive | Addition | Why |
 | --- | --- | --- |
-| `media-src` | `https://cdn.esersahiner.com blob:` | HLS parçaları MediaSource ile `blob:` URL üzerinden oynar |
-| `connect-src` | `https://cdn.esersahiner.com` | playlist, byte-range fetch'leri, VTT dosyaları |
-| `img-src` | `https://cdn.esersahiner.com` | poster ve thumbnail sprite'ları |
-| `worker-src` | `blob:` (yalnız hls.js kullanılırsa) | hazırdaki `hls-video` motoru worker kullanmaz |
-| `font-src` | `'self'` | fontlar `@fontsource-variable` ile aynı origin'den |
-| `style-src` | değişiklik yok | paketler stylesheet dosyası kullanır, inline stil yok |
+| `media-src` | `https://cdn.esersahiner.com blob:` | HLS segments play through MediaSource via a `blob:` URL |
+| `connect-src` | `https://cdn.esersahiner.com` | playlists, byte-range fetches, VTT files |
+| `img-src` | `https://cdn.esersahiner.com` | posters and thumbnail sprites |
+| `worker-src` | `blob:` (only if hls.js is used) | the bundled `hls-video` engine does not use workers |
+| `font-src` | `'self'` | fonts are served same-origin via `@fontsource-variable` |
+| `style-src` | no change | the packages use stylesheet files, no inline styles |
 
-Video.js 10 CSP rehberi: `node_modules/@videojs/html/docs/guides/content-security-policy.md`.
+Video.js 10 CSP guide: `node_modules/@videojs/html/docs/guides/content-security-policy.md`.
 
-## 3. Bileşen kullanımı (App Router)
+## 3. Component usage (App Router)
 
-Tema token'ları global CSS'e bir kez:
+Theme tokens go into the global CSS once:
 
 ```ts
-// app/layout.tsx (veya globals.css üzerinden @import)
+// app/layout.tsx (or via @import in globals.css)
 import '@esershnr/caramel-theme/tokens.css';
-// Fontlar next/font ile --font-heading / --font-body olarak zaten geliyor; fonts.css gerekmez.
+// Fonts already come from next/font as --font-heading / --font-body; fonts.css is not needed.
 ```
 
-Player bir client component içinde (`'use client'` sarmalayıcılar elementleri
-yalnız tarayıcıda kaydeder, sunucu render'ı temiz kalır):
+The player lives inside a client component (the `'use client'` wrappers register
+the elements only in the browser, so the server render stays clean):
 
 ```tsx
 'use client';
@@ -88,22 +91,23 @@ export function VideoPage({ lang }: { lang: 'tr' | 'en' }) {
 }
 ```
 
-`hls-video` elementi için sayfada bir kez `import '@videojs/html/media/hls-video'`
-(client tarafında). JSX tipi için `declare module 'react'` bloğu
-`examples/react/src/App.tsx` içinde örnektir.
+For the `hls-video` element, add `import '@videojs/html/media/hls-video'` once per
+page (client side). The `declare module 'react'` block in
+`examples/react/src/App.tsx` is an example of the JSX typing.
 
-- HLS `src` mutlak URL olmalı (motor göreli URL'yi `Invalid base URL` ile reddeder); playlist denetleyicisi göreli verileni `document.baseURI` ile mutlaklaştırır, manifest zaten mutlak yazar.
-- Dil: `lang` prop'u hem player etiketlerini (`<media-i18n>`) hem bölüm track'ini
-  (`chapters: { tr, en }`) seçer; `<html lang>` değişince otomatik takip eder.
-- Tema: site zaten `.dark` sınıfını `<html>`'e koyuyor; `.caramel-theme` kapsamı bunu okur.
-- Manifest'i sunucuda da çekip `items` olarak verebilirsin; bileşen SSR'da
-  player iskeletini üretir, media elementini elementler kaydolunca bağlar.
+- The HLS `src` must be an absolute URL (the engine rejects relative URLs with `Invalid base URL`); the playlist controller makes relative values absolute against `document.baseURI`, and the manifest already uses absolute URLs.
+- Language: the `lang` prop selects both the player labels (`<media-i18n>`) and the
+  chapters track (`chapters: { tr, en }`); it follows `<html lang>` changes automatically.
+- Theme: the site already puts the `.dark` class on `<html>`; the `.caramel-theme` scope reads it.
+- You can also fetch the manifest on the server and pass it as `items`; the component
+  renders the player skeleton during SSR and attaches the media element once the
+  elements are registered.
 
-## 4. Kontrol listesi
+## 4. Checklist
 
-- CDN'de `Range` için CORS izni (scripts/encode-hls/README.md, bölüm 5).
-- Yeni encode için `v2/` yolu ve sitede yalnız manifest URL'sinin değişmesi.
-- Kurulumdan sonra `next dev` ve `next build` ikisinde de çalıştığını doğrula; ikisi de
-  paketlerin `dist/` çıktısını kullanır (`caramel-source` koşulu yalnız monorepo içindir).
-- Lisans: skin paketi `MIT AND Apache-2.0` (Video.js 10 skin türevi dosyalar
-  Apache-2.0); diğerleri MIT. Ayrıntı paketlerdeki `NOTICE` dosyalarında.
+- CORS permission for `Range` on the CDN (scripts/encode-hls/README.md, section 5).
+- A `v2/` path for new encodes, so only the manifest URL changes on the site.
+- After installing, verify that both `next dev` and `next build` work; both use the
+  packages' `dist/` output (the `caramel-source` condition is monorepo-only).
+- License: the skin package is `MIT AND Apache-2.0` (files derived from the Video.js 10
+  skin are Apache-2.0); the others are MIT. Details are in each package's `NOTICE` file.
