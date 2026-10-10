@@ -3,20 +3,24 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Caramel Webplayer, vanilla demo</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Ccircle cx=%2712%27 cy=%2712%27 r=%2712%27 fill=%27%235e3310%27/%3E%3Cpath d=%27M9 7l8 5-8 5z%27 fill=%27%23c9945c%27/%3E%3C/svg%3E" />
+    <title>Caramel Webplayer demo</title>
+    <meta name="description" content="A themed Video.js 10 player: morphing icons, skip intro / recap / outro / sponsor, chapters, playlist with resume." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/src/demo.css" />
   </head>
   <body class="caramel-theme">
     <header class="demo-header">
-      <h1 class="caramel-heading">Player demo (HTML)</h1>
-      <div class="demo-theme" role="group" aria-label="Tema">
-        <button type="button" data-theme-choice="light">Açık</button>
-        <button type="button" data-theme-choice="dark">Koyu</button>
-        <button type="button" data-theme-choice="system" aria-pressed="true">Sistem</button>
+      <a class="demo-brand" href="https://github.com/esershnr/caramel-webplayer">
+        <img src="/favicon.svg" alt="" width="28" height="28" />
+        <h1 class="caramel-heading">Caramel Webplayer</h1>
+      </a>
+      <div class="demo-theme" role="group" aria-label="Tema" data-i18n-label="theme">
+        <button type="button" data-theme-choice="light" data-i18n="light">Açık</button>
+        <button type="button" data-theme-choice="dark" data-i18n="dark">Koyu</button>
+        <button type="button" data-theme-choice="system" aria-pressed="true" data-i18n="system">Sistem</button>
         <span class="demo-resolved caramel-tabular" id="resolved-theme"></span>
       </div>
-      <div class="demo-theme" role="group" aria-label="Dil">
+      <div class="demo-theme" role="group" aria-label="Dil" data-i18n-label="language">
         <button type="button" data-lang="tr" aria-pressed="true">TR</button>
         <button type="button" data-lang="en">EN</button>
       </div>
@@ -33,21 +37,27 @@
       <aside class="demo-side">
         <caramel-playlist-panel for="playlist" class="demo-playlist"></caramel-playlist-panel>
         <section class="demo-panel">
-          <h2 class="caramel-heading">Zaman çizelgesi bantları</h2>
-          <p class="demo-muted">Çizgili bant otomatik atlanır (demo: özet). Önizleme kartı fare bandın üstündeyken türü gösterir.</p>
+          <h2 class="caramel-heading" data-i18n="bands">Zaman çizelgesi bantları</h2>
+          <p class="demo-muted" data-i18n="bandsHint">Çizgili bant otomatik atlanır (demo: özet). Önizleme kartı fare bandın üstündeyken türü gösterir.</p>
           <ul class="demo-list demo-legend">
-            <li><span class="demo-swatch" data-type="intro"></span>İntro</li>
-            <li><span class="demo-swatch" data-type="recap" data-auto></span>Özet (otomatik atlanır)</li>
-            <li><span class="demo-swatch" data-type="outro"></span>Jenerik</li>
+            <li><span class="demo-swatch" data-type="intro"></span><span data-i18n="intro">İntro</span></li>
+            <li><span class="demo-swatch" data-type="recap" data-auto></span><span data-i18n="recap">Özet (otomatik atlanır)</span></li>
+            <li><span class="demo-swatch" data-type="outro"></span><span data-i18n="outro">Jenerik</span></li>
             <li><span class="demo-swatch" data-type="sponsor"></span>Sponsor</li>
           </ul>
         </section>
         <section class="demo-panel">
-          <h2 class="caramel-heading">Olaylar</h2>
+          <h2 class="caramel-heading" data-i18n="events">Olaylar</h2>
           <ol id="event-log" class="demo-list demo-log caramel-tabular"></ol>
         </section>
       </aside>
     </main>
+
+    <footer class="demo-footer">
+      <a href="https://github.com/esershnr/caramel-webplayer">GitHub</a>
+      <a href="https://www.npmjs.com/package/@esershnr/caramel-webplayer">npm</a>
+      <span>Video: <a href="https://mango.blender.org">Tears of Steel</a> (CC) Blender Foundation, <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></span>
+    </footer>
 
     <script type="module" src="/src/main.ts"></script>
   </body>

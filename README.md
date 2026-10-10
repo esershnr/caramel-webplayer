@@ -1,8 +1,31 @@
-# Caramel Webplayer
+<p align="center">
+  <img src=".github/assets/logo.svg" alt="" width="96" height="96">
+</p>
 
-[![npm](https://img.shields.io/npm/v/@esershnr/caramel-webplayer?label=npm)](https://www.npmjs.com/package/@esershnr/caramel-webplayer)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-[![CI](https://github.com/esershnr/caramel-webplayer/actions/workflows/ci.yml/badge.svg)](https://github.com/esershnr/caramel-webplayer/actions/workflows/ci.yml)
+<h1 align="center">Caramel Webplayer</h1>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/@esershnr/caramel-webplayer"><img src="https://img.shields.io/npm/v/@esershnr/caramel-webplayer?label=npm" alt="npm"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT"></a>
+  <a href="https://github.com/esershnr/caramel-webplayer/actions/workflows/ci.yml"><img src="https://github.com/esershnr/caramel-webplayer/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+</p>
+
+<p align="center">
+  <a href="https://esershnr.github.io/caramel-webplayer/"><strong>Live demo</strong></a>
+  ·
+  <a href="#quick-start">Quick start</a>
+  ·
+  <a href="#theming--renkleri-değiştirme">Theming</a>
+</p>
+
+<a href="https://esershnr.github.io/caramel-webplayer/">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/assets/screenshot-dark.webp">
+    <img src=".github/assets/screenshot-light.webp" alt="Caramel Webplayer demo: the player with subtitles, the chapter list and the playlist panel">
+  </picture>
+</a>
+
+https://github.com/user-attachments/assets/9d378b7f-71d3-46bc-96da-5ce669c75c35
 
 A themed Video.js 10 player, built for esersahiner.com: skin with morphing
 Lucide icons, skip intro / recap / outro / sponsor, chapter list, playlist with
@@ -304,7 +327,8 @@ pnpm lint            # Biome lint (pnpm format:check / pnpm format for formattin
 pnpm test            # Vitest, pure logic plus a few happy-dom tests
 pnpm typecheck
 pnpm build           # dist/ for every package (needed before `vite build` in examples)
-pnpm dev:vanilla     # http://localhost:5173  (?theme=light|dark)
+node tools/tos-demo.mjs  # demo clips (Tears of Steel), once; needs ffmpeg
+pnpm dev:vanilla     # http://localhost:5173  (?theme=light|dark, ?dev adds the test streams)
 pnpm dev:react       # http://localhost:5174
 ```
 
@@ -327,6 +351,16 @@ Bug reports, fixes and ideas are welcome. Start with
 and [docs/package-playbook.md](docs/package-playbook.md) (how packages are
 built). Please follow the [Code of Conduct](CODE_OF_CONDUCT.md) and report
 security problems privately as described in [SECURITY.md](SECURITY.md).
+
+## Demo media
+
+The live demo and the screenshots use clips from
+[Tears of Steel](https://mango.blender.org), (CC) Blender Foundation,
+licensed [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). The clips
+are not committed; `node tools/tos-demo.mjs` downloads the source into
+`media/tos/` and writes them to `examples/vanilla/public/tos/` (the Pages
+workflow does the same). The Turkish subtitles are a translation made for the
+demo.
 
 ## License
 

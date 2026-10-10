@@ -10,6 +10,7 @@ import { watchTheme } from '@esershnr/caramel-theme';
 import type { Segment, SkipEventDetail } from '@esershnr/caramel-skip-segments';
 import type { PlaylistItem } from '@esershnr/caramel-playlist';
 import { PLAYLIST } from './playlist-data';
+import { TOS_PLAYLIST } from './tos-data';
 import { loadManifest } from './manifest';
 
 // Player ------------------------------------------------------------------
@@ -28,21 +29,27 @@ skip.setAttribute('auto-skip', 'recap');
 const playlist = document.createElement('caramel-playlist');
 playlist.id = 'playlist';
 playlist.setAttribute('list-id', 'demo');
-playlist.items = PLAYLIST;
+// The demo plays the Tears of Steel clips only. On the dev server `?dev` adds the
+// Mux test streams and the encode-hls output (local `out/` and the R2 copy).
+const DEV_EXTRAS = import.meta.env.DEV && new URLSearchParams(location.search).has('dev');
+const BASE_ITEMS = DEV_EXTRAS ? [...TOS_PLAYLIST, ...PLAYLIST] : TOS_PLAYLIST;
+playlist.items = BASE_ITEMS;
 
 mountSkin(player, { media, extras: [skip, playlist], uid: 'demo' });
 
 // encode-hls output, when present: `pnpm --filter @esershnr/caramel-encode-hls start -- media/<slug> --base-url ...`
 // The Vite plugin serves repo `out/` under /out/ with Range support.
 const R2_MANIFEST = 'https://cdn.esersahiner.com/videos/openwrt-rehber/v1/manifest.json';
-void Promise.all([
-  loadManifest('/out/openwrt-rehber/manifest.json', `${location.origin}/out/openwrt-rehber/`),
-  loadManifest(R2_MANIFEST).then((item) =>
-    item ? { ...item, id: `${item.id}-r2`, title: `${item.title} (R2)` } : null,
-  ),
-]).then((extra) => {
-  playlist.items = [...PLAYLIST, ...extra.filter((item): item is NonNullable<typeof item> => item !== null)];
-});
+if (DEV_EXTRAS) {
+  void Promise.all([
+    loadManifest('/out/openwrt-rehber/manifest.json', `${location.origin}/out/openwrt-rehber/`),
+    loadManifest(R2_MANIFEST).then((item) =>
+      item ? { ...item, id: `${item.id}-r2`, title: `${item.title} (R2)` } : null,
+    ),
+  ]).then((extra) => {
+    playlist.items = [...BASE_ITEMS, ...extra.filter((item): item is NonNullable<typeof item> => item !== null)];
+  });
+}
 
 // Event log ---------------------------------------------------------------
 const log = document.querySelector<HTMLOListElement>('#event-log')!;
@@ -82,9 +89,49 @@ if (preset === 'light' || preset === 'dark') {
     .forEach((b) => b.setAttribute('aria-pressed', String(b.dataset['themeChoice'] === preset)));
 }
 
+// Page chrome strings; the player and the panels translate themselves.
+const STRINGS = {
+  tr: {
+    theme: 'Tema',
+    language: 'Dil',
+    light: 'Açık',
+    dark: 'Koyu',
+    system: 'Sistem',
+    resolved: 'çözülen',
+    bands: 'Zaman çizelgesi bantları',
+    bandsHint: 'Çizgili bant otomatik atlanır (demo: özet). Önizleme kartı fare bandın üstündeyken türü gösterir.',
+    intro: 'İntro',
+    recap: 'Özet (otomatik atlanır)',
+    outro: 'Jenerik',
+    events: 'Olaylar',
+  },
+  en: {
+    theme: 'Theme',
+    language: 'Language',
+    light: 'Light',
+    dark: 'Dark',
+    system: 'System',
+    resolved: 'resolved',
+    bands: 'Timeline segment bands',
+    bandsHint:
+      'The striped band is skipped automatically (demo: recap). The preview card shows the type while hovering a band.',
+    intro: 'Intro',
+    recap: 'Recap (auto-skipped)',
+    outro: 'Credits',
+    events: 'Events',
+  },
+};
+type Lang = keyof typeof STRINGS;
+let strings = STRINGS.tr;
+let resolvedTheme = '';
+
 const resolved = document.querySelector<HTMLElement>('#resolved-theme')!;
+const renderResolved = () => {
+  resolved.textContent = `${strings.resolved}: ${resolvedTheme}`;
+};
 watchTheme((theme) => {
-  resolved.textContent = `çözülen: ${theme}`;
+  resolvedTheme = theme;
+  renderResolved();
 });
 
 document.querySelectorAll<HTMLButtonElement>('[data-theme-choice]').forEach((button) => {
@@ -99,14 +146,28 @@ document.querySelectorAll<HTMLButtonElement>('[data-theme-choice]').forEach((but
 });
 
 // Language switch ---------------------------------------------------------
+// `?lang=en|tr` preselects a language (handy for screenshots).
 const i18n = document.querySelector<HTMLElement>('#i18n')!;
-document.querySelectorAll<HTMLButtonElement>('[data-lang]').forEach((button) => {
-  button.addEventListener('click', () => {
-    const lang = button.dataset['lang']!;
-    i18n.setAttribute('lang', lang);
-    document.documentElement.lang = lang;
-    document
-      .querySelectorAll<HTMLButtonElement>('[data-lang]')
-      .forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+
+function setLang(lang: Lang) {
+  strings = STRINGS[lang];
+  i18n.setAttribute('lang', lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll<HTMLElement>('[data-i18n]').forEach((el) => {
+    el.textContent = strings[el.dataset['i18n'] as keyof typeof strings];
   });
+  document.querySelectorAll<HTMLElement>('[data-i18n-label]').forEach((el) => {
+    el.setAttribute('aria-label', strings[el.dataset['i18nLabel'] as keyof typeof strings]);
+  });
+  document
+    .querySelectorAll<HTMLButtonElement>('[data-lang]')
+    .forEach((b) => b.setAttribute('aria-pressed', String(b.dataset['lang'] === lang)));
+  renderResolved();
+}
+
+document.querySelectorAll<HTMLButtonElement>('[data-lang]').forEach((button) => {
+  button.addEventListener('click', () => setLang(button.dataset['lang'] as Lang));
 });
+
+const langPreset = new URLSearchParams(location.search).get('lang');
+if (langPreset === 'en' || langPreset === 'tr') setLang(langPreset);

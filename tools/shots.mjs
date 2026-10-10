@@ -35,7 +35,7 @@ for (const base of urls) {
     page.on('pageerror', (e) => errors.push(String(e)));
     page.on('response', (r) => r.status() >= 400 && errors.push(`${r.status()} ${r.url()}`));
 
-    await page.goto(`${base}?theme=${theme}`, { waitUntil: 'networkidle' });
+    await page.goto(`${base}?theme=${theme}&dev`, { waitUntil: 'networkidle' });
     await page.waitForSelector('media-container[data-controls-visible]', { timeout: 10000 }).catch(() => {});
     await page.waitForTimeout(600);
     const shot = (name) => page.screenshot({ path: resolve(outDir, `${tag}-${theme}-${name}.png`) });
