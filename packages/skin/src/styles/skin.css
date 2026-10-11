@@ -204,17 +204,17 @@
   /* ------------------------------------------------------------------ */
 
   .caramel-skin .media-menu-popup.caramel-theme {
-    --media-popover: var(--caramel-surface);
-    --media-popover-foreground: var(--caramel-text);
-    --media-foreground: var(--caramel-text);
-    --media-muted-foreground: var(--caramel-muted);
-    --media-accent: var(--caramel-raised-hover);
-    --media-accent-foreground: var(--caramel-text);
-    --media-primary: var(--caramel-primary);
-    --media-primary-foreground: var(--caramel-primary-contrast);
-    --media-border: var(--caramel-divider);
-    --media-surface-border: var(--caramel-divider);
-    --media-ring: var(--caramel-primary);
+    --media-popover: var(--_caramel-surface);
+    --media-popover-foreground: var(--_caramel-text);
+    --media-foreground: var(--_caramel-text);
+    --media-muted-foreground: var(--_caramel-muted);
+    --media-accent: var(--_caramel-raised-hover);
+    --media-accent-foreground: var(--_caramel-text);
+    --media-primary: var(--_caramel-primary);
+    --media-primary-foreground: var(--_caramel-primary-contrast);
+    --media-border: var(--_caramel-divider);
+    --media-surface-border: var(--_caramel-divider);
+    --media-ring: var(--_caramel-primary);
     --media-shadow-current-color: transparent;
     --media-shadow-separator: 0 0 #0000;
     --media-shadow-surface-inset: 0 0 #0000;
@@ -234,22 +234,22 @@
   .caramel-skin
     .media-menu-popup.caramel-theme
     :is(.media-menu-trigger-item, .media-menu-radio-item, .media-menu-back-item):focus-visible {
-    outline: var(--caramel-focus-ring);
+    outline: var(--_caramel-focus-ring);
     /* Inside a clipped, scrollable panel the ring sits inward. */
     outline-offset: calc(var(--caramel-focus-offset) * -1);
   }
 
   .caramel-skin .media-menu-popup.caramel-theme .media-menu-radio-item-icon {
-    color: var(--caramel-primary);
+    color: var(--_caramel-primary);
   }
 
   .caramel-skin .media-menu-popup.caramel-theme .media-menu-badge {
-    background: var(--caramel-solid);
-    color: var(--caramel-solid-contrast);
+    background: var(--_caramel-solid);
+    color: var(--_caramel-solid-contrast);
   }
 
   .caramel-skin .media-menu-popup.caramel-theme .media-menu-separator {
-    border-color: var(--caramel-divider);
+    border-color: var(--_caramel-divider);
   }
 
   /* Timeline preview card (YouTube layout): thumbnail on top, below it one
@@ -280,9 +280,9 @@
   }
 
   .caramel-skin .caramel-preview-card {
-    --media-popover: var(--caramel-surface);
-    --media-popover-foreground: var(--caramel-text);
-    --media-surface-border: var(--caramel-divider);
+    --media-popover: var(--_caramel-surface);
+    --media-popover-foreground: var(--_caramel-text);
+    --media-surface-border: var(--_caramel-divider);
     --media-shadow-surface-inset: 0 0 #0000;
     --media-backdrop-filter-surface: none;
     --media-shadow-surface: 0 0 #0000;
@@ -343,9 +343,9 @@
     min-width: 0;
     padding: calc(var(--media-spacing) * 1) calc(var(--media-spacing) * 2.5);
     border-radius: var(--caramel-radius-chip);
-    background: var(--caramel-surface);
-    color: var(--caramel-text);
-    box-shadow: 0 0 0 1px var(--caramel-divider);
+    background: var(--_caramel-surface);
+    color: var(--_caramel-text);
+    box-shadow: 0 0 0 1px var(--_caramel-divider);
     white-space: nowrap;
     overflow: hidden;
     font-variant-numeric: tabular-nums;
@@ -358,7 +358,7 @@
 
   .caramel-skin .caramel-preview-sep {
     flex: none;
-    color: var(--caramel-muted);
+    color: var(--_caramel-muted);
   }
 
   .caramel-skin .caramel-preview-title {
@@ -367,7 +367,7 @@
     max-width: none;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: var(--caramel-accent-text);
+    color: var(--_caramel-accent-text);
     font-weight: 600;
   }
 

@@ -11,11 +11,6 @@ export default defineConfig({
   // `conditions` replaces.
   resolve: { conditions: ['caramel-source', 'module', 'browser', 'development|production'] },
   server: { open: false },
-  // The tokens are light-dark() custom properties on :root. Lowering light-dark()
-  // for older targets (Vite's default build target) turns them into
-  // --lightningcss-light/dark fallbacks that only resolve on .caramel-theme, so
-  // every token is invalid at :root. Keep light-dark() native in the build.
-  build: { cssTarget: ['chrome123', 'edge123', 'firefox120', 'safari17.5'] },
   // encode-hls output (repo `out/`) under /out/ with Range support.
   plugins: [serveOut(path.resolve(import.meta.dirname, '../../out'))],
 });
