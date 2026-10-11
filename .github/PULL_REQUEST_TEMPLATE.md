@@ -21,6 +21,7 @@
 - [ ] Tests added or updated for new logic
 - [ ] Changeset added (`pnpm changeset`), or not needed (docs, tests, tooling, private packages)
 - [ ] Docs updated (package README, root README, playbook) if behavior or API changed
+- [ ] React wrapper (`src/react.tsx`) updated if an element attribute or property was added or changed
 
 ## Testing
 
