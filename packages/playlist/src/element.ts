@@ -3,7 +3,10 @@ import { PlaylistModel, normalizeItems, type PlaylistListener } from './model.js
 import {
   clearResume,
   createLocalStorage,
+  parseResumeThreshold,
   readResume,
+  RESUME_END_MARGIN,
+  RESUME_MIN_TIME,
   restoreTime,
   resumeKey,
   saveResume,
@@ -86,6 +89,8 @@ function noop(): void {}
  *   no-auto-advance  stay on the item when it ends
  *   list-id          resume storage namespace (default `default`)
  *   no-resume        disable resume persistence
+ *   resume-min-time  minimum position saved in seconds (default 3)
+ *   resume-end-margin  unsaved and unrestored tail in seconds (default 5)
  *   for              id of the `<video-player>` when the element lives outside it
  *   player           (property) the player element itself
  *
@@ -108,6 +113,8 @@ export class CaramelPlaylistElement extends Base {
       'no-auto-advance',
       'list-id',
       'no-resume',
+      'resume-min-time',
+      'resume-end-margin',
       'for',
     ];
   }
@@ -126,6 +133,10 @@ export class CaramelPlaylistElement extends Base {
   #startIndex = 0;
   #listId: string | null = null;
   #resume = true;
+  #resumeMinTime = RESUME_MIN_TIME;
+  #resumeEndMargin = RESUME_END_MARGIN;
+  #resumeMinTimeFromProperty = false;
+  #resumeEndMarginFromProperty = false;
   #storage: ResumeStorage | null = null;
 
   /** What is currently applied to `#player`. */
@@ -213,6 +224,26 @@ export class CaramelPlaylistElement extends Base {
     this.#storage = value ? (this.#storage ?? createLocalStorage()) : null;
   }
 
+  /** Minimum playback position, in seconds, that may be saved. Default 3. */
+  get resumeMinTime(): number {
+    return this.#resumeMinTime;
+  }
+
+  set resumeMinTime(value: number) {
+    this.#resumeMinTime = parseResumeThreshold(value, RESUME_MIN_TIME);
+    this.#resumeMinTimeFromProperty = true;
+  }
+
+  /** Number of seconds at the end that must not be saved or restored. Default 5. */
+  get resumeEndMargin(): number {
+    return this.#resumeEndMargin;
+  }
+
+  set resumeEndMargin(value: number) {
+    this.#resumeEndMargin = parseResumeThreshold(value, RESUME_END_MARGIN);
+    this.#resumeEndMarginFromProperty = true;
+  }
+
   /** The player to drive. Wins over `for` and the ancestor lookup. */
   get player(): PlayerLike | null {
     return this.#player;
@@ -251,6 +282,14 @@ export class CaramelPlaylistElement extends Base {
 
   override attributeChangedCallback(name: string, old: string | null, value: string | null): void {
     super.attributeChangedCallback?.(name, old, value);
+    if (name === 'resume-min-time') {
+      this.#resumeMinTime = parseResumeThreshold(value, RESUME_MIN_TIME);
+      this.#resumeMinTimeFromProperty = false;
+    }
+    if (name === 'resume-end-margin') {
+      this.#resumeEndMargin = parseResumeThreshold(value, RESUME_END_MARGIN);
+      this.#resumeEndMarginFromProperty = false;
+    }
     if (!this.isConnected) return;
     if (name === 'for') this.#lookupRetries = 0;
     this.#readAttributes();
@@ -314,6 +353,12 @@ export class CaramelPlaylistElement extends Base {
     this.#model.autoAdvance = !this.hasAttribute('no-auto-advance');
     this.#listId = this.getAttribute('list-id');
     this.resume = !this.hasAttribute('no-resume');
+    if (!this.#resumeMinTimeFromProperty) {
+      this.#resumeMinTime = parseResumeThreshold(this.getAttribute('resume-min-time'), RESUME_MIN_TIME);
+    }
+    if (!this.#resumeEndMarginFromProperty) {
+      this.#resumeEndMargin = parseResumeThreshold(this.getAttribute('resume-end-margin'), RESUME_END_MARGIN);
+    }
   }
 
   /** Replaces the list, keeping the current item when it is still present. */
@@ -454,7 +499,7 @@ export class CaramelPlaylistElement extends Base {
       // Same source as the previous item: nothing reloads, so restart by hand
       // and keep playing when the previous item was playing or had ended.
       this.#awaitingSource = false;
-      const resume = restoreTime(this.#pendingRestore, time?.duration);
+      const resume = restoreTime(this.#pendingRestore, time?.duration, this.#resumeEndMargin);
       this.#pendingRestore = null;
       time?.seek(resume ?? 0).catch(noop);
       if (playback && (!playback.paused || playback.ended)) playback.play().catch(noop);
@@ -569,7 +614,7 @@ export class CaramelPlaylistElement extends Base {
       if (!attached || !fresh || !(time.duration > 0)) return;
       this.#awaitingSource = false;
       if (this.#player) this.#applySegments(this.#player, false);
-      const at = restoreTime(this.#pendingRestore, time.duration);
+      const at = restoreTime(this.#pendingRestore, time.duration, this.#resumeEndMargin);
       this.#pendingRestore = null;
       if (at !== null) time.seek(at).catch(noop);
       if (this.#resumePlaying) {
@@ -600,10 +645,10 @@ export class CaramelPlaylistElement extends Base {
     const now = Date.now();
     if (playback.paused && this.#lastPaused === false) {
       // Pause: save right away, ignoring the throttle.
-      saveResume(this.#storage, key, time.currentTime, time.duration, now);
+      saveResume(this.#storage, key, time.currentTime, time.duration, now, this.#resumeMinTime, this.#resumeEndMargin);
       this.#lastSavedAt = now;
     } else if (!playback.paused && shouldSave(this.#lastSavedAt, now)) {
-      saveResume(this.#storage, key, time.currentTime, time.duration, now);
+      saveResume(this.#storage, key, time.currentTime, time.duration, now, this.#resumeMinTime, this.#resumeEndMargin);
       this.#lastSavedAt = now;
     }
     this.#lastPaused = playback.paused;
@@ -641,8 +686,19 @@ export class CaramelPlaylistElement extends Base {
     const playback = selectPlayback(store.state);
     if (!time || !playback) return;
     const key = this.#key(item);
-    if (playback.ended) clearResume(this.#storage, key);
-    else saveResume(this.#storage, key, time.currentTime, time.duration);
+    if (playback.ended) {
+      clearResume(this.#storage, key);
+    } else {
+      saveResume(
+        this.#storage,
+        key,
+        time.currentTime,
+        time.duration,
+        Date.now(),
+        this.#resumeMinTime,
+        this.#resumeEndMargin,
+      );
+    }
   }
 
   #key(item: PlaylistItem): string {

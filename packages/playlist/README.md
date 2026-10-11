@@ -36,6 +36,31 @@ import { Playlist, PlaylistPanel } from '@esershnr/caramel-playlist/react';
 <PlaylistPanel for="playlist" />
 ```
 
+## Resume thresholds
+
+The playlist saves each item's playback position in local storage. By default,
+it skips positions in the first 3 seconds and positions within 5 seconds of the
+end. Set `resume-min-time` and `resume-end-margin` to change these limits in
+seconds, for example for short clips:
+
+```html
+<caramel-playlist resume-min-time="1" resume-end-margin="1"></caramel-playlist>
+```
+
+The matching JavaScript properties are `resumeMinTime` and `resumeEndMargin`:
+
+```ts
+playlist.resumeMinTime = 1;
+playlist.resumeEndMargin = 1;
+```
+
+Each value must be a finite, non-negative number. Missing, empty, non-numeric,
+or negative attributes fall back to their respective defaults of 3 and 5
+seconds. Invalid property values also use those defaults. Property changes
+affect subsequent save and restore checks; they do not change the attributes.
+When `no-resume` is present (or `playlist.resume = false`), the playlist does
+not save or restore positions, regardless of the thresholds.
+
 The item contract is in `PlaylistItem`. With `@esershnr/caramel-skin`, pass
 `<caramel-playlist>` in `extras`. More: [root README](https://github.com/esershnr/caramel-webplayer#readme).
 
