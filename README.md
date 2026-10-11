@@ -173,16 +173,29 @@ re-encoding and uploading to a new version folder (`v2/`), see
 
 ## Theming / Renkleri değiştirme
 
-Every color is a CSS custom property on `:root`, declared once with
-`light-dark(light, dark)`. Override the main tokens and every hover, contrast
-and overlay derivative follows (they are `color-mix()` expressions over the
-main tokens, see `packages/theme/styles/tokens.css`).
+Every color is a CSS custom property. Themed roles have a light and a dark
+value (`--caramel-bg-light`, `--caramel-bg-dark`); each `.caramel-theme` scope
+picks one for the active scheme. Override the main tokens and every hover,
+contrast and overlay derivative follows (they are `color-mix()` expressions over
+the main tokens, see `packages/theme/styles/tokens.css`).
+
+Two ways to override a themed role, on `:root` or any ancestor of the scope:
+
+- `--caramel-<role>`: one value for both schemes (wins over the pair).
+- `--caramel-<role>-light` / `--caramel-<role>-dark`: one scheme only.
+
+The tokens need no bundler setting: they use plain custom properties, not
+`light-dark()`, so a CSS minifier that lowers modern color syntax for older
+targets (lightningcss in Vite's default build) has nothing to rewrite.
 
 TR: Renkler `--caramel-*` değişkenleridir; yalnız ana token'ları ezmeniz yeterlidir,
-hover ve türevler kendiliğinden uyar. Override'lar `tokens.css`'ten SONRA
+hover ve türevler kendiliğinden uyar. `--caramel-<rol>` iki temada da geçerli tek
+değerdir, `--caramel-<rol>-light` / `-dark` yalnız o temayı değiştirir. Override'lar `tokens.css`'ten SONRA
 yüklenmelidir.
 
 ### Main tokens
+
+Columns are the `-light` / `-dark` defaults; the bare name overrides both.
 
 | Token | Role | Light (latte) | Dark (bitter) |
 | --- | --- | --- | --- |
@@ -227,8 +240,10 @@ segment bands have their own tokens (below).
 
 ```css
 :root {
-  --caramel-primary: light-dark(#1d4ed8, #93c5fd);
-  --caramel-solid: light-dark(#1d4ed8, #1e40af);
+  --caramel-primary-light: #1d4ed8;
+  --caramel-primary-dark: #93c5fd;
+  --caramel-solid-light: #1d4ed8;
+  --caramel-solid-dark: #1e40af;
 }
 ```
 
@@ -250,8 +265,10 @@ tokens inherit, so the wrapper's values win inside it:
 
 ```css
 .player-mocha {
-  --caramel-bg: light-dark(#eff1f5, #1e1e2e);
-  --caramel-surface: light-dark(#e6e9ef, #313244);
+  --caramel-bg-light: #eff1f5;
+  --caramel-bg-dark: #1e1e2e;
+  --caramel-surface-light: #e6e9ef;
+  --caramel-surface-dark: #313244;
   --caramel-accent: #fab387;
   /* ... */
 }
