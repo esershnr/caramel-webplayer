@@ -85,12 +85,14 @@ Reference: `packages/skin/src/react.tsx` and `packages/skip-segments/src/react.t
 
 Reference: `packages/theme/styles/tokens.css`.
 
-- Colors are `--caramel-*` custom properties declared once with `light-dark()` on `:root`
-  (`tokens.css:13-50`). Never write hex in a package stylesheet; derive hovers with
-  `color-mix()`.
+- Colors are `--caramel-*` custom properties. Themed roles are declared as
+  `--caramel-<role>-light` / `-dark` pairs on `:root`; packages read the resolved
+  `--_caramel-<role>` values, which every `.caramel-theme` scope computes for its scheme.
+  No `light-dark()` (minifiers lower it and break `:root` tokens in production builds).
+  Never write hex in a package stylesheet; derive hovers with `color-mix()`.
 - Surfaces outside the video (panels, lists, menus) follow the page theme. Give the root
-  element of such a component the class `caramel-theme` (`tokens.css:95-121`): it resolves
-  `color-scheme`, so the tokens flip with `prefers-color-scheme`, `data-theme="light|dark"`
+  element of such a component the class `caramel-theme`: it resolves `color-scheme`
+  and the `--_caramel-*` values, so the tokens flip with `prefers-color-scheme`, `data-theme="light|dark"`
   or `.dark` on `<html>`. Controls over the video use the `--caramel-overlay-*` roles instead
   and stay dark.
 - Roles: `--caramel-bg` page, `--caramel-surface` panel, `--caramel-raised` item box,

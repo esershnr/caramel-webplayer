@@ -2,8 +2,8 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--caramel-bg);
-  color: var(--caramel-text);
+  background: var(--_caramel-bg);
+  color: var(--_caramel-text);
   font-family: var(--caramel-font-body);
   transition: background-color var(--caramel-duration-fill) var(--caramel-ease-fill);
 }
@@ -14,7 +14,7 @@ body {
   align-items: center;
   gap: 1rem 1.5rem;
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--caramel-divider);
+  border-bottom: 1px solid var(--_caramel-divider);
 }
 
 .demo-header h1 {
@@ -36,19 +36,19 @@ body {
   gap: 0.5rem 1.25rem;
   justify-content: center;
   padding: 1rem 1.5rem 2rem;
-  color: var(--caramel-muted);
+  color: var(--_caramel-muted);
   font-size: 0.85rem;
 }
 
 .demo-footer a {
-  color: var(--caramel-accent-text);
+  color: var(--_caramel-accent-text);
 }
 
 .demo-theme {
   display: inline-flex;
   gap: 0.25rem;
   padding: 0.25rem;
-  background: var(--caramel-surface);
+  background: var(--_caramel-surface);
   border-radius: var(--caramel-radius-chip);
 }
 
@@ -59,29 +59,29 @@ body {
   border: 0;
   border-radius: var(--caramel-radius-chip);
   background: transparent;
-  color: var(--caramel-muted);
+  color: var(--_caramel-muted);
   cursor: pointer;
 }
 
 .demo-theme button:hover {
-  background: var(--caramel-raised-hover);
-  color: var(--caramel-text);
+  background: var(--_caramel-raised-hover);
+  color: var(--_caramel-text);
 }
 
 .demo-theme button[aria-pressed='true'] {
-  background: var(--caramel-solid);
-  color: var(--caramel-solid-contrast);
+  background: var(--_caramel-solid);
+  color: var(--_caramel-solid-contrast);
 }
 
 .demo-theme button:focus-visible {
-  outline: var(--caramel-focus-ring);
+  outline: var(--_caramel-focus-ring);
   outline-offset: var(--caramel-focus-offset);
 }
 
 .demo-resolved {
   align-self: center;
   padding-inline: 0.5rem;
-  color: var(--caramel-muted);
+  color: var(--_caramel-muted);
   font-size: 0.85rem;
 }
 
@@ -122,7 +122,7 @@ body {
 }
 
 .demo-panel {
-  background: var(--caramel-surface);
+  background: var(--_caramel-surface);
   border-radius: var(--caramel-radius-panel);
   padding: 1.25rem;
   align-self: start;
@@ -140,7 +140,7 @@ body {
 
 .demo-muted {
   margin: 0 0 0.75rem;
-  color: var(--caramel-muted);
+  color: var(--_caramel-muted);
   font-size: 0.9rem;
 }
 
@@ -157,18 +157,18 @@ body {
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0.5rem 0.75rem;
-  background: var(--caramel-raised);
+  background: var(--_caramel-raised);
   border-radius: var(--caramel-radius-box);
   font-size: 0.9rem;
 }
 
 .demo-list li[data-active] {
-  outline: 2px solid var(--caramel-primary);
+  outline: 2px solid var(--_caramel-primary);
   outline-offset: -2px;
 }
 
 .demo-list .type {
-  color: var(--caramel-accent-text);
+  color: var(--_caramel-accent-text);
   font-weight: 600;
   text-transform: capitalize;
 }
@@ -180,7 +180,7 @@ body {
 }
 
 .demo-log li {
-  color: var(--caramel-muted);
+  color: var(--_caramel-muted);
 }
 
 /* Segment band legend: same tokens, ring and stripes as the timeline */

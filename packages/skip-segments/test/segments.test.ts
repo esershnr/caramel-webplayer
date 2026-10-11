@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   findActiveIndex,
+  geometryInLane,
+  laneRange,
   normalizeSegments,
   parseAutoSkip,
   segmentAtRatio,
@@ -88,6 +90,29 @@ describe('skipTarget and segmentGeometry', () => {
       width: 100 - 100 / 1.2,
     });
     expect(segmentGeometry({ start: 0, end: 10, type: 'intro' }, 0)).toBeNull();
+  });
+});
+
+describe('laneRange and geometryInLane', () => {
+  it('removes the chapter gaps in percent of the track', () => {
+    // 400px track, 4px spacing, half a gap (2px = 0.5%) on each inner edge.
+    expect(laneRange(44, 80, 0.5, 0.5, 4, 400)).toEqual({ from: 44.5, to: 79.5 });
+    expect(laneRange(0, 44, 0, 0.5, 4, 400)).toEqual({ from: 0, to: 43.5 });
+    expect(laneRange(44, 80, 0.5, 0.5, 4, 0)).toEqual({ from: 44, to: 80 });
+  });
+
+  it('puts a band that spans a chapter boundary in both lanes', () => {
+    const first = laneRange(0, 44, 0, 0.5, 4, 400);
+    const second = laneRange(44, 80, 0.5, 0.5, 4, 400);
+    const third = laneRange(80, 100, 0.5, 0, 4, 400);
+    const band = { start: 36, width: 20 };
+    expect([first, second, third].map((lane) => geometryInLane(band, lane))).toEqual([true, true, false]);
+  });
+
+  it('skips a band that only touches the gap', () => {
+    const second = laneRange(44, 80, 0.5, 0.5, 4, 400);
+    expect(geometryInLane({ start: 40, width: 4.3 }, second)).toBe(false);
+    expect(geometryInLane({ start: 79.6, width: 5 }, second)).toBe(false);
   });
 });
 

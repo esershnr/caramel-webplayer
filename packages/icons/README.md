@@ -31,5 +31,7 @@ import { Icon, MorphIcon } from '@esershnr/caramel-icons/react';
 
 More: [root README](https://github.com/esershnr/caramel-webplayer#readme).
 
+Changes per version: [CHANGELOG.md](https://github.com/esershnr/caramel-webplayer/blob/main/packages/icons/CHANGELOG.md).
+
 MIT License, Copyright (c) 2026 Eser Şahiner. Lucide (ISC) and Morphicons (MIT)
 are credited in `NOTICE`.

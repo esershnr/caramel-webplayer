@@ -2,45 +2,59 @@
  * esersahiner.com player tokens (--caramel-*).
  * Source of truth for colors: the esersahiner.com site theme (latte D3 / bitter).
  *
- * Every color is declared once with light-dark(); the active scheme is decided
- * on the `.caramel-theme` scope so the host page's own color-scheme is left alone.
- * Precedence: data-theme="light|dark" or .light/.dark on <html> (or any
- * ancestor) wins, otherwise prefers-color-scheme.
+ * Every themed color has a light and a dark value (--caramel-<role>-light /
+ * -dark). The active scheme is decided on the `.caramel-theme` scope, so the
+ * host page's own color-scheme is left alone. Precedence: data-theme="light|dark"
+ * or .light/.dark on <html> (or any ancestor) wins, otherwise prefers-color-scheme.
  *
- * Host pages override any token by redefining it on :root or an ancestor.
+ * Overriding, on :root or any ancestor of the scope:
+ *   --caramel-<role>          one value for both schemes
+ *   --caramel-<role>-light    light scheme only (same for -dark)
+ *
+ * No light-dark() on purpose: CSS minifiers lower it for older targets
+ * (lightningcss in Vite's default build) into variables that only exist on the
+ * element carrying color-scheme, so tokens declared on :root broke in
+ * production builds. The scope resolves the values itself instead (see
+ * "Scheme resolution" below), which needs nothing newer than custom properties.
  */
 
 :root {
   /* Surfaces (outside the video frame: playlist, chapter list, menus, cards) */
-  --caramel-bg: light-dark(#fbf7f0, #141414);
-  --caramel-surface: light-dark(#ece5da, #2d2d2d);
-  --caramel-raised: light-dark(#faf7f2, #242424);
-  --caramel-divider: light-dark(#d2c4b0, #454545);
-  --caramel-border: light-dark(#8a5f36, #8a8a8a);
+  --caramel-bg-light: #fbf7f0;
+  --caramel-bg-dark: #141414;
+  --caramel-surface-light: #ece5da;
+  --caramel-surface-dark: #2d2d2d;
+  --caramel-raised-light: #faf7f2;
+  --caramel-raised-dark: #242424;
+  --caramel-divider-light: #d2c4b0;
+  --caramel-divider-dark: #454545;
+  --caramel-border-light: #8a5f36;
+  --caramel-border-dark: #8a8a8a;
 
   /* Text */
-  --caramel-text: light-dark(#2a1606, #ffffff);
-  --caramel-muted: light-dark(#553821, #b8b0a6);
+  --caramel-text-light: #2a1606;
+  --caramel-text-dark: #ffffff;
+  --caramel-muted-light: #553821;
+  --caramel-muted-dark: #b8b0a6;
 
   /* Indicator: selection, focus ring, active chapter marker */
-  --caramel-primary: light-dark(#5e3310, #c9945c);
+  --caramel-primary-light: #5e3310;
+  --caramel-primary-dark: #c9945c;
 
   /* Solid fill: buttons, active list item */
-  --caramel-solid: light-dark(#5e3310, #8a5a2b);
+  --caramel-solid-light: #5e3310;
+  --caramel-solid-dark: #8a5a2b;
 
   /* Caramel accent: decoration only (progress fill, lines). Never for text. */
   --caramel-accent: #c9945c;
   /* Readable caramel for text and icons */
-  --caramel-accent-text: light-dark(#653d19, #d9ae7e);
+  --caramel-accent-text-light: #653d19;
+  --caramel-accent-text-dark: #d9ae7e;
 
-  /* Derived roles. Everything below follows the main tokens above, so a site
-     that overrides only the main tokens gets matching hovers and contrasts.
-     Mixing with --caramel-text darkens in light mode and lightens in dark mode. */
-  --caramel-raised-hover: color-mix(in srgb, var(--caramel-raised), var(--caramel-text) 8%);
-  --caramel-primary-hover: color-mix(in srgb, var(--caramel-primary), var(--caramel-text) 15%);
-  --caramel-primary-contrast: light-dark(var(--caramel-surface), var(--caramel-bg));
-  --caramel-solid-hover: color-mix(in srgb, var(--caramel-solid), var(--caramel-text) 15%);
-  --caramel-solid-contrast: light-dark(var(--caramel-surface), var(--caramel-text));
+  /* Derived roles (raised-hover, primary-hover, primary-contrast, solid-hover,
+     solid-contrast, focus-ring) are computed in the scheme resolution block
+     from the main roles, so a site that overrides only the main tokens gets
+     matching hovers and contrasts. They can be overridden like the others. */
 
   /* Overlay layer on top of the video. Theme independent: stays dark so the
      controls read on any frame. Only the accent follows the palette. */
@@ -79,8 +93,7 @@
   /* Stripes on bands of auto-skipped types */
   --caramel-segment-hatch: color-mix(in srgb, black 40%, transparent);
 
-  /* Focus ring: 2px solid primary, 2px offset */
-  --caramel-focus-ring: 2px solid var(--caramel-primary);
+  /* Focus ring: 2px solid primary (resolved below), 2px offset */
   --caramel-focus-offset: 2px;
 
   /* Corners: panel 24 -> inner box 16 -> chip pill */
@@ -122,16 +135,97 @@
   }
 }
 
-/* Scheme resolution scope. Put .caramel-theme on player wrappers and panels. */
+/*
+ * Scheme resolution. Put .caramel-theme on player wrappers and panels.
+ *
+ * Packages read the resolved --_caramel-<role> values, never the inputs above.
+ * Each scope picks light or dark with two switches: the active one is
+ * `initial` (so var() falls back to its value), the other is empty (so it adds
+ * nothing). `var(--_caramel-light, A) var(--_caramel-dark, B)` is then A in
+ * light and B in dark. :root resolves too (always light), so a token used
+ * outside any scope still has a value.
+ */
+:root,
+.caramel-theme {
+  --_caramel-light: initial;
+  --_caramel-dark: ;
+
+  --_caramel-bg: var(
+    --caramel-bg,
+    var(--_caramel-light, var(--caramel-bg-light)) var(--_caramel-dark, var(--caramel-bg-dark))
+  );
+  --_caramel-surface: var(
+    --caramel-surface,
+    var(--_caramel-light, var(--caramel-surface-light)) var(--_caramel-dark, var(--caramel-surface-dark))
+  );
+  --_caramel-raised: var(
+    --caramel-raised,
+    var(--_caramel-light, var(--caramel-raised-light)) var(--_caramel-dark, var(--caramel-raised-dark))
+  );
+  --_caramel-divider: var(
+    --caramel-divider,
+    var(--_caramel-light, var(--caramel-divider-light)) var(--_caramel-dark, var(--caramel-divider-dark))
+  );
+  --_caramel-border: var(
+    --caramel-border,
+    var(--_caramel-light, var(--caramel-border-light)) var(--_caramel-dark, var(--caramel-border-dark))
+  );
+  --_caramel-text: var(
+    --caramel-text,
+    var(--_caramel-light, var(--caramel-text-light)) var(--_caramel-dark, var(--caramel-text-dark))
+  );
+  --_caramel-muted: var(
+    --caramel-muted,
+    var(--_caramel-light, var(--caramel-muted-light)) var(--_caramel-dark, var(--caramel-muted-dark))
+  );
+  --_caramel-primary: var(
+    --caramel-primary,
+    var(--_caramel-light, var(--caramel-primary-light)) var(--_caramel-dark, var(--caramel-primary-dark))
+  );
+  --_caramel-solid: var(
+    --caramel-solid,
+    var(--_caramel-light, var(--caramel-solid-light)) var(--_caramel-dark, var(--caramel-solid-dark))
+  );
+  --_caramel-accent-text: var(
+    --caramel-accent-text,
+    var(--_caramel-light, var(--caramel-accent-text-light)) var(--_caramel-dark, var(--caramel-accent-text-dark))
+  );
+
+  /* Derived roles. Mixing with text darkens in light and lightens in dark. */
+  --_caramel-raised-hover: var(
+    --caramel-raised-hover,
+    color-mix(in srgb, var(--_caramel-raised), var(--_caramel-text) 8%)
+  );
+  --_caramel-primary-hover: var(
+    --caramel-primary-hover,
+    color-mix(in srgb, var(--_caramel-primary), var(--_caramel-text) 15%)
+  );
+  --_caramel-primary-contrast: var(
+    --caramel-primary-contrast,
+    var(--_caramel-light, var(--_caramel-surface)) var(--_caramel-dark, var(--_caramel-bg))
+  );
+  --_caramel-solid-hover: var(
+    --caramel-solid-hover,
+    color-mix(in srgb, var(--_caramel-solid), var(--_caramel-text) 15%)
+  );
+  --_caramel-solid-contrast: var(
+    --caramel-solid-contrast,
+    var(--_caramel-light, var(--_caramel-surface)) var(--_caramel-dark, var(--_caramel-text))
+  );
+  --_caramel-focus-ring: var(--caramel-focus-ring, 2px solid var(--_caramel-primary));
+}
+
 .caramel-theme {
   color-scheme: light;
-  color: var(--caramel-text);
+  color: var(--_caramel-text);
   font-family: var(--caramel-font-body);
 }
 
 @media (prefers-color-scheme: dark) {
   .caramel-theme {
     color-scheme: dark;
+    --_caramel-light: ;
+    --_caramel-dark: initial;
   }
 }
 
@@ -141,6 +235,8 @@
 [data-theme='light'] .caramel-theme,
 .caramel-theme[data-theme='light'] {
   color-scheme: light;
+  --_caramel-light: initial;
+  --_caramel-dark: ;
 }
 
 :root[data-theme='dark'] .caramel-theme,
@@ -148,6 +244,8 @@
 [data-theme='dark'] .caramel-theme,
 .caramel-theme[data-theme='dark'] {
   color-scheme: dark;
+  --_caramel-light: ;
+  --_caramel-dark: initial;
 }
 
 /* Utilities shared by every package */
@@ -161,6 +259,6 @@
 }
 
 .caramel-focusable:focus-visible {
-  outline: var(--caramel-focus-ring);
+  outline: var(--_caramel-focus-ring);
   outline-offset: var(--caramel-focus-offset);
 }

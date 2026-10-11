@@ -116,8 +116,14 @@ changelog, from the user's point of view. Commit the generated
 `.changeset/*.md` file with your change. Documentation, tests, CI and the
 private packages (`scripts/*`, `examples/*`) need no changeset.
 
+The changeset text becomes the package's `CHANGELOG.md` entry and the GitHub
+release notes, so write it for someone upgrading: what changed, what they
+need to do (if anything), no internal details.
+
 After merge, a "Version Packages" pull request collects the pending
-changesets; merging it publishes to npm from CI. Contributors never publish.
+changesets; merging it publishes to npm from CI, tags every released package
+as `@esershnr/caramel-<package>@<version>` and opens a GitHub release.
+Contributors never publish.
 
 ## Adding a new package
 

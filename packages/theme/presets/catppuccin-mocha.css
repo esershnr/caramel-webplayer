@@ -25,18 +25,30 @@
  * 5.7 (Latte), ring/band 7.1 or more. Chip text 8.2 or more.
  */
 :root {
-  --caramel-bg: light-dark(#eff1f5, #1e1e2e);
-  --caramel-surface: light-dark(#e6e9ef, #313244);
-  --caramel-raised: light-dark(#dce0e8, #45475a);
-  --caramel-divider: light-dark(#bcc0cc, #585b70);
-  --caramel-border: light-dark(#6c6f85, #9399b2);
-  --caramel-text: light-dark(#4c4f69, #cdd6f4);
-  --caramel-muted: light-dark(#5c5f77, #bac2de);
-  --caramel-primary: light-dark(#c2470a, #fab387);
-  --caramel-solid: light-dark(#c2470a, #fab387);
-  --caramel-solid-contrast: light-dark(#ffffff, #1e1e2e);
-  --caramel-accent: light-dark(#fe640b, #fab387);
-  --caramel-accent-text: light-dark(#a53b06, #fab387);
+  --caramel-bg-light: #eff1f5;
+  --caramel-bg-dark: #1e1e2e;
+  --caramel-surface-light: #e6e9ef;
+  --caramel-surface-dark: #313244;
+  --caramel-raised-light: #dce0e8;
+  --caramel-raised-dark: #45475a;
+  --caramel-divider-light: #bcc0cc;
+  --caramel-divider-dark: #585b70;
+  --caramel-border-light: #6c6f85;
+  --caramel-border-dark: #9399b2;
+  --caramel-text-light: #4c4f69;
+  --caramel-text-dark: #cdd6f4;
+  --caramel-muted-light: #5c5f77;
+  --caramel-muted-dark: #bac2de;
+  --caramel-primary-light: #c2470a;
+  --caramel-primary-dark: #fab387;
+  --caramel-solid-light: #c2470a;
+  --caramel-solid-dark: #fab387;
+  --caramel-solid-contrast-light: #ffffff;
+  --caramel-solid-contrast-dark: #1e1e2e;
+  --caramel-accent-light: #fe640b;
+  --caramel-accent-dark: #fab387;
+  --caramel-accent-text-light: #a53b06;
+  --caramel-accent-text-dark: #fab387;
   --caramel-segment-intro: #94e2d5;
   --caramel-segment-recap: #cba6f7;
   --caramel-segment-outro: #89b4fa;

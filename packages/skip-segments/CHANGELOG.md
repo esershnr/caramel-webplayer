@@ -5,3 +5,7 @@
 ### Patch Changes
 
 - dcc58ca: Bind to the player when `<caramel-skip-segments>` is registered before `<video-player>`. The element now waits for the undefined ancestor and requests the player context again once it is defined.
+
+## 0.1.0
+
+First public release.

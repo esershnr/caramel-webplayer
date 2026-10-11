@@ -17,10 +17,10 @@ caramel-chapters-panel {
   overflow: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: var(--caramel-divider) transparent;
+  scrollbar-color: var(--_caramel-divider) transparent;
   padding: var(--caramel-chapters-padding, 1rem);
-  background: var(--caramel-surface);
-  color: var(--caramel-text);
+  background: var(--_caramel-surface);
+  color: var(--_caramel-text);
   border-radius: var(--caramel-radius-panel);
   font-family: var(--caramel-font-body);
   font-size: 0.9375rem;
@@ -30,7 +30,7 @@ caramel-chapters-panel {
 caramel-chapters-panel .caramel-chapters-heading {
   margin: 0 0 0.75rem;
   padding: 0 0.25rem 0.625rem;
-  border-bottom: 1px solid var(--caramel-divider);
+  border-bottom: 1px solid var(--_caramel-divider);
   font-size: 1rem;
   letter-spacing: 0.01em;
   line-height: 1.3;
@@ -44,7 +44,7 @@ caramel-chapters-panel .caramel-chapters-empty[hidden] {
 caramel-chapters-panel .caramel-chapters-empty {
   margin: 0;
   padding: 0.5rem 0.25rem;
-  color: var(--caramel-muted);
+  color: var(--_caramel-muted);
 }
 
 caramel-chapters-panel .caramel-chapters-list {
@@ -76,7 +76,7 @@ caramel-chapters-panel .caramel-chapter-button {
   padding: 0.625rem 0.875rem 0.625rem 1.125rem;
   border: 0;
   border-radius: var(--caramel-radius-box);
-  background: var(--caramel-raised);
+  background: var(--_caramel-raised);
   color: inherit;
   font: inherit;
   text-align: start;
@@ -93,7 +93,7 @@ caramel-chapters-panel .caramel-chapter-button::before {
   inset-inline-start: 0.375rem;
   width: 3px;
   border-radius: var(--caramel-radius-chip);
-  background: var(--caramel-primary);
+  background: var(--_caramel-primary);
   opacity: 0;
   transform: scaleY(0.4);
   transition:
@@ -102,7 +102,7 @@ caramel-chapters-panel .caramel-chapter-button::before {
 }
 
 caramel-chapters-panel .caramel-chapter-button:hover {
-  background: var(--caramel-raised-hover);
+  background: var(--_caramel-raised-hover);
 }
 
 caramel-chapters-panel .caramel-chapter-button:active {
@@ -111,12 +111,12 @@ caramel-chapters-panel .caramel-chapter-button:active {
 }
 
 caramel-chapters-panel .caramel-chapter-button:focus-visible {
-  outline: var(--caramel-focus-ring);
+  outline: var(--_caramel-focus-ring);
   outline-offset: var(--caramel-focus-offset);
 }
 
 caramel-chapters-panel .caramel-chapter[data-active] .caramel-chapter-button {
-  outline: 2px solid var(--caramel-primary);
+  outline: 2px solid var(--_caramel-primary);
   outline-offset: -2px;
 }
 
@@ -130,14 +130,14 @@ caramel-chapters-panel .caramel-chapter[data-active] .caramel-chapter-button::be
 }
 
 caramel-chapters-panel .caramel-chapter-time {
-  color: var(--caramel-muted);
+  color: var(--_caramel-muted);
   font-size: 0.875em;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 caramel-chapters-panel .caramel-chapter[data-active] .caramel-chapter-time {
-  color: var(--caramel-accent-text);
+  color: var(--_caramel-accent-text);
 }
 
 caramel-chapters-panel .caramel-chapter-title {

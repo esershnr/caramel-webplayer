@@ -173,16 +173,29 @@ re-encoding and uploading to a new version folder (`v2/`), see
 
 ## Theming / Renkleri değiştirme
 
-Every color is a CSS custom property on `:root`, declared once with
-`light-dark(light, dark)`. Override the main tokens and every hover, contrast
-and overlay derivative follows (they are `color-mix()` expressions over the
-main tokens, see `packages/theme/styles/tokens.css`).
+Every color is a CSS custom property. Themed roles have a light and a dark
+value (`--caramel-bg-light`, `--caramel-bg-dark`); each `.caramel-theme` scope
+picks one for the active scheme. Override the main tokens and every hover,
+contrast and overlay derivative follows (they are `color-mix()` expressions over
+the main tokens, see `packages/theme/styles/tokens.css`).
+
+Two ways to override a themed role, on `:root` or any ancestor of the scope:
+
+- `--caramel-<role>`: one value for both schemes (wins over the pair).
+- `--caramel-<role>-light` / `--caramel-<role>-dark`: one scheme only.
+
+The tokens need no bundler setting: they use plain custom properties, not
+`light-dark()`, so a CSS minifier that lowers modern color syntax for older
+targets (lightningcss in Vite's default build) has nothing to rewrite.
 
 TR: Renkler `--caramel-*` değişkenleridir; yalnız ana token'ları ezmeniz yeterlidir,
-hover ve türevler kendiliğinden uyar. Override'lar `tokens.css`'ten SONRA
+hover ve türevler kendiliğinden uyar. `--caramel-<rol>` iki temada da geçerli tek
+değerdir, `--caramel-<rol>-light` / `-dark` yalnız o temayı değiştirir. Override'lar `tokens.css`'ten SONRA
 yüklenmelidir.
 
 ### Main tokens
+
+Columns are the `-light` / `-dark` defaults; the bare name overrides both.
 
 | Token | Role | Light (latte) | Dark (bitter) |
 | --- | --- | --- | --- |
@@ -227,8 +240,10 @@ segment bands have their own tokens (below).
 
 ```css
 :root {
-  --caramel-primary: light-dark(#1d4ed8, #93c5fd);
-  --caramel-solid: light-dark(#1d4ed8, #1e40af);
+  --caramel-primary-light: #1d4ed8;
+  --caramel-primary-dark: #93c5fd;
+  --caramel-solid-light: #1d4ed8;
+  --caramel-solid-dark: #1e40af;
 }
 ```
 
@@ -250,8 +265,10 @@ tokens inherit, so the wrapper's values win inside it:
 
 ```css
 .player-mocha {
-  --caramel-bg: light-dark(#eff1f5, #1e1e2e);
-  --caramel-surface: light-dark(#e6e9ef, #313244);
+  --caramel-bg-light: #eff1f5;
+  --caramel-bg-dark: #1e1e2e;
+  --caramel-surface-light: #e6e9ef;
+  --caramel-surface-dark: #313244;
   --caramel-accent: #fab387;
   /* ... */
 }
@@ -344,9 +361,34 @@ The skin template (`packages/skin/src/template.ts`) is generated from
 `skin.html` by `pnpm --filter @esershnr/caramel-skin build:template`; run it
 after editing `skin.html`.
 
+## Releases and changelog
+
+Every package is versioned on its own with [Changesets](https://github.com/changesets/changesets)
+and published to npm from CI with [provenance](https://docs.npmjs.com/generating-provenance-statements).
+
+- What changed: each package has a `CHANGELOG.md` (for example
+  [`packages/webplayer/CHANGELOG.md`](packages/webplayer/CHANGELOG.md)), also
+  shipped in the npm package.
+- Every release gets a git tag `@esershnr/caramel-<package>@<version>` and a
+  [GitHub release](https://github.com/esershnr/caramel-webplayer/releases) with
+  the same notes. Watch the repository with "Custom > Releases" to be notified.
+- Versioning: [SemVer](https://semver.org). While the packages are on 0.x, a
+  minor release (0.1 to 0.2) may change behavior and says so in the changelog;
+  patch releases only fix bugs. The packages depend on each other with exact
+  versions, so install them from the same release (the umbrella
+  `@esershnr/caramel-webplayer` does that for you).
+
+## Questions and support
+
+Usage questions and ideas: [GitHub Discussions](https://github.com/esershnr/caramel-webplayer/discussions).
+Bugs and feature requests: [issues](https://github.com/esershnr/caramel-webplayer/issues/new/choose).
+Security problems: privately, see [SECURITY.md](SECURITY.md).
+
 ## Contributing
 
-Bug reports, fixes and ideas are welcome. Start with
+Bug reports, fixes and ideas are welcome. Issues labeled
+[good first issue](https://github.com/esershnr/caramel-webplayer/labels/good%20first%20issue)
+are a good place to begin. Start with
 [CONTRIBUTING.md](CONTRIBUTING.md) (setup, checks, commit format, changesets)
 and [docs/package-playbook.md](docs/package-playbook.md) (how packages are
 built). Please follow the [Code of Conduct](CODE_OF_CONDUCT.md) and report

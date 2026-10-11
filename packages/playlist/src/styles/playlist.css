@@ -21,8 +21,8 @@ caramel-playlist-panel {
   box-sizing: border-box;
   padding: 1rem;
   border-radius: var(--caramel-radius-panel);
-  background: var(--caramel-surface);
-  color: var(--caramel-text);
+  background: var(--_caramel-surface);
+  color: var(--_caramel-text);
   font-family: var(--caramel-font-body);
   font-size: 0.9375rem;
   line-height: 1.35;
@@ -60,14 +60,14 @@ caramel-playlist-panel .caramel-playlist-nav-button {
   padding: 0;
   border: 0;
   border-radius: var(--caramel-radius-chip);
-  background: var(--caramel-solid);
-  color: var(--caramel-solid-contrast);
+  background: var(--_caramel-solid);
+  color: var(--_caramel-solid-contrast);
   cursor: pointer;
   transition: transform var(--caramel-duration-instant) var(--caramel-ease-fill);
 }
 
 caramel-playlist-panel .caramel-playlist-nav-button:hover:not(:disabled) {
-  background: var(--caramel-solid-hover);
+  background: var(--_caramel-solid-hover);
 }
 
 caramel-playlist-panel .caramel-playlist-nav-button:active:not(:disabled) {
@@ -76,13 +76,13 @@ caramel-playlist-panel .caramel-playlist-nav-button:active:not(:disabled) {
 
 caramel-playlist-panel .caramel-playlist-nav-button:disabled {
   /* Keep the pill visible; only the glyph dims (stays above 3:1 on the pill). */
-  background: color-mix(in srgb, var(--caramel-solid) 55%, var(--caramel-surface));
-  color: color-mix(in srgb, var(--caramel-solid-contrast) 70%, var(--caramel-solid));
+  background: color-mix(in srgb, var(--_caramel-solid) 55%, var(--_caramel-surface));
+  color: color-mix(in srgb, var(--_caramel-solid-contrast) 70%, var(--_caramel-solid));
   cursor: default;
 }
 
 caramel-playlist-panel .caramel-playlist-nav-button:focus-visible {
-  outline: var(--caramel-focus-ring);
+  outline: var(--_caramel-focus-ring);
   outline-offset: var(--caramel-focus-offset);
 }
 
@@ -123,7 +123,7 @@ caramel-playlist-panel .caramel-playlist-row {
 }
 
 caramel-playlist-panel .caramel-playlist-row + .caramel-playlist-row {
-  border-top: 1px solid var(--caramel-divider);
+  border-top: 1px solid var(--_caramel-divider);
   padding-top: 0.5rem;
 }
 
@@ -138,7 +138,7 @@ caramel-playlist-panel .caramel-playlist-item {
   padding: 0.5rem 0.75rem 0.5rem 0.5rem;
   border: 0;
   border-radius: var(--caramel-radius-box);
-  background: var(--caramel-raised);
+  background: var(--_caramel-raised);
   color: inherit;
   font: inherit;
   text-align: start;
@@ -147,7 +147,7 @@ caramel-playlist-panel .caramel-playlist-item {
 }
 
 caramel-playlist-panel .caramel-playlist-item:hover {
-  background: var(--caramel-raised-hover);
+  background: var(--_caramel-raised-hover);
 }
 
 caramel-playlist-panel .caramel-playlist-item:active {
@@ -156,24 +156,24 @@ caramel-playlist-panel .caramel-playlist-item:active {
 }
 
 caramel-playlist-panel .caramel-playlist-item[data-active] {
-  outline: 2px solid var(--caramel-primary);
+  outline: 2px solid var(--_caramel-primary);
   outline-offset: -2px;
 }
 
 caramel-playlist-panel .caramel-playlist-item:focus-visible {
-  outline: var(--caramel-focus-ring);
+  outline: var(--_caramel-focus-ring);
   outline-offset: var(--caramel-focus-offset);
 }
 
 caramel-playlist-panel .caramel-playlist-number {
-  color: var(--caramel-muted);
+  color: var(--_caramel-muted);
   font-size: 0.875rem;
   font-variant-numeric: tabular-nums;
   text-align: center;
 }
 
 caramel-playlist-panel .caramel-playlist-item[data-active] .caramel-playlist-number {
-  color: var(--caramel-primary);
+  color: var(--_caramel-primary);
   font-weight: 600;
 }
 
@@ -183,7 +183,7 @@ caramel-playlist-panel .caramel-playlist-thumb {
   width: 100%;
   overflow: hidden;
   border-radius: var(--caramel-radius-box);
-  background: var(--caramel-divider);
+  background: var(--_caramel-divider);
 }
 
 caramel-playlist-panel .caramel-playlist-thumb > img {
@@ -209,7 +209,7 @@ caramel-playlist-panel .caramel-playlist-title {
 }
 
 caramel-playlist-panel .caramel-playlist-duration {
-  color: var(--caramel-muted);
+  color: var(--_caramel-muted);
   font-size: 0.8125rem;
   font-variant-numeric: tabular-nums;
 }
@@ -217,7 +217,7 @@ caramel-playlist-panel .caramel-playlist-duration {
 caramel-playlist-panel .caramel-playlist-empty {
   margin: 0;
   padding: 0.75rem 0.5rem;
-  color: var(--caramel-muted);
+  color: var(--_caramel-muted);
 }
 
 caramel-playlist-panel .caramel-playlist-empty[hidden] {

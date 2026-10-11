@@ -33,4 +33,6 @@ Place it inside the player (with `@esershnr/caramel-skin`, pass it in
 `extras`). Band colors: `--caramel-segment-intro/recap/outro/sponsor`. More:
 [root README](https://github.com/esershnr/caramel-webplayer#readme).
 
+Changes per version: [CHANGELOG.md](https://github.com/esershnr/caramel-webplayer/blob/main/packages/skip-segments/CHANGELOG.md).
+
 MIT License, Copyright (c) 2026 Eser Şahiner.

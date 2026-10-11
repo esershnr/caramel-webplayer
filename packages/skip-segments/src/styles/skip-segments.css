@@ -94,7 +94,8 @@ caramel-skip-segments {
    caramel fill (no band color can contrast with both the fill and the dark
    track on its own, see tokens.css). */
 .caramel-segment-markers,
-.caramel-segment-layer {
+.caramel-segment-layer,
+.caramel-segment-lane {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -116,14 +117,32 @@ media-time-slider[data-dragging] .caramel-segment-layer[data-played] {
 .caramel-segment-marker {
   position: absolute;
   top: 50%;
-  left: var(--caramel-seg-start);
-  width: var(--caramel-seg-width);
+  /* The band's part inside its lane's chapter, bounded like the chapter track:
+     the chapter range minus half a gap on inner edges (Video.js values copied
+     onto the lane). A band that spans two chapters is two rounded pieces. */
+  left: max(
+    var(--caramel-seg-start),
+    calc(var(--caramel-lane-start, 0%) + var(--media-spacing, 4px) * var(--caramel-lane-inset-start, 0))
+  );
+  right: max(
+    calc(100% - var(--caramel-seg-end)),
+    calc(100% - var(--caramel-lane-end, 100%) + var(--media-spacing, 4px) * var(--caramel-lane-inset-end, 0))
+  );
   height: var(--media-spacing, 4px);
   translate: 0 -50%;
   border-radius: var(--caramel-radius-chip);
   background-color: var(--caramel-segment-color);
   box-shadow: 0 0 0 1px var(--caramel-segment-ring);
-  transition: scale var(--caramel-duration-fast) var(--caramel-ease-enter);
+  /* Height follows the chapter track (same duration and easing as the skin's
+     track transition); scale is the active-band pulse. */
+  transition:
+    height var(--media-duration-slow, 150ms) var(--media-ease-out, cubic-bezier(0, 0, 0.2, 1)),
+    scale var(--caramel-duration-fast) var(--caramel-ease-enter);
+}
+
+/* The chapter under the pointer grows its track; its lane grows the bands. */
+.caramel-segment-lane[data-highlighted] .caramel-segment-marker {
+  height: calc(var(--media-spacing, 4px) * 1.75);
 }
 
 .caramel-segment-layer[data-played] .caramel-segment-marker {

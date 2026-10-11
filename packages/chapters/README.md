@@ -27,4 +27,6 @@ import { ChaptersPanel } from '@esershnr/caramel-chapters/react';
 
 More: [root README](https://github.com/esershnr/caramel-webplayer#readme).
 
+Changes per version: [CHANGELOG.md](https://github.com/esershnr/caramel-webplayer/blob/main/packages/chapters/CHANGELOG.md).
+
 MIT License, Copyright (c) 2026 Eser Şahiner.
