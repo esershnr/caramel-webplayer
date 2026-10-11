@@ -1,6 +1,6 @@
 {
   "name": "@esershnr/caramel-icons",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lucide icon data and a morphing <caramel-morph-icon> element for Caramel Webplayer (Video.js 10)",
   "keywords": [
     "videojs",

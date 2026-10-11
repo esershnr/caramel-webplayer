@@ -1,6 +1,6 @@
 {
   "name": "@esershnr/caramel-chapters",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Chapter list panel for Video.js 10, fed by the player's chapters track",
   "keywords": [
     "videojs",
