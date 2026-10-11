@@ -7,20 +7,20 @@ adding Caramel Webplayer to the esersahiner.com site (Next.js App Router).
 
 ## 1. Packages
 
-Version 0.1.0 from npm. The shortest path is the umbrella package (it pulls in all
+Install the latest release from npm (see the package changelogs for what changed). The shortest path is the umbrella package (it pulls in all
 six packages; `/react` exposes every wrapper, `/webplayer.css` provides the tokens
 plus the skin CSS):
 
 ```sh
-npm install @esershnr/caramel-webplayer@0.1.0 @videojs/html@10.0.1
+npm install @esershnr/caramel-webplayer @videojs/html@10.0.1
 ```
 
 Modular install, if you only want what you need:
 
 ```sh
-npm install @esershnr/caramel-theme@0.1.0 @esershnr/caramel-skin@0.1.0 \
-  @esershnr/caramel-skip-segments@0.1.0 @esershnr/caramel-chapters@0.1.0 \
-  @esershnr/caramel-playlist@0.1.0 @videojs/html@10.0.1
+npm install @esershnr/caramel-theme @esershnr/caramel-skin \
+  @esershnr/caramel-skip-segments @esershnr/caramel-chapters \
+  @esershnr/caramel-playlist @videojs/html@10.0.1
 ```
 
 `@videojs/html` (10.0.x) is a peer dependency, so it is installed explicitly.
