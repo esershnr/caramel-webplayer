@@ -112,3 +112,31 @@ export function segmentGeometry(segment: Segment, duration: number): SegmentGeom
   const end = Math.min(100, Math.max(0, (segment.end / duration) * 100));
   return { start, width: Math.max(0, end - start) };
 }
+
+/** Drawn range of a timeline chapter, in percent of the track. */
+export interface LaneRange {
+  from: number;
+  to: number;
+}
+
+/**
+ * The part of a chapter (start and end in percent) that its track covers: the
+ * skin leaves `spacing * inset` pixels free on each inner edge as the gap
+ * between chapters. Gaps are ignored while the track has no width yet.
+ */
+export function laneRange(
+  start: number,
+  end: number,
+  insetStart: number,
+  insetEnd: number,
+  spacing: number,
+  width: number,
+): LaneRange {
+  const gap = (inset: number) => (width > 0 ? ((spacing * inset) / width) * 100 : 0);
+  return { from: start + gap(insetStart), to: end - gap(insetEnd) };
+}
+
+/** True when a band reaches into the lane, past its gaps. */
+export function geometryInLane(geo: SegmentGeometry, lane: LaneRange): boolean {
+  return Math.min(geo.start + geo.width, lane.to) - Math.max(geo.start, lane.from) > 0;
+}

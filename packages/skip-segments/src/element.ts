@@ -11,7 +11,16 @@ import {
 import { createIconElement, icons } from '@esershnr/caramel-icons';
 import { SEGMENT_DEFAULTS, SEGMENT_KEYS, SKIP_DEFAULTS, SKIP_KEYS, registerSkipSegmentsI18n } from './i18n.js';
 import { SkipModel } from './model.js';
-import { parseAutoSkip, segmentAtRatio, segmentGeometry, type AutoSkipConfig, type Segment } from './segments.js';
+import {
+  geometryInLane,
+  laneRange,
+  parseAutoSkip,
+  segmentAtRatio,
+  segmentGeometry,
+  type AutoSkipConfig,
+  type LaneRange,
+  type Segment,
+} from './segments.js';
 
 /** HTMLElement stand-in so the module can be imported during SSR. */
 const Base: typeof UIElement =
@@ -62,6 +71,10 @@ export class CaramelSkipSegmentsElement extends Base {
   #label: HTMLSpanElement | null = null;
   #markers: HTMLDivElement | null = null;
   #markerDuration = 0;
+  /** Chapter ranges the lanes were built for (see readLanes). */
+  #laneSig = '';
+  /** Watches the slider's chapters: new ranges rebuild, highlight is mirrored. */
+  #chapterObserver: MutationObserver | null = null;
   /** Pointer listeners on the time slider, for the preview card chip. */
   #sliderEvents: AbortController | null = null;
   #chip: HTMLSpanElement | null = null;
@@ -272,6 +285,12 @@ export class CaramelSkipSegmentsElement extends Base {
    * base layer for the unplayed part and a lighter one clipped to the played
    * part (`--media-slider-fill`), so progress stays readable inside a band.
    * Bands of auto-skipped types carry `data-auto` (striped).
+   *
+   * Each layer holds one lane per timeline chapter. A lane draws the part of
+   * every band that falls inside its chapter, bounded like the chapter track
+   * (gaps included), so a band that spans two chapters becomes two rounded
+   * pieces. The lane of the chapter under the pointer grows with its track
+   * (the chapter's `data-highlighted` is mirrored onto the lane).
    */
   #renderMarkers(duration: number, active: Segment | null): void {
     if (this.hasAttribute('no-markers')) {
@@ -290,42 +309,90 @@ export class CaramelSkipSegmentsElement extends Base {
       this.#listenToSlider(slider);
     }
 
-    if (duration !== this.#markerDuration) {
+    const lanes = readLanes(slider);
+    const laneSig = lanesSignature(lanes);
+    const segments = this.#model.segments.filter((s) => segmentGeometry(s, duration)?.width);
+    if (duration !== this.#markerDuration || laneSig !== this.#laneSig) {
       this.#markerDuration = duration;
+      this.#laneSig = laneSig;
       const auto = this.#model.options.autoSkip;
       const layers = [false, true].map((played) => {
         const layer = document.createElement('div');
         layer.className = 'caramel-segment-layer';
         if (played) layer.dataset['played'] = '';
-        for (const segment of this.#model.segments) {
-          const geo = segmentGeometry(segment, duration);
-          if (!geo || geo.width <= 0) continue;
-          const marker = document.createElement('span');
-          marker.className = 'caramel-segment-marker';
-          marker.dataset['type'] = segment.type;
-          if (auto[segment.type]) marker.dataset['auto'] = '';
-          marker.style.setProperty('--caramel-seg-start', `${geo.start}%`);
-          marker.style.setProperty('--caramel-seg-width', `${geo.width}%`);
-          layer.append(marker);
+        for (const range of lanes) {
+          const lane = document.createElement('div');
+          lane.className = 'caramel-segment-lane';
+          lane.style.cssText = range.style;
+          segments.forEach((segment, index) => {
+            const geo = segmentGeometry(segment, duration)!;
+            if (!geometryInLane(geo, range)) return;
+            const marker = document.createElement('span');
+            marker.className = 'caramel-segment-marker';
+            marker.dataset['type'] = segment.type;
+            marker.dataset['index'] = String(index);
+            if (auto[segment.type]) marker.dataset['auto'] = '';
+            marker.style.setProperty('--caramel-seg-start', `${geo.start}%`);
+            marker.style.setProperty('--caramel-seg-end', `${geo.start + geo.width}%`);
+            lane.append(marker);
+          });
+          layer.append(lane);
         }
         return layer;
       });
       this.#markers.replaceChildren(...layers);
     }
+    this.#syncHighlight(lanes);
 
-    const segments = this.#model.segments.filter((s) => segmentGeometry(s, duration)?.width);
+    for (const marker of this.#markers.querySelectorAll<HTMLElement>('.caramel-segment-marker')) {
+      marker.toggleAttribute('data-active', segments[Number(marker.dataset['index'])] === active);
+    }
+  }
+
+  /** Copies the chapters' `data-highlighted` onto the matching lanes. */
+  #syncHighlight(lanes: readonly Lane[]): void {
+    if (!this.#markers) return;
     for (const layer of this.#markers.children) {
       const children = layer.children;
       for (let i = 0; i < children.length; i++) {
-        children[i]?.toggleAttribute('data-active', segments[i] === active);
+        children[i]?.toggleAttribute('data-highlighted', lanes[i]?.highlighted ?? false);
       }
     }
+  }
+
+  /**
+   * Video.js renders the chapters after the track loads and flips
+   * `data-highlighted` on hover; neither updates this element. New ranges
+   * rebuild the lanes, anything else only mirrors the highlight.
+   */
+  #observeChapters(slider: HTMLElement, signal: AbortSignal): void {
+    this.#chapterObserver?.disconnect();
+    const chapters = slider.querySelector('media-time-slider-chapters');
+    if (!chapters) return;
+    const observer = new MutationObserver(() => {
+      const lanes = readLanes(slider);
+      if (lanesSignature(lanes) !== this.#laneSig) {
+        this.requestUpdate();
+      } else {
+        this.#syncHighlight(lanes);
+      }
+    });
+    observer.observe(chapters, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['data-highlighted', 'style'],
+    });
+    this.#chapterObserver = observer;
+    signal.addEventListener('abort', () => observer.disconnect(), { once: true });
   }
 
   #removeMarkers(): void {
     this.#markers?.remove();
     this.#markers = null;
     this.#markerDuration = 0;
+    this.#laneSig = '';
+    this.#chapterObserver = null;
     this.#sliderEvents?.abort();
     this.#sliderEvents = null;
     this.#chip?.remove();
@@ -341,6 +408,7 @@ export class CaramelSkipSegmentsElement extends Base {
     this.#sliderEvents?.abort();
     this.#sliderEvents = new AbortController();
     const { signal } = this.#sliderEvents;
+    this.#observeChapters(slider, signal);
     const update = (event: PointerEvent) => {
       const rect = slider.getBoundingClientRect();
       const ratio = rect.width > 0 ? (event.clientX - rect.left) / rect.width : NaN;
@@ -375,6 +443,57 @@ export class CaramelSkipSegmentsElement extends Base {
   #emit(type: string, detail: unknown): void {
     this.dispatchEvent(new CustomEvent(type, { detail, bubbles: true, composed: true }));
   }
+}
+
+interface Lane extends LaneRange {
+  /** Range and gap insets, compared to decide when to rebuild. */
+  sig: string;
+  /** Inline style for the lane element. */
+  style: string;
+  highlighted: boolean;
+}
+
+/** One lane over the whole track, for sliders without chapters. */
+const FULL_LANE: Lane = { sig: 'full', style: '', from: 0, to: 100, highlighted: false };
+
+const lanesSignature = (lanes: readonly Lane[]): string => lanes.map((lane) => lane.sig).join('|');
+
+/**
+ * One lane per chapter element Video.js rendered in the slider, with the
+ * range (`--media-slider-chapter-start/end`) and the gap insets the skin gives
+ * it (`--media-chapter-inset-start/end`), so lanes line up with the tracks.
+ */
+function readLanes(slider: HTMLElement): Lane[] {
+  const host = slider.querySelector('media-time-slider-chapters');
+  if (!host) return [FULL_LANE];
+  const lanes: Lane[] = [];
+  const width = slider.getBoundingClientRect().width;
+  for (const chapter of host.children) {
+    if (!(chapter instanceof HTMLElement) || chapter.localName === 'template') continue;
+    const cs = getComputedStyle(chapter);
+    const start = cs.getPropertyValue('--media-slider-chapter-start').trim();
+    const end = cs.getPropertyValue('--media-slider-chapter-end').trim();
+    if (!start || !end) continue;
+    const insetStart = cs.getPropertyValue('--media-chapter-inset-start').trim() || '0';
+    const insetEnd = cs.getPropertyValue('--media-chapter-inset-end').trim() || '0';
+    const spacing = Number.parseFloat(cs.getPropertyValue('--media-spacing')) || 4;
+    lanes.push({
+      ...laneRange(
+        Number.parseFloat(start),
+        Number.parseFloat(end),
+        Number.parseFloat(insetStart),
+        Number.parseFloat(insetEnd),
+        spacing,
+        width,
+      ),
+      sig: `${start} ${end} ${insetStart} ${insetEnd}`,
+      style:
+        `--caramel-lane-start: ${start}; --caramel-lane-end: ${end}; ` +
+        `--caramel-lane-inset-start: ${insetStart}; --caramel-lane-inset-end: ${insetEnd};`,
+      highlighted: chapter.hasAttribute('data-highlighted'),
+    });
+  }
+  return lanes.length ? lanes : [FULL_LANE];
 }
 
 /** Local name of the closest ancestor that is a custom element not defined yet. */
