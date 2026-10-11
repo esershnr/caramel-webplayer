@@ -45,5 +45,7 @@ import { CaramelVideoSkin, SkipSegments } from '@esershnr/caramel-webplayer/reac
 
 Full guide, theming and the modular packages: [root README](https://github.com/esershnr/caramel-webplayer#readme).
 
+Changes per version: [CHANGELOG.md](https://github.com/esershnr/caramel-webplayer/blob/main/packages/webplayer/CHANGELOG.md).
+
 MIT License, Copyright (c) 2026 Eser Şahiner. The skin package it depends on is
 `MIT AND Apache-2.0` (files derived from the Video.js 10 default skin).

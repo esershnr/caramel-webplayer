@@ -39,6 +39,7 @@
     "dist",
     "styles",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "main": "./dist/index.js",

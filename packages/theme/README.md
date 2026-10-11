@@ -30,4 +30,6 @@ other player packages import `tokens.css` themselves.
 Token table, scheme rules and contrast guidance: see the
 [root README](https://github.com/esershnr/caramel-webplayer#theming--renkleri-değiştirme).
 
+Changes per version: [CHANGELOG.md](https://github.com/esershnr/caramel-webplayer/blob/main/packages/theme/CHANGELOG.md).
+
 MIT License, Copyright (c) 2026 Eser Şahiner.
