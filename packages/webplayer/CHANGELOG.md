@@ -1,5 +1,12 @@
 # @esershnr/caramel-webplayer
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [4b15808]
+  - @esershnr/caramel-playlist@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes

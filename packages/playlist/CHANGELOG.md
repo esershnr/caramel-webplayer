@@ -1,5 +1,11 @@
 # @esershnr/caramel-playlist
 
+## 0.3.0
+
+### Minor Changes
+
+- 4b15808: Allow playlist resume thresholds to be set in seconds with `resume-min-time` and `resume-end-margin` attributes or the matching JavaScript properties. Existing playlists keep the 3-second start and 5-second end defaults.
+
 ## 0.2.0
 
 ### Minor Changes
