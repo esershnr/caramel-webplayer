@@ -54,6 +54,12 @@ playlist.resumeMinTime = 1;
 playlist.resumeEndMargin = 1;
 ```
 
+In React, pass `resumeMinTime` and `resumeEndMargin` to `<Playlist>`:
+
+```tsx
+<Playlist items={items} resumeMinTime={1} resumeEndMargin={1} />
+```
+
 Each value must be a finite, non-negative number. Missing, empty, non-numeric,
 or negative attributes fall back to their respective defaults of 3 and 5
 seconds. Invalid property values also use those defaults. Property changes
