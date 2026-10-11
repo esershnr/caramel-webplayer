@@ -26,6 +26,13 @@ export const RESUME_MIN_TIME = 3;
 /** Positions closer than this to the end are not saved or restored (seconds). */
 export const RESUME_END_MARGIN = 5;
 
+/** Accept finite, non-negative seconds; use the default for absent or invalid input. */
+export function parseResumeThreshold(value: unknown, fallback: number): number {
+  if (typeof value === 'string' && !/^(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(value.trim())) return fallback;
+  const parsed = typeof value === 'number' || typeof value === 'string' ? Number(value) : Number.NaN;
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : fallback;
+}
+
 export const DEFAULT_LIST_ID = 'default';
 
 export function resumeKey(listId: string | null | undefined, itemId: string): string {
@@ -39,17 +46,23 @@ export function shouldSave(lastSavedAt: number | null, now: number, interval = R
 }
 
 /** Whether a position is worth saving: finite, past the start, before the tail. */
-export function canSave(t: number, d: number): boolean {
+export function canSave(t: number, d: number, minTime = RESUME_MIN_TIME, endMargin = RESUME_END_MARGIN): boolean {
   if (!Number.isFinite(t) || !Number.isFinite(d) || d <= 0) return false;
-  return t >= RESUME_MIN_TIME && t <= d - RESUME_END_MARGIN;
+  const min = parseResumeThreshold(minTime, RESUME_MIN_TIME);
+  const margin = parseResumeThreshold(endMargin, RESUME_END_MARGIN);
+  return t >= min && t <= d - margin;
 }
 
 /** Position to restore from an entry, or null. `duration` overrides the stored one when known. */
-export function restoreTime(entry: ResumeEntry | null | undefined, duration?: number): number | null {
+export function restoreTime(
+  entry: ResumeEntry | null | undefined,
+  duration?: number,
+  endMargin = RESUME_END_MARGIN,
+): number | null {
   if (!entry || !Number.isFinite(entry.t) || entry.t <= 0) return null;
   const d = duration !== undefined && Number.isFinite(duration) && duration > 0 ? duration : entry.d;
   if (!Number.isFinite(d) || d <= 0) return null;
-  return entry.t < d - RESUME_END_MARGIN ? entry.t : null;
+  return entry.t < d - parseResumeThreshold(endMargin, RESUME_END_MARGIN) ? entry.t : null;
 }
 
 export function readResume(storage: ResumeStorage | null, key: string): ResumeEntry | null {
@@ -74,8 +87,10 @@ export function saveResume(
   t: number,
   d: number,
   now = Date.now(),
+  minTime = RESUME_MIN_TIME,
+  endMargin = RESUME_END_MARGIN,
 ): boolean {
-  if (!storage || !canSave(t, d)) return false;
+  if (!storage || !canSave(t, d, minTime, endMargin)) return false;
   try {
     storage.set(key, JSON.stringify({ t, d, at: now } satisfies ResumeEntry));
     return true;

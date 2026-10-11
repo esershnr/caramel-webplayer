@@ -20,6 +20,10 @@ export interface PlaylistProps {
   listId?: string | undefined;
   /** Remember and restore positions. Default true. */
   resume?: boolean | undefined;
+  /** Minimum playback position saved, in seconds. Default 3. */
+  resumeMinTime?: number | undefined;
+  /** Number of seconds at the end excluded from resume. Default 5. */
+  resumeEndMargin?: number | undefined;
   /** Id of the `<video-player>` when the component is rendered outside it. */
   playerId?: string | undefined;
   onChange?: ((detail: PlaylistChangeDetail) => void) | undefined;
@@ -43,6 +47,8 @@ export function Playlist({
   autoAdvance,
   listId,
   resume,
+  resumeMinTime,
+  resumeEndMargin,
   playerId,
   onChange,
   onEnded,
@@ -82,6 +88,8 @@ export function Playlist({
       no-auto-advance={autoAdvance === false ? '' : undefined}
       list-id={listId}
       no-resume={resume === false ? '' : undefined}
+      resume-min-time={resumeMinTime === undefined ? undefined : String(resumeMinTime)}
+      resume-end-margin={resumeEndMargin === undefined ? undefined : String(resumeEndMargin)}
     />
   );
 }
@@ -129,6 +137,8 @@ declare module 'react' {
         'no-auto-advance'?: string | undefined;
         'list-id'?: string | undefined;
         'no-resume'?: string | undefined;
+        'resume-min-time'?: string | undefined;
+        'resume-end-margin'?: string | undefined;
       };
       'caramel-playlist-panel': {
         ref?: import('react').Ref<HTMLElement> | undefined;
