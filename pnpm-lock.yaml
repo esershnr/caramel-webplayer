@@ -138,8 +138,8 @@ importers:
   packages/icons:
     dependencies:
       lucide:
-        specifier: ^1.54.0
-        version: 1.54.0
+        specifier: ^1.55.0
+        version: 1.55.0
       morphicons:
         specifier: ^1.7.1
         version: 1.7.1(react@19.3.0)
@@ -1297,8 +1297,8 @@ packages:
   lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
 
-  lucide@1.54.0:
-    resolution: {integrity: sha512-2N2brA+7NYLDlxG2QNcmGej5Qhw3pYMPN9MLktTNkQfs7Sk/2g2e8s0CUWibLz5lPVKMYesxm+k/ndDB7E1JjQ==}
+  lucide@1.55.0:
+    resolution: {integrity: sha512-FA0GSqTWkdwtvY4KqOFcMXvurex3exkX9FMtfSwUdo8rVsYGx56fBB3TLfc5Iroi4YtgXHUl+2EMJ/uqd30F+Q==}
 
   magic-string@1.4.3:
     resolution: {integrity: sha512-z12OxmaPGE0F4xlpGdjuAUckipLpQlTAuAmyGhNoD7ODpYUzvDfvtxUbjM/jwznyP178oju/KDdyi220wNJ0RQ==}
@@ -2379,7 +2379,7 @@ snapshots:
 
   lines-and-columns@1.2.4: {}
 
-  lucide@1.54.0: {}
+  lucide@1.55.0: {}
 
   magic-string@1.4.3:
     dependencies:
