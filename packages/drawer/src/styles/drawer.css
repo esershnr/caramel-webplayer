@@ -1,0 +1,280 @@
+/*
+ * <caramel-drawer> styles. The drawer sits inside <media-container> on the
+ * right edge. The handle sits on the video, so it uses the overlay roles and
+ * stays dark; the panel is a surface that follows the page theme
+ * (.caramel-theme, --_caramel-* roles). Plain unlayered rules: the Video.js
+ * skin keeps its layout in @layer base, which these win over.
+ *
+ * Custom property: --caramel-drawer-width (default clamp(260px, 38%, 380px),
+ * 100% on narrow players).
+ */
+@import '@esershnr/caramel-theme/tokens.css';
+
+caramel-drawer {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  z-index: 40;
+  display: block;
+  width: var(--caramel-drawer-width, clamp(260px, 38%, 380px));
+  /* The closed drawer lets the video through; only the handle and the panel take pointers. */
+  pointer-events: none;
+  transform: translateX(100%);
+  transition: transform var(--caramel-duration-enter) var(--caramel-ease-enter);
+  font-family: var(--caramel-font-body);
+}
+
+caramel-drawer[data-open] {
+  transform: none;
+}
+
+/* Handle: a tab glued to the drawer's left edge. When closed it sits on the
+   player's right edge. */
+.caramel-drawer-handle {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: 100%;
+  z-index: 35;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 64px;
+  margin: 0;
+  padding: 0;
+  translate: 0 -50%;
+  border: 1px solid var(--caramel-overlay-border);
+  border-inline-end: 0;
+  border-radius: var(--caramel-radius-box) 0 0 var(--caramel-radius-box);
+  background: var(--caramel-overlay-surface-strong);
+  color: var(--caramel-overlay-text);
+  font: inherit;
+  cursor: pointer;
+  pointer-events: auto;
+  /* Drags on the handle are ours, not the page's. */
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 1;
+  transition: opacity var(--caramel-duration-controls) var(--caramel-ease-enter);
+}
+
+.caramel-drawer-handle[hidden] {
+  display: none;
+}
+
+.caramel-drawer-handle:hover {
+  background: color-mix(in srgb, var(--caramel-overlay-surface-strong), white 8%);
+}
+
+.caramel-drawer-handle:focus-visible {
+  outline: 2px solid var(--caramel-overlay-accent);
+  outline-offset: var(--caramel-focus-offset);
+}
+
+/* The handle follows the control bar; keyboard focus keeps it visible. */
+media-container:not([data-controls-visible])
+  caramel-drawer:not([data-open])
+  .caramel-drawer-handle:not(:focus-visible) {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Chevron: points left (open me) when closed, right (push me back) when open. */
+.caramel-drawer-handle-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  transform: rotate(180deg);
+  transition: transform var(--caramel-duration-fast) var(--caramel-ease-enter);
+}
+
+caramel-drawer[data-open] .caramel-drawer-handle-icon {
+  transform: none;
+}
+
+/* Panel */
+.caramel-drawer-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--_caramel-surface);
+  color: var(--_caramel-text);
+  box-shadow: 0 0 0 1px var(--_caramel-divider);
+  pointer-events: auto;
+  /* Vertical list scrolling stays native; a horizontal drag reaches our pointer handlers. */
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+}
+
+.caramel-drawer-panel:focus {
+  outline: none;
+}
+
+.caramel-drawer-panel:focus-visible {
+  outline: var(--_caramel-focus-ring);
+  outline-offset: calc(var(--caramel-focus-offset) * -1);
+}
+
+.caramel-drawer-header {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px 0;
+  border-block-end: 1px solid var(--_caramel-divider);
+}
+
+/* With one tab there is no tab bar; the header only holds the close button
+   on narrow players (below). */
+caramel-drawer:not([data-tabs='2']) .caramel-drawer-header {
+  display: none;
+}
+
+.caramel-drawer-tabs {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: 4px;
+}
+
+.caramel-drawer-tabs[hidden] {
+  display: none;
+}
+
+.caramel-drawer-tab {
+  flex: 0 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 8px 8px 0 0;
+  background: transparent;
+  color: var(--_caramel-muted);
+  font: inherit;
+  font-family: var(--caramel-font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  /* Selection marker: a primary underline drawn inside the tab. */
+  box-shadow: inset 0 -2px 0 transparent;
+}
+
+.caramel-drawer-tab[hidden] {
+  display: none;
+}
+
+.caramel-drawer-tab:hover {
+  background: color-mix(in srgb, var(--_caramel-text) 8%, transparent);
+  color: var(--_caramel-text);
+}
+
+.caramel-drawer-tab[aria-selected='true'] {
+  color: var(--_caramel-text);
+  box-shadow: inset 0 -2px 0 var(--_caramel-primary);
+}
+
+.caramel-drawer-close {
+  display: none;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin: 0 0 4px auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--caramel-radius-chip);
+  background: transparent;
+  color: var(--_caramel-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.caramel-drawer-close:hover {
+  background: color-mix(in srgb, var(--_caramel-text) 8%, transparent);
+}
+
+.caramel-drawer-close-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+.caramel-drawer-panel :is(.caramel-drawer-tab, .caramel-drawer-close):focus-visible {
+  outline: var(--_caramel-focus-ring);
+  outline-offset: calc(var(--caramel-focus-offset) * -1);
+}
+
+.caramel-drawer-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.caramel-drawer-tabpanel {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.caramel-drawer-tabpanel[hidden] {
+  display: none;
+}
+
+/* The hosted panels fill the tab panel and scroll inside it. */
+.caramel-drawer-tabpanel > :is(caramel-chapters-panel, caramel-playlist-panel) {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+}
+
+/* Narrow players: the drawer covers the whole video. The handle stays glued
+   to the drawer's left edge, which is off screen while open, so the close
+   button takes over. */
+@container media-root (width < 30rem) {
+  caramel-drawer {
+    width: 100%;
+  }
+
+  caramel-drawer[data-tabs] .caramel-drawer-header {
+    display: flex;
+  }
+
+  .caramel-drawer-close {
+    display: inline-flex;
+  }
+}
+
+@media (forced-colors: active) {
+  .caramel-drawer-handle {
+    border: 1px solid ButtonText;
+    background: ButtonFace;
+    color: ButtonText;
+  }
+
+  .caramel-drawer-panel {
+    border-inline-start: 1px solid CanvasText;
+  }
+
+  .caramel-drawer-tab,
+  .caramel-drawer-close {
+    color: ButtonText;
+  }
+
+  /* Forced colors drop box-shadow, so the marker becomes a border. */
+  .caramel-drawer-tab[aria-selected='true'] {
+    color: Highlight;
+    border-block-end: 2px solid Highlight;
+  }
+
+  .caramel-drawer-handle:focus-visible,
+  .caramel-drawer-panel :is(.caramel-drawer-tab, .caramel-drawer-close):focus-visible {
+    outline: 2px solid Highlight;
+  }
+}
