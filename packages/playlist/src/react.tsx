@@ -101,12 +101,14 @@ export interface PlaylistPanelProps {
   noHeading?: boolean | undefined;
   /** Where the previous/next buttons sit. Default `top`. */
   nav?: 'top' | 'bottom' | 'none' | undefined;
+  /** Hosted inside another surface (for example a drawer): no own padding, corner or background. */
+  embedded?: boolean | undefined;
   className?: string | undefined;
   style?: CSSProperties | undefined;
 }
 
 /** React wrapper for <caramel-playlist-panel>. Renders outside the video, themed by `.caramel-theme`. */
-export function PlaylistPanel({ for: forId, heading, noHeading, nav, className, style }: PlaylistPanelProps) {
+export function PlaylistPanel({ for: forId, heading, noHeading, nav, embedded, className, style }: PlaylistPanelProps) {
   useEffect(() => {
     void import('./define.js');
   }, []);
@@ -117,6 +119,7 @@ export function PlaylistPanel({ for: forId, heading, noHeading, nav, className, 
       heading={heading}
       no-heading={noHeading ? '' : undefined}
       nav={nav}
+      embedded={embedded ? '' : undefined}
       class={className}
       style={style}
     />
@@ -148,6 +151,7 @@ declare module 'react' {
         heading?: string | undefined;
         'no-heading'?: string | undefined;
         nav?: string | undefined;
+        embedded?: string | undefined;
         children?: import('react').ReactNode;
       };
     }

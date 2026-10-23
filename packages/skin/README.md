@@ -3,7 +3,9 @@
 The Video.js 10 default video skin, themed with `--caramel-*` tokens and Lucide
 morphing icons: clickable time counter, quality badge and sorted quality menu,
 timeline preview card, signed seek indicator, Space to play / pause from any
-control.
+control. A subtree marked `data-caramel-native-space` keeps Space for its own buttons.
+
+The control bar carries two placeholders upgraded by other packages: `<caramel-playlist-nav>` (previous / next) and `<caramel-drawer-toggle>` (drawer button before the settings gear); below 28rem a visible drawer toggle replaces the mute button.
 
 ```sh
 npm install @esershnr/caramel-skin @videojs/html

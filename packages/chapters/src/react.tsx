@@ -10,6 +10,8 @@ export interface ChaptersPanelProps {
   heading?: string | undefined;
   /** Hide the heading. */
   noHeading?: boolean | undefined;
+  /** Host the panel inside another surface: no background, radius or max height. */
+  embedded?: boolean | undefined;
   onChapterSelect?: ((detail: ChapterSelectDetail) => void) | undefined;
   className?: string | undefined;
   style?: CSSProperties | undefined;
@@ -20,7 +22,15 @@ export interface ChaptersPanelProps {
  * point it at the player with `playerId`. Registers the element in the browser
  * only (Next.js App Router safe).
  */
-export function ChaptersPanel({ playerId, heading, noHeading, onChapterSelect, className, style }: ChaptersPanelProps) {
+export function ChaptersPanel({
+  playerId,
+  heading,
+  noHeading,
+  embedded,
+  onChapterSelect,
+  className,
+  style,
+}: ChaptersPanelProps) {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -47,6 +57,7 @@ export function ChaptersPanel({ playerId, heading, noHeading, onChapterSelect, c
       for={playerId}
       heading={heading}
       no-heading={noHeading ? '' : undefined}
+      embedded={embedded ? '' : undefined}
     />
   );
 }
@@ -62,6 +73,7 @@ declare module 'react' {
         for?: string | undefined;
         heading?: string | undefined;
         'no-heading'?: string | undefined;
+        embedded?: string | undefined;
         lang?: string | undefined;
       };
     }

@@ -17,6 +17,8 @@ import '@esershnr/caramel-chapters/define'; // registers the element, loads the 
 <caramel-chapters-panel for="player"></caramel-chapters-panel>
 ```
 
+Hosted inside another surface (such as the drawer), add `embedded` to drop the panel's own background, radius and max height.
+
 React:
 
 ```tsx

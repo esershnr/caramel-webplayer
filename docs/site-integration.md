@@ -8,7 +8,7 @@ adding Caramel Webplayer to the esersahiner.com site (Next.js App Router).
 ## 1. Packages
 
 Install the latest release from npm (see the package changelogs for what changed). The shortest path is the umbrella package (it pulls in all
-six packages; `/react` exposes every wrapper, `/webplayer.css` provides the tokens
+seven packages; `/react` exposes every wrapper, `/webplayer.css` provides the tokens
 plus the skin CSS):
 
 ```sh
@@ -20,7 +20,7 @@ Modular install, if you only want what you need:
 ```sh
 npm install @esershnr/caramel-theme @esershnr/caramel-skin \
   @esershnr/caramel-skip-segments @esershnr/caramel-chapters \
-  @esershnr/caramel-playlist @videojs/html@10.0.1
+  @esershnr/caramel-playlist @esershnr/caramel-drawer @videojs/html@10.0.1
 ```
 
 `@videojs/html` (10.0.x) is a peer dependency, so it is installed explicitly.
@@ -69,6 +69,7 @@ import { CaramelVideoSkin } from '@esershnr/caramel-skin/react';
 import { SkipSegments } from '@esershnr/caramel-skip-segments/react';
 import { ChaptersPanel } from '@esershnr/caramel-chapters/react';
 import { Playlist, PlaylistPanel } from '@esershnr/caramel-playlist/react';
+import { Drawer } from '@esershnr/caramel-drawer/react';
 import type { PlaylistItem } from '@esershnr/caramel-playlist';
 import '@esershnr/caramel-skin/skin.css';
 
@@ -81,7 +82,7 @@ export function VideoPage({ lang }: { lang: 'tr' | 'en' }) {
   }, []);
   return (
     <div className="caramel-theme" lang={lang}>
-      <CaramelVideoSkin id="player" lang={lang} extras={<><SkipSegments segments={[]} autoSkip={['recap']} /><Playlist id="playlist" items={items} listId="site" /></>}>
+      <CaramelVideoSkin id="player" lang={lang} extras={<><SkipSegments segments={[]} autoSkip={['recap']} /><Playlist id="playlist" items={items} listId="site" /><Drawer /></>}>
         <hls-video playsinline="" crossorigin="anonymous" preload="metadata" />
       </CaramelVideoSkin>
       <ChaptersPanel playerId="player" />
@@ -102,6 +103,7 @@ page (client side). The `declare module 'react'` block in
 - You can also fetch the manifest on the server and pass it as `items`; the component
   renders the player skeleton during SSR and attaches the media element once the
   elements are registered.
+- The drawer is optional. Without `<Drawer />` the player is unchanged. It shows a list button in the control bar when the item has chapters or the playlist has at least two items.
 
 ## 4. Checklist
 

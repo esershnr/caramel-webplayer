@@ -55,6 +55,15 @@ export interface PlaylistItem {
   segments?: Segment[] | undefined;
   /** Duration in seconds when known up front; used by the panel before playback. */
   duration?: number | undefined;
+  /**
+   * Optional display group name, for example "Season 1". Consecutive items with
+   * the same `group` form one collapsible section in `<caramel-playlist-panel>`;
+   * items without a group get no header, and the same name appearing again later
+   * (after other items) starts a new section. The flat array stays the single
+   * source of order: navigation, auto advance and resume ignore groups, so auto
+   * advance simply continues from the last item of one group to the first of the next.
+   */
+  group?: string | undefined;
 }
 
 /** Media element tag for an item: explicit `type` first, then the URL. */

@@ -22,4 +22,10 @@ describe('shouldRedirectSpace', () => {
   it('lets the player hotkey handle non-activatable targets itself', () => {
     expect(shouldRedirectSpace({ ...base, activatable: false })).toBe(false);
   });
+
+  it('keeps Space inside a native-space subtree', () => {
+    expect(shouldRedirectSpace({ ...base, nativeSpace: true })).toBe(false);
+    expect(shouldRedirectSpace({ ...base, nativeSpace: false })).toBe(true);
+    expect(shouldRedirectSpace({ ...base, nativeSpace: undefined })).toBe(true);
+  });
 });

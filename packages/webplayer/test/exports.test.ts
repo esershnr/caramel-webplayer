@@ -9,6 +9,7 @@ describe('@esershnr/caramel-webplayer', () => {
     expect(typeof webplayer.normalizeSegments).toBe('function'); // skip-segments
     expect(typeof webplayer.formatTime).toBe('function'); // chapters
     expect(typeof webplayer.PlaylistModel).toBe('function'); // playlist
+    expect(typeof webplayer.swipeDecision).toBe('function'); // drawer
   });
 
   it('keeps both findActiveIndex helpers under explicit names', () => {

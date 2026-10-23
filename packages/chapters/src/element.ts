@@ -39,6 +39,7 @@ const LOOKUP_RETRIES = 30;
  *   for         id of the `<video-player>` to follow
  *   heading     heading text (default: translated "Chapters")
  *   no-heading  hide the heading
+ *   embedded    hosted inside another surface: no surface of its own, fills the host
  *   lang        overrides the resolved language for the built-in strings
  *
  * Properties:

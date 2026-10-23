@@ -122,9 +122,107 @@ caramel-playlist-panel .caramel-playlist-row {
   padding: 0;
 }
 
-caramel-playlist-panel .caramel-playlist-row + .caramel-playlist-row {
+caramel-playlist-panel .caramel-playlist-row + .caramel-playlist-row,
+caramel-playlist-panel .caramel-playlist-group + .caramel-playlist-row,
+caramel-playlist-panel .caramel-playlist-group {
   border-top: 1px solid var(--_caramel-divider);
   padding-top: 0.5rem;
+}
+
+/* Groups: a header button over a nested list of rows. */
+caramel-playlist-panel .caramel-playlist-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+caramel-playlist-panel .caramel-playlist-group:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+caramel-playlist-panel .caramel-playlist-group-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+caramel-playlist-panel .caramel-playlist-group-list[hidden] {
+  display: none;
+}
+
+caramel-playlist-panel .caramel-playlist-group-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.75rem 0.5rem 0.5rem;
+  border: 0;
+  border-radius: var(--caramel-radius-box);
+  background: transparent;
+  color: var(--_caramel-muted);
+  font: inherit;
+  font-weight: 600;
+  text-align: start;
+  cursor: pointer;
+}
+
+caramel-playlist-panel .caramel-playlist-group-button:hover {
+  background: color-mix(in srgb, var(--_caramel-raised-hover) 70%, transparent);
+  color: var(--_caramel-text);
+}
+
+caramel-playlist-panel .caramel-playlist-group-button:focus-visible {
+  outline: var(--_caramel-focus-ring);
+  outline-offset: var(--caramel-focus-offset);
+}
+
+caramel-playlist-panel .caramel-playlist-group[data-active] > .caramel-playlist-group-button {
+  color: var(--_caramel-primary);
+}
+
+caramel-playlist-panel .caramel-playlist-group-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+caramel-playlist-panel .caramel-playlist-group-count {
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+caramel-playlist-panel .caramel-playlist-group-chevron {
+  display: block;
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  transition: transform var(--caramel-duration-fast) var(--caramel-ease-fill);
+}
+
+caramel-playlist-panel .caramel-playlist-group-chevron > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+caramel-playlist-panel .caramel-playlist-group-button[aria-expanded='true'] .caramel-playlist-group-chevron {
+  transform: rotate(90deg);
+}
+
+caramel-playlist-panel .caramel-playlist-group-button:dir(rtl) .caramel-playlist-group-chevron {
+  transform: scaleX(-1);
+}
+
+caramel-playlist-panel .caramel-playlist-group-button[aria-expanded='true']:dir(rtl) .caramel-playlist-group-chevron {
+  transform: rotate(90deg);
 }
 
 /* Item */
@@ -193,6 +291,26 @@ caramel-playlist-panel .caramel-playlist-thumb > img {
   object-fit: cover;
 }
 
+/* Items without a poster keep the empty box; a small neutral play glyph marks it
+   so it does not look broken. No image, so no request. */
+caramel-playlist-panel .caramel-playlist-thumb:not(:has(img)) {
+  position: relative;
+}
+
+caramel-playlist-panel .caramel-playlist-thumb:not(:has(img))::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-block: 0.5rem solid transparent;
+  border-left: 0.75rem solid var(--_caramel-muted);
+  opacity: 0.5;
+  transform: translate(-40%, -50%);
+  pointer-events: none;
+}
+
 caramel-playlist-panel .caramel-playlist-text {
   display: flex;
   flex-direction: column;
@@ -224,6 +342,22 @@ caramel-playlist-panel .caramel-playlist-empty[hidden] {
   display: none;
 }
 
+/* Embedded: the host surface (for example a drawer) owns padding, corners,
+   background and height; the list scrolls in the space left over. */
+caramel-playlist-panel[embedded] {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  height: 100%;
+  min-height: 0;
+}
+
+caramel-playlist-panel[embedded] .caramel-playlist-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+}
+
 /* The panel is its own query container (see the root rule). */
 @container caramel-playlist (width < 22rem) {
   caramel-playlist-panel .caramel-playlist-item {
@@ -235,16 +369,37 @@ caramel-playlist-panel .caramel-playlist-empty[hidden] {
   }
 }
 
+/* Drawers host the panel at 260px to 380px, so the hide rule above would drop the
+   thumbnail there. From 14.5rem up, an embedded panel keeps the three-column grid
+   with a 5rem thumb (16:9, about 2.8rem tall) and a 0.5rem column gap. Below
+   14.5rem the hide rule still applies. The title clamp is not touched. */
+@container caramel-playlist (width >= 14.5rem) and (width < 22rem) {
+  caramel-playlist-panel[embedded] .caramel-playlist-item {
+    --caramel-playlist-thumb-width: 5rem;
+    gap: 0.5rem;
+    grid-template-columns: 1.75rem var(--caramel-playlist-thumb-width) minmax(0, 1fr);
+  }
+
+  caramel-playlist-panel[embedded] .caramel-playlist-thumb {
+    display: block;
+  }
+}
+
 @media (forced-colors: active) {
-  caramel-playlist-panel {
+  caramel-playlist-panel:not([embedded]) {
     border: 1px solid CanvasText;
   }
 
   caramel-playlist-panel .caramel-playlist-item,
-  caramel-playlist-panel .caramel-playlist-nav-button {
+  caramel-playlist-panel .caramel-playlist-nav-button,
+  caramel-playlist-panel .caramel-playlist-group-button {
     border: 1px solid ButtonText;
     background: ButtonFace;
     color: ButtonText;
+  }
+
+  caramel-playlist-panel .caramel-playlist-group[data-active] > .caramel-playlist-group-button {
+    color: Highlight;
   }
 
   caramel-playlist-panel .caramel-playlist-item[data-active] {
@@ -253,6 +408,12 @@ caramel-playlist-panel .caramel-playlist-empty[hidden] {
 
   caramel-playlist-panel .caramel-playlist-nav-button:disabled {
     color: GrayText;
+    opacity: 1;
+  }
+
+  caramel-playlist-panel .caramel-playlist-thumb:not(:has(img))::before {
+    border-block-color: transparent;
+    border-left-color: GrayText;
     opacity: 1;
   }
 }

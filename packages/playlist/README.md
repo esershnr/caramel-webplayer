@@ -36,6 +36,38 @@ import { Playlist, PlaylistPanel } from '@esershnr/caramel-playlist/react';
 <PlaylistPanel for="playlist" />
 ```
 
+Panel attributes: `for` (controller id), `heading`, `no-heading`, `nav`
+(`top`, `bottom` or `none`) and `embedded`. Set `embedded` when the panel sits
+inside another surface, such as a drawer: it
+drops its own padding, corners and background, fills the host's height and
+scrolls the list in the remaining space. Thumbnails stay visible in an embedded
+panel down to 14.5rem (232px) wide; narrower panels hide them. In React, pass
+`embedded` to `<PlaylistPanel>`.
+
+## Groups
+
+Give items an optional `group` name to split the panel into collapsible
+sections, for example seasons. Consecutive items with the same `group` form one
+section with a header showing the name and the item count. Items without a
+group get no header, and a name that appears again after other items starts a
+new section.
+
+```ts
+const items: PlaylistItem[] = [
+  { id: 'trailer', title: 'Fragman', src: '/videos/trailer.mp4' },
+  { id: 's1e1', title: 'Bölüm 1', src: '/videos/s1e1.mp4', group: '1. Sezon' },
+  { id: 's1e2', title: 'Bölüm 2', src: '/videos/s1e2.mp4', group: '1. Sezon' },
+  { id: 's2e1', title: 'Bölüm 1', src: '/videos/s2e1.mp4', group: '2. Sezon' },
+];
+```
+
+Only the section holding the current item starts expanded; a section expands
+when one of its items becomes current, and its header still shows the active
+state while collapsed. Groups are display only: the flat array stays the order
+for previous / next, auto advance and resume, so playback continues from the
+last item of one group to the first item of the next. `groupRuns(items)` returns
+the same sections (`{ group, start, end }`) for custom UIs.
+
 ## Resume thresholds
 
 The playlist saves each item's playback position in local storage. By default,

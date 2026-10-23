@@ -27,6 +27,15 @@ caramel-chapters-panel {
   line-height: 1.4;
 }
 
+/* Hosted inside another surface (the drawer): no surface of its own, fills the host's height, still scrolls itself. */
+caramel-chapters-panel[embedded] {
+  max-height: none;
+  height: 100%;
+  padding: var(--caramel-chapters-padding, 0.375rem);
+  border-radius: 0;
+  background: transparent;
+}
+
 caramel-chapters-panel .caramel-chapters-heading {
   margin: 0 0 0.75rem;
   padding: 0 0.25rem 0.625rem;
@@ -150,7 +159,7 @@ caramel-chapters-panel .caramel-chapter[data-active] .caramel-chapter-title {
 }
 
 @media (forced-colors: active) {
-  caramel-chapters-panel {
+  caramel-chapters-panel:not([embedded]) {
     border: 1px solid CanvasText;
   }
 

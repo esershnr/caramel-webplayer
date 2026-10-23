@@ -10,6 +10,8 @@
  * where the Video.js hotkey runs exactly once (and its OSD shows). Enter keeps
  * doing the control's own job. Text fields, contenteditable and menu items
  * keep Space. Outside a player nothing changes, so page scrolling is intact.
+ * A subtree marked `data-caramel-native-space` keeps Space for its own controls,
+ * so panels inside the player (the drawer) activate their buttons natively.
  *
  * Focus ring: a pointer press inside a player marks the container with
  * `data-caramel-pointer-focus` and the skin hides focus rings while it is set;
@@ -22,6 +24,8 @@ const ACTIVATABLE = 'button,a[href],[role="slider"],[role="button"]';
 const EDITABLE = 'input,textarea,select,[contenteditable]:not([contenteditable="false"])';
 const MENU_ITEM = '[role^="menuitem"],[role="option"]';
 const CONTAINER = 'media-container.caramel-skin';
+const NATIVE_SPACE_ATTR = 'data-caramel-native-space';
+const NATIVE_SPACE = `[${NATIVE_SPACE_ATTR}]`;
 
 export interface SpaceTarget {
   key: string;
@@ -32,12 +36,14 @@ export interface SpaceTarget {
   editable: boolean;
   /** Item inside a menu or list box, where Space selects. */
   menuItem: boolean;
+  /** Target sits inside a subtree marked `data-caramel-native-space`, which keeps Space for its own controls. */
+  nativeSpace?: boolean | undefined;
 }
 
 /** True when Space on this target should play / pause the player instead. */
 export function shouldRedirectSpace(target: SpaceTarget): boolean {
   if (target.key !== ' ' || target.modifiers) return false;
-  if (target.editable || target.menuItem) return false;
+  if (target.editable || target.menuItem || target.nativeSpace) return false;
   return target.activatable;
 }
 
@@ -58,6 +64,7 @@ export function installSpaceKey(root: Document = document): () => void {
       activatable: target.matches(ACTIVATABLE),
       editable: target.matches(EDITABLE),
       menuItem: target.closest(MENU_ITEM) !== null,
+      nativeSpace: target.closest(NATIVE_SPACE) !== null,
     });
     return redirect ? container : null;
   };
