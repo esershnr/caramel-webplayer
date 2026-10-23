@@ -32,6 +32,17 @@ describe('skin template', () => {
     expect(SKIN_TEMPLATE).toContain('{{uid}}-0-trigger');
   });
 
+  it('places the drawer toggle placeholder right before the settings trigger', () => {
+    const toggle = SKIN_TEMPLATE.indexOf('<caramel-drawer-toggle class="caramel-drawer-toggle" hidden>');
+    const settings = SKIN_TEMPLATE.indexOf(
+      'class="media-button media-settings-menu-trigger video-controls-settings-button"',
+    );
+    expect(toggle).toBeGreaterThan(-1);
+    expect(settings).toBeGreaterThan(toggle);
+    const settingsStart = SKIN_TEMPLATE.lastIndexOf('<button', settings);
+    expect(SKIN_TEMPLATE.slice(0, settingsStart).endsWith('</caramel-drawer-toggle>')).toBe(true);
+  });
+
   it('keeps every id reference resolvable after applying a uid', () => {
     const html = applyUid(SKIN_TEMPLATE, 'caramel-x');
     const ids = new Set([...html.matchAll(/ id="([^"]+)"/g)].map((m) => m[1]));

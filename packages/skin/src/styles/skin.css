@@ -439,6 +439,19 @@
     cursor: default;
   }
 
+  /* Drawer toggle (from @esershnr/caramel-drawer): a placeholder before the
+     settings button, upgraded by the drawer package into a list button that
+     opens the drawer. Without that package it never upgrades and stays out
+     of the layout; with it, it hides itself until the drawer has a tab. */
+  .caramel-skin caramel-drawer-toggle:not(:defined),
+  .caramel-skin caramel-drawer-toggle[hidden] {
+    display: none;
+  }
+
+  .caramel-skin .caramel-drawer-toggle {
+    display: contents;
+  }
+
   /* Quality badge on the settings gear: HD / FHD / 2K / 4K for the playing
      rendition. Override with --caramel-quality-badge-bg / -text. Defaults are the
      overlay accent pair (9.1:1 text, 8:1 against the control bar). */
@@ -510,5 +523,15 @@
   .caramel-skin .caramel-time-display[data-mode='remaining'] .caramel-time-current,
   .caramel-skin .caramel-time-display:not([data-mode]) .caramel-time-remaining {
     display: none;
+  }
+
+  /* Below 28rem the primary pill is already tight (play, previous / next, mute,
+     time, slider, settings); a visible drawer toggle would starve the slider, so
+     the mute button steps aside there. Phones have hardware volume keys, and the
+     volume popover is hover-only anyway. Without the drawer nothing changes. */
+  @container media-root (width < 28rem) {
+    .caramel-skin:has(caramel-drawer-toggle:defined:not([hidden])) .media-mute-button {
+      display: none;
+    }
   }
 }
