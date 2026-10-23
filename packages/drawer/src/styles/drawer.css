@@ -1,9 +1,28 @@
 /*
  * <caramel-drawer> styles. The drawer sits inside <media-container> on the
- * right edge. The handle sits on the video, so it uses the overlay roles and
- * stays dark; the panel is a surface that follows the page theme
- * (.caramel-theme, --_caramel-* roles). Plain unlayered rules: the Video.js
- * skin keeps its layout in @layer base, which these win over.
+ * right edge, on top of the video, so the whole drawer (handle, tab bar,
+ * panel) is the player's dark glass in both page themes: the overlay roles
+ * plus the skip button's blur. The panel keeps its .caramel-theme scope and
+ * the hosted chapters and playlist panels carry their own, so the drawer
+ * remaps the role inputs (--caramel-<role>) on the panel; every nested scope
+ * resolves its --_caramel-* values from them. The same panels outside the
+ * video keep the page theme. Plain unlayered rules: the Video.js skin keeps
+ * its layout in @layer base, which these win over.
+ *
+ * Contrast (WCAG, computed; blur ignored, alpha composited in sRGB as the
+ * browser paints it). Glass = overlay-surface-strong mixed with black 30%,
+ * black at 86%. Rows add white 8% (raised) or 14% (hover). Accent = overlay
+ * accent (caramel lightened 25%).
+ *                        white frame            black frame
+ *                     glass  row  hover      glass  row  hover
+ *   text (white)       15.6  12.2   10.0      21.0  18.4   15.6
+ *   muted (white 80%)  10.4   8.5    7.1      13.1  11.9   10.4
+ *   accent (text, ring) 7.7   6.0    4.9      10.3   9.0    7.7
+ *   Fallback glass (black 94%, no blur) is darker: every pair above or higher.
+ *   Solid: overlay-on-accent on overlay-accent 8.8, on the hover fill 9.8.
+ * Bare overlay-surface-strong (black 80%) would already give text 12.6 and
+ * accent on hover 4.0 over white; the stronger glass keeps the accent above
+ * 4.5 on every row and steadies busy frames, which the table does not count.
  *
  * Custom property: --caramel-drawer-width (default clamp(260px, 38%, 380px),
  * 100% on narrow players).
@@ -22,6 +41,25 @@ caramel-drawer {
   transform: translateX(100%);
   transition: transform var(--caramel-duration-enter) var(--caramel-ease-enter);
   font-family: var(--caramel-font-body);
+  /* The drawer's glass: overlay-surface-strong made denser (black at 86%). */
+  --_caramel-drawer-glass: color-mix(in srgb, var(--caramel-overlay-surface-strong), black 30%);
+  --_caramel-drawer-blur: blur(12px) saturate(110%);
+}
+
+/* No backdrop blur, or the viewer asks for less transparency: a near-opaque
+   surface instead, so text never depends on the frame behind it. */
+@supports not (backdrop-filter: blur(1px)) {
+  caramel-drawer {
+    --_caramel-drawer-glass: color-mix(in srgb, black 94%, transparent);
+    --_caramel-drawer-blur: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  caramel-drawer {
+    --_caramel-drawer-glass: color-mix(in srgb, black 94%, transparent);
+    --_caramel-drawer-blur: none;
+  }
 }
 
 caramel-drawer[data-open] {
@@ -46,8 +84,9 @@ caramel-drawer[data-open] {
   border: 1px solid var(--caramel-overlay-border);
   border-inline-end: 0;
   border-radius: var(--caramel-radius-box) 0 0 var(--caramel-radius-box);
-  background: var(--caramel-overlay-surface-strong);
+  background: var(--_caramel-drawer-glass);
   color: var(--caramel-overlay-text);
+  backdrop-filter: var(--_caramel-drawer-blur);
   font: inherit;
   cursor: pointer;
   pointer-events: auto;
@@ -63,7 +102,7 @@ caramel-drawer[data-open] {
 }
 
 .caramel-drawer-handle:hover {
-  background: color-mix(in srgb, var(--caramel-overlay-surface-strong), white 8%);
+  background: color-mix(in srgb, var(--_caramel-drawer-glass), white 8%);
 }
 
 .caramel-drawer-handle:focus-visible {
@@ -92,14 +131,37 @@ caramel-drawer[data-open] .caramel-drawer-handle-icon {
   transform: none;
 }
 
-/* Panel */
-.caramel-drawer-panel {
+/* Panel: the glass. The role inputs below feed the panel's own .caramel-theme
+   scope and the scopes of the hosted panels, so their rows, hover, active
+   row, group headers, muted text, focus ring and scrollbars turn to overlay
+   values. The tab bar reads the same roles. */
+caramel-drawer .caramel-drawer-panel {
+  --caramel-bg: var(--_caramel-drawer-glass);
+  --caramel-surface: var(--_caramel-drawer-glass);
+  --caramel-raised: color-mix(in srgb, white 8%, transparent);
+  --caramel-raised-hover: color-mix(in srgb, white 14%, transparent);
+  --caramel-divider: var(--caramel-overlay-border);
+  --caramel-border: var(--caramel-overlay-border);
+  --caramel-text: var(--caramel-overlay-text);
+  --caramel-muted: color-mix(in srgb, var(--caramel-overlay-text) 80%, transparent);
+  --caramel-primary: var(--caramel-overlay-accent);
+  --caramel-primary-hover: color-mix(in srgb, var(--caramel-overlay-accent), white 15%);
+  --caramel-primary-contrast: var(--caramel-overlay-on-accent);
+  --caramel-accent-text: var(--caramel-overlay-accent);
+  --caramel-solid: var(--caramel-overlay-accent);
+  --caramel-solid-hover: color-mix(in srgb, var(--caramel-overlay-accent), white 15%);
+  --caramel-solid-contrast: var(--caramel-overlay-on-accent);
+  --caramel-focus-ring: 2px solid var(--caramel-overlay-accent);
+
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: var(--_caramel-surface);
-  color: var(--_caramel-text);
-  box-shadow: 0 0 0 1px var(--_caramel-divider);
+  background: var(--_caramel-drawer-glass);
+  color: var(--caramel-overlay-text);
+  backdrop-filter: var(--_caramel-drawer-blur);
+  box-shadow: 0 0 0 1px var(--caramel-overlay-border);
+  /* Inherited, so the playlist's scroll area picks it up too. */
+  scrollbar-color: var(--caramel-overlay-border) transparent;
   pointer-events: auto;
   /* Vertical list scrolling stays native; a horizontal drag reaches our pointer handlers. */
   touch-action: pan-y;
@@ -108,6 +170,13 @@ caramel-drawer[data-open] .caramel-drawer-handle-icon {
 
 .caramel-drawer-panel:focus {
   outline: none;
+}
+
+/* Dark form controls and scrollbars in every themed scope inside the drawer.
+   The extra class and tag beat the theme's ":root[data-theme] .caramel-theme"
+   scheme switches (three classes). */
+caramel-drawer.caramel-drawer .caramel-theme:is(.caramel-drawer-panel, caramel-chapters-panel, caramel-playlist-panel) {
+  color-scheme: dark;
 }
 
 .caramel-drawer-panel:focus-visible {
@@ -258,8 +327,15 @@ caramel-drawer:not([data-tabs='2']) .caramel-drawer-header {
     color: ButtonText;
   }
 
-  .caramel-drawer-panel {
+  .caramel-drawer-handle,
+  caramel-drawer .caramel-drawer-panel {
+    backdrop-filter: none;
+  }
+
+  caramel-drawer .caramel-drawer-panel {
     border-inline-start: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
   }
 
   .caramel-drawer-tab,

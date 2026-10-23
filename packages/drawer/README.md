@@ -65,8 +65,12 @@ closes the drawer on narrow players (below 480 px) and keeps it open on wide
 ones. The last tab picked is remembered for the browser session.
 
 CSS: `--caramel-drawer-width` (default `clamp(260px, 38%, 380px)`; the drawer
-covers the whole player below 30rem). Colors follow the `--caramel-*` theme
-tokens.
+covers the whole player below 30rem). The drawer sits on the video, so in both
+page themes it is the player's dark overlay surface: a blurred glass built from
+the `--caramel-overlay-*` tokens, with the hosted chapters and playlist panels
+switched to the same overlay roles (the same panels outside the player keep the
+page theme). Without backdrop blur, or with `prefers-reduced-transparency`,
+the glass becomes a near-opaque dark surface.
 
 ## Known limitations
 
