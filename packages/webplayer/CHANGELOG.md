@@ -1,5 +1,22 @@
 # @esershnr/caramel-webplayer
 
+## 0.3.0
+
+### Minor Changes
+
+- 8717cc2: Re-exports the new `@esershnr/caramel-drawer` package: `<caramel-drawer>` and `<Drawer>` are available from the umbrella entry, `/define` and `/react`.
+
+### Patch Changes
+
+- Updated dependencies [8717cc2]
+- Updated dependencies [8717cc2]
+- Updated dependencies [8717cc2]
+- Updated dependencies [8717cc2]
+  - @esershnr/caramel-drawer@0.1.0
+  - @esershnr/caramel-chapters@0.3.0
+  - @esershnr/caramel-playlist@0.4.0
+  - @esershnr/caramel-skin@0.3.0
+
 ## 0.2.1
 
 ### Patch Changes
