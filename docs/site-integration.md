@@ -103,7 +103,7 @@ page (client side). The `declare module 'react'` block in
 - You can also fetch the manifest on the server and pass it as `items`; the component
   renders the player skeleton during SSR and attaches the media element once the
   elements are registered.
-- The drawer is optional. Without `<Drawer />` the player is unchanged. It shows a handle on the right edge when the item has chapters or the playlist has at least two items.
+- The drawer is optional. Without `<Drawer />` the player is unchanged. It shows a list button in the control bar when the item has chapters or the playlist has at least two items.
 
 ## 4. Checklist
 

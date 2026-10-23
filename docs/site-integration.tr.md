@@ -101,7 +101,7 @@ export function VideoPage({ lang }: { lang: 'tr' | 'en' }) {
 - Tema: site zaten `.dark` sınıfını `<html>`'e koyuyor; `.caramel-theme` kapsamı bunu okur.
 - Manifest'i sunucuda da çekip `items` olarak verebilirsin; bileşen SSR'da
   player iskeletini üretir, media elementini elementler kaydolunca bağlar.
-- Çekmece isteğe bağlıdır. `<Drawer />` yoksa oynatıcı değişmez. Öğenin bölümleri varsa ya da oynatma listesinde en az iki öğe varsa sağ kenarda bir tutamaç gösterir.
+- Çekmece isteğe bağlıdır. `<Drawer />` yoksa oynatıcı değişmez. Öğenin bölümleri varsa ya da oynatma listesinde en az iki öğe varsa kontrol çubuğunda bir liste düğmesi gösterir.
 
 ## 4. Kontrol listesi
 
