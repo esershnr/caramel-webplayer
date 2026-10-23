@@ -291,6 +291,26 @@ caramel-playlist-panel .caramel-playlist-thumb > img {
   object-fit: cover;
 }
 
+/* Items without a poster keep the empty box; a small neutral play glyph marks it
+   so it does not look broken. No image, so no request. */
+caramel-playlist-panel .caramel-playlist-thumb:not(:has(img)) {
+  position: relative;
+}
+
+caramel-playlist-panel .caramel-playlist-thumb:not(:has(img))::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-block: 0.5rem solid transparent;
+  border-left: 0.75rem solid var(--_caramel-muted);
+  opacity: 0.5;
+  transform: translate(-40%, -50%);
+  pointer-events: none;
+}
+
 caramel-playlist-panel .caramel-playlist-text {
   display: flex;
   flex-direction: column;
@@ -349,6 +369,22 @@ caramel-playlist-panel[embedded] .caramel-playlist-scroll {
   }
 }
 
+/* Drawers host the panel at 260px to 380px, so the hide rule above would drop the
+   thumbnail there. From 14.5rem up, an embedded panel keeps the three-column grid
+   with a 5rem thumb (16:9, about 2.8rem tall) and a 0.5rem column gap. Below
+   14.5rem the hide rule still applies. The title clamp is not touched. */
+@container caramel-playlist (width >= 14.5rem) and (width < 22rem) {
+  caramel-playlist-panel[embedded] .caramel-playlist-item {
+    --caramel-playlist-thumb-width: 5rem;
+    gap: 0.5rem;
+    grid-template-columns: 1.75rem var(--caramel-playlist-thumb-width) minmax(0, 1fr);
+  }
+
+  caramel-playlist-panel[embedded] .caramel-playlist-thumb {
+    display: block;
+  }
+}
+
 @media (forced-colors: active) {
   caramel-playlist-panel:not([embedded]) {
     border: 1px solid CanvasText;
@@ -372,6 +408,12 @@ caramel-playlist-panel[embedded] .caramel-playlist-scroll {
 
   caramel-playlist-panel .caramel-playlist-nav-button:disabled {
     color: GrayText;
+    opacity: 1;
+  }
+
+  caramel-playlist-panel .caramel-playlist-thumb:not(:has(img))::before {
+    border-block-color: transparent;
+    border-left-color: GrayText;
     opacity: 1;
   }
 }

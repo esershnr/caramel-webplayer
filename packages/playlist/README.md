@@ -40,8 +40,9 @@ Panel attributes: `for` (controller id), `heading`, `no-heading`, `nav`
 (`top`, `bottom` or `none`) and `embedded`. Set `embedded` when the panel sits
 inside another surface, such as a drawer: it
 drops its own padding, corners and background, fills the host's height and
-scrolls the list in the remaining space. In React, pass `embedded` to
-`<PlaylistPanel>`.
+scrolls the list in the remaining space. Thumbnails stay visible in an embedded
+panel down to 14.5rem (232px) wide; narrower panels hide them. In React, pass
+`embedded` to `<PlaylistPanel>`.
 
 ## Groups
 
