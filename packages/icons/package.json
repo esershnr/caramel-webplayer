@@ -68,7 +68,7 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "lucide": "^1.54.0",
+    "lucide": "^1.55.0",
     "morphicons": "^1.7.1"
   },
   "peerDependencies": {
