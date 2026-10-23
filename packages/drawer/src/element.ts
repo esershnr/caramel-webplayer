@@ -15,7 +15,15 @@ import { DRAWER_DEFAULTS, DRAWER_KEYS, registerDrawerI18n } from './i18n.js';
 import { readLastTab, writeLastTab } from './session.js';
 import { undefinedAncestorTag } from './provider.js';
 import { swipeDecision } from './swipe.js';
-import { DRAWER_TABS, chaptersPresent, isDrawerTab, resolveTab, visibleTabs, type DrawerTab } from './tabs.js';
+import {
+  DRAWER_TABS,
+  chaptersPresent,
+  isDrawerTab,
+  renderedTabs,
+  resolveTab,
+  visibleTabs,
+  type DrawerTab,
+} from './tabs.js';
 
 /** HTMLElement stand-in so the module can be imported during SSR. */
 const Base: typeof UIElement =
@@ -59,8 +67,17 @@ let counter = 0;
  * (pass it in the skin's `extras`). It opens from a `<caramel-drawer-toggle>`
  * button in the control bar and sits above the bar on the right, like the
  * settings menu, with two tabs, chapters and playlist, hosting
- * `<caramel-chapters-panel>` and `<caramel-playlist-panel>`. A tab is shown only
- * when it has content; with no content the toggle hides.
+ * `<caramel-chapters-panel>` and `<caramel-playlist-panel>`. A tab has content
+ * with a chapters track or a playlist of two or more items; with no content
+ * the toggle hides.
+ *
+ * Available tabs and rendered pills differ: `tabs` (and the
+ * `caramel-drawer-tabs` payload) lists the tabs with content, while the tab
+ * bar renders `renderedTabs(tabs)`. With a playlist both pills always render,
+ * so the bar does not jump between items; on an item without chapters the
+ * Chapters pill is disabled (`aria-disabled`, out of the arrow key order, a
+ * "no chapters" hint as its title and description). Without a playlist there
+ * is no tab bar. `data-tabs` on the element counts the rendered pills.
  *
  *   <caramel-drawer for="queue"></caramel-drawer>
  *
@@ -75,7 +92,7 @@ let counter = 0;
  * Methods: `show()`, `hide()`, `toggle()`.
  * Events: `caramel-drawer-toggle` (detail: DrawerToggleDetail),
  * `caramel-drawer-tab` (detail: DrawerTabDetail), `caramel-drawer-tabs`
- * (detail: DrawerTabsDetail, the visible tabs changed). All bubble.
+ * (detail: DrawerTabsDetail, the tabs with content changed). All bubble.
  *
  * The drawer and the player's menus (the settings menu, any root
  * `<media-menu>` in the same `<video-player>`) take turns: `show()` closes
@@ -122,6 +139,8 @@ export class CaramelDrawerElement extends Base {
 
   #panel: HTMLDivElement | null = null;
   #tablist: HTMLDivElement | null = null;
+  /** Visually hidden "no chapters" text, the disabled pill's description. */
+  #hint: HTMLSpanElement | null = null;
   #closeButton: HTMLButtonElement | null = null;
   #tabButtons = new Map<DrawerTab, HTMLButtonElement>();
   #tabpanels = new Map<DrawerTab, HTMLDivElement>();
@@ -161,7 +180,11 @@ export class CaramelDrawerElement extends Base {
     return this.#controller;
   }
 
-  /** Tabs that have content, in display order. Empty: nothing to open. */
+  /**
+   * Tabs that have content, in display order. Empty: nothing to open. The
+   * tab bar may render more pills than this (`renderedTabs`): a rendered tab
+   * missing here is disabled.
+   */
   get tabs(): readonly DrawerTab[] {
     return this.#visible;
   }
@@ -526,7 +549,11 @@ export class CaramelDrawerElement extends Base {
     close.className = 'caramel-drawer-close';
     close.setAttribute('aria-label', DRAWER_DEFAULTS.close);
     close.append(createIconElement(icons.close, { className: 'caramel-drawer-close-icon' }));
-    header.append(tablist, close);
+    const hint = document.createElement('span');
+    hint.className = 'caramel-drawer-hint';
+    hint.id = `${id}-hint`;
+    hint.textContent = DRAWER_DEFAULTS.noChapters;
+    header.append(tablist, hint, close);
 
     const body = document.createElement('div');
     body.className = 'caramel-drawer-body';
@@ -591,7 +618,8 @@ export class CaramelDrawerElement extends Base {
 
     tablist.addEventListener('click', (event) => {
       const tab = tabOf(event.target);
-      if (tab) this.#pickTab(tab);
+      // A disabled pill (a tab without content) ignores clicks.
+      if (tab && this.#visible.includes(tab)) this.#pickTab(tab);
     });
     tablist.addEventListener('keydown', (event) => this.#onTablistKey(event));
     close.addEventListener('click', () => this.hide());
@@ -599,6 +627,7 @@ export class CaramelDrawerElement extends Base {
     this.replaceChildren(panel);
     this.#panel = panel;
     this.#tablist = tablist;
+    this.#hint = hint;
     this.#closeButton = close;
     if (this.#controller && this.#playlistPanel) this.#playlistPanel.controller = this.#controller;
     this.#render();
@@ -609,24 +638,36 @@ export class CaramelDrawerElement extends Base {
     const tablist = this.#tablist;
     if (!panel || !tablist) return;
     const visible = this.#visible;
+    const rendered = renderedTabs(visible);
     const selected = this.#tab;
 
-    this.dataset['tabs'] = String(visible.length);
-    tablist.hidden = visible.length < 2;
+    this.dataset['tabs'] = String(rendered.length);
+    tablist.hidden = rendered.length < 2;
 
+    this.#renderText();
+    const hint = this.#hint;
     for (const tab of DRAWER_TABS) {
       const button = this.#tabButtons.get(tab);
       const tabpanel = this.#tabpanels.get(tab);
       const isSelected = tab === selected && visible.includes(tab);
       if (button) {
-        button.hidden = !visible.includes(tab);
+        // Rendered but without content: shown, never selectable.
+        const disabled = rendered.includes(tab) && !visible.includes(tab);
+        button.hidden = !rendered.includes(tab);
         button.setAttribute('aria-selected', isSelected ? 'true' : 'false');
         button.tabIndex = isSelected ? 0 : -1;
+        if (disabled && hint) {
+          setAttr(button, 'aria-disabled', 'true');
+          setAttr(button, 'title', hint.textContent ?? '');
+          setAttr(button, 'aria-describedby', hint.id);
+        } else {
+          button.removeAttribute('aria-disabled');
+          button.removeAttribute('title');
+          button.removeAttribute('aria-describedby');
+        }
       }
       if (tabpanel) tabpanel.hidden = !isSelected;
     }
-
-    this.#renderText();
   }
 
   #renderText(): void {
@@ -636,6 +677,7 @@ export class CaramelDrawerElement extends Base {
     setAttr(this.#panel, 'aria-label', text(DRAWER_KEYS.panel, DRAWER_DEFAULTS.panel));
     setText(this.#tabButtons.get('chapters'), text(CHAPTERS_KEYS.heading, CHAPTERS_DEFAULTS.heading));
     setText(this.#tabButtons.get('playlist'), text(PLAYLIST_KEYS.heading, PLAYLIST_DEFAULTS.heading));
+    setText(this.#hint, text(DRAWER_KEYS.noChapters, DRAWER_DEFAULTS.noChapters));
   }
 
   // Interaction ------------------------------------------------------------
@@ -689,20 +731,24 @@ export class CaramelDrawerElement extends Base {
     event.stopPropagation();
   }
 
-  /** Tablist pattern: arrows, Home and End move focus and select (roving tabindex). */
+  /**
+   * Tablist pattern: arrows, Home and End move focus and select (roving
+   * tabindex). Only tabs with content take part; a disabled pill is skipped.
+   */
   #onTablistKey(event: KeyboardEvent): void {
     const current = tabOf(event.target);
     if (!current) return;
     const tabs = this.#visible;
+    if (tabs.length === 0) return;
+    // A disabled pill focused by a pointer is not in the order: start from the ends.
     const index = tabs.indexOf(current);
-    if (index < 0 || tabs.length === 0) return;
     let next: DrawerTab | undefined;
     switch (event.key) {
       case 'ArrowRight':
-        next = tabs[(index + 1) % tabs.length];
+        next = tabs[index < 0 ? 0 : (index + 1) % tabs.length];
         break;
       case 'ArrowLeft':
-        next = tabs[(index - 1 + tabs.length) % tabs.length];
+        next = tabs[index < 0 ? tabs.length - 1 : (index - 1 + tabs.length) % tabs.length];
         break;
       case 'Home':
         next = tabs[0];

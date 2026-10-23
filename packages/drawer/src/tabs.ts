@@ -7,9 +7,26 @@ export function isDrawerTab(value: unknown): value is DrawerTab {
   return value === 'chapters' || value === 'playlist';
 }
 
-/** Tabs that have content, in display order (chapters first). */
+/**
+ * Tabs that have content, in display order (chapters first). This is the
+ * drawer's `tabs` property and the `caramel-drawer-tabs` payload: an empty
+ * list means nothing to open, so the control bar toggle hides.
+ */
 export function visibleTabs(input: { chapters: boolean; playlist: boolean }): DrawerTab[] {
   return DRAWER_TABS.filter((tab) => input[tab]);
+}
+
+/**
+ * The pills the tab bar renders for a set of available tabs (see
+ * `visibleTabs`). With a playlist both pills render, so the tab bar stays put
+ * while items change; a rendered tab that is not available (Chapters on an
+ * item without chapters) is shown disabled. Without a playlist the available
+ * tabs render as they are: chapters only, or nothing. The tab bar shows only
+ * when two pills render.
+ */
+export function renderedTabs(available: readonly DrawerTab[]): DrawerTab[] {
+  if (available.includes('playlist')) return [...DRAWER_TABS];
+  return [...available];
 }
 
 /**

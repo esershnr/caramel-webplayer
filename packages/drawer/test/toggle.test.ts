@@ -173,3 +173,80 @@ describe('<caramel-drawer> and the settings menu', () => {
     expect(drawer.open).toBe(false);
   });
 });
+
+describe('<caramel-drawer> tab bar with a playlist and no chapters', () => {
+  function pills(drawer: HTMLElement): { chapters: HTMLButtonElement; playlist: HTMLButtonElement } {
+    return {
+      chapters: drawer.querySelector('.caramel-drawer-tab[data-tab="chapters"]') as HTMLButtonElement,
+      playlist: drawer.querySelector('.caramel-drawer-tab[data-tab="playlist"]') as HTMLButtonElement,
+    };
+  }
+
+  function press(target: HTMLElement, key: string): void {
+    target.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+  }
+
+  it('renders both pills with Chapters disabled and Playlist selected', async () => {
+    const { player, toggle, drawer } = mount();
+    addPlaylist(player);
+    await settle();
+    expect(drawer.tabs).toEqual(['playlist']);
+    expect(toggle.hidden).toBe(false);
+    expect(drawer.dataset['tabs']).toBe('2');
+    expect((drawer.querySelector('.caramel-drawer-tabs') as HTMLElement).hidden).toBe(false);
+
+    const { chapters, playlist } = pills(drawer);
+    expect(chapters.hidden).toBe(false);
+    expect(playlist.hidden).toBe(false);
+    expect(chapters.getAttribute('aria-disabled')).toBe('true');
+    expect(chapters.hasAttribute('disabled')).toBe(false);
+    expect(chapters.getAttribute('tabindex')).toBe('-1');
+    expect(chapters.getAttribute('aria-selected')).toBe('false');
+    expect(chapters.getAttribute('title')).toBe('No chapters in this video');
+    const describedBy = chapters.getAttribute('aria-describedby') as string;
+    expect(document.getElementById(describedBy)?.textContent).toBe('No chapters in this video');
+
+    expect(drawer.tab).toBe('playlist');
+    expect(playlist.getAttribute('aria-selected')).toBe('true');
+    expect(playlist.getAttribute('tabindex')).toBe('0');
+    expect(playlist.hasAttribute('aria-disabled')).toBe(false);
+    expect(playlist.hasAttribute('title')).toBe(false);
+    expect(playlist.hasAttribute('aria-describedby')).toBe(false);
+  });
+
+  it('never selects the disabled pill with arrows, Home or End', async () => {
+    const { player, drawer } = mount();
+    addPlaylist(player);
+    await settle();
+    drawer.show();
+    const { chapters, playlist } = pills(drawer);
+    for (const key of ['ArrowLeft', 'ArrowRight', 'Home', 'End']) {
+      press(playlist, key);
+      expect(drawer.tab).toBe('playlist');
+      expect(chapters.getAttribute('aria-selected')).toBe('false');
+      expect(chapters.getAttribute('tabindex')).toBe('-1');
+    }
+  });
+
+  it('ignores clicks on the disabled pill', async () => {
+    const { player, drawer } = mount();
+    addPlaylist(player);
+    await settle();
+    drawer.show();
+    const seen: string[] = [];
+    drawer.addEventListener('caramel-drawer-tab', (e) => seen.push((e as CustomEvent<{ tab: string }>).detail.tab));
+    const { chapters } = pills(drawer);
+    chapters.click();
+    expect(drawer.tab).toBe('playlist');
+    expect(chapters.getAttribute('aria-selected')).toBe('false');
+    expect(seen).toEqual([]);
+  });
+
+  it('renders no tab bar while nothing has content', async () => {
+    const { drawer } = mount();
+    await settle();
+    expect(drawer.tabs).toEqual([]);
+    expect(drawer.dataset['tabs']).toBe('0');
+    expect((drawer.querySelector('.caramel-drawer-tabs') as HTMLElement).hidden).toBe(true);
+  });
+});

@@ -7,6 +7,7 @@ export const DRAWER_KEYS = {
   open: 'caramel.drawer.open',
   close: 'caramel.drawer.close',
   panel: 'caramel.drawer.panel',
+  noChapters: 'caramel.drawer.noChapters',
 } as const;
 
 /** English defaults, used when no translation is registered. */
@@ -14,12 +15,14 @@ export const DRAWER_DEFAULTS = {
   open: 'Open panel',
   close: 'Close panel',
   panel: 'Chapters and playlist',
+  noChapters: 'No chapters in this video',
 } as const;
 
 const TR = {
   open: 'Paneli aç',
   close: 'Paneli kapat',
   panel: 'Bölümler ve oynatma listesi',
+  noChapters: 'Bu videoda bölüm yok',
 } as const;
 
 let registered = false;

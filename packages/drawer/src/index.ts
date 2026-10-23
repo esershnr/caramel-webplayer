@@ -1,4 +1,12 @@
-export { DRAWER_TABS, isDrawerTab, visibleTabs, resolveTab, chaptersPresent, type DrawerTab } from './tabs.js';
+export {
+  DRAWER_TABS,
+  isDrawerTab,
+  visibleTabs,
+  renderedTabs,
+  resolveTab,
+  chaptersPresent,
+  type DrawerTab,
+} from './tabs.js';
 export {
   SWIPE_MIN_DISTANCE,
   SWIPE_MIN_VELOCITY,

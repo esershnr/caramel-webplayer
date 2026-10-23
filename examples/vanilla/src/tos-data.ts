@@ -8,7 +8,7 @@ const base = `${import.meta.env.BASE_URL}tos/`;
 interface ClipOptions {
   /** Display group (season name). Consecutive items with the same group share a header. */
   group?: string;
-  /** `false` leaves the item without a chapters track, so the chapters tab does not show. */
+  /** `false` leaves the item without a chapters track, so the drawer's Chapters pill is disabled. */
   chapters?: boolean;
 }
 
@@ -54,7 +54,7 @@ export function tosPlaylist(lang: 'tr' | 'en'): PlaylistItem[] {
       ],
       { group: season1 },
     ),
-    // No chapters: the drawer's chapters tab disappears while this item plays.
+    // No chapters: the drawer's Chapters pill is disabled while this item plays.
     clip('simulation', 'Tears of Steel: simulation', 42, [{ start: 0, end: 7, type: 'recap' }], {
       group: season1,
       chapters: false,

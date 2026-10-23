@@ -178,8 +178,10 @@ caramel-drawer.caramel-drawer .caramel-theme:is(.caramel-drawer-panel, caramel-c
   border-block-end: 1px solid var(--_caramel-divider);
 }
 
-/* With one tab there is no tab bar; the header only holds the close button
-   on narrow players (below). */
+/* data-tabs counts the rendered pills: with a playlist both render (Chapters
+   disabled on an item without chapters), so the bar stays put between items.
+   With fewer than two there is no tab bar; the header only holds the close
+   button on narrow players (below). */
 caramel-drawer:not([data-tabs='2']) .caramel-drawer-header {
   display: none;
 }
@@ -223,9 +225,29 @@ caramel-drawer:not([data-tabs='2']) .caramel-drawer-header {
   display: none;
 }
 
-.caramel-drawer-tab:hover {
+.caramel-drawer-tab:not([aria-disabled='true']):hover {
   background: color-mix(in srgb, white 8%, transparent);
   color: var(--caramel-overlay-text);
+}
+
+/* Disabled (Chapters on an item without chapters): dimmed, same size, no
+   hover tint. aria-disabled keeps it in the accessibility tree. */
+.caramel-drawer-tab[aria-disabled='true'] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* The disabled pill's description: read by screen readers, not drawn. */
+.caramel-drawer-hint {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 /* Selected: the skin's --media-accent fill (overlay accent at 22%). */
@@ -330,6 +352,10 @@ caramel-drawer:not([data-tabs='2']) .caramel-drawer-header {
   .caramel-drawer-tab[aria-selected='true'] {
     background: Highlight;
     color: HighlightText;
+  }
+
+  .caramel-drawer-tab[aria-disabled='true'] {
+    color: GrayText;
   }
 
   .caramel-drawer-panel :is(.caramel-drawer-tab, .caramel-drawer-close):focus-visible {

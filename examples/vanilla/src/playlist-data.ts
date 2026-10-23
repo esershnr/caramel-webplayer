@@ -6,7 +6,7 @@ const SECOND = '601n4w1fq88NJiVpzvrQQeQfNnnjjfKMIN7dCGAEarTs';
 /**
  * Three items: HLS with Mux storyboard, MP4 with a gen-thumbs sprite, a second HLS clip.
  * `grouped` puts the first two under season 1 and the second clip under season 2.
- * The MP4 item has no chapters track in either mode, so its chapters tab stays hidden.
+ * The MP4 item has no chapters track in either mode, so the drawer's Chapters pill is disabled while it plays.
  */
 export function muxPlaylist(lang: 'tr' | 'en', grouped = true): PlaylistItem[] {
   const season1 = lang === 'tr' ? '1. Sezon' : 'Season 1';

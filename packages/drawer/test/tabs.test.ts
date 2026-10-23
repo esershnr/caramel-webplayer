@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { chaptersPresent, resolveTab, visibleTabs } from '../src/tabs.js';
+import { chaptersPresent, renderedTabs, resolveTab, visibleTabs } from '../src/tabs.js';
 
 describe('visibleTabs', () => {
   it('keeps the order chapters, playlist', () => {
@@ -56,5 +56,17 @@ describe('chaptersPresent', () => {
 
   it('is absent when the track is disabled (it never loads)', () => {
     expect(chaptersPresent({ cueCount: 0, track: { readyState: 0, mode: 'disabled' } })).toBe(false);
+  });
+});
+
+describe('renderedTabs', () => {
+  it('renders both pills when a playlist is available, with or without chapters', () => {
+    expect(renderedTabs(['chapters', 'playlist'])).toEqual(['chapters', 'playlist']);
+    expect(renderedTabs(['playlist'])).toEqual(['chapters', 'playlist']);
+  });
+
+  it('renders the available tabs as they are without a playlist', () => {
+    expect(renderedTabs(['chapters'])).toEqual(['chapters']);
+    expect(renderedTabs([])).toEqual([]);
   });
 });

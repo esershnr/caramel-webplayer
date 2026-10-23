@@ -4,9 +4,21 @@ A side drawer inside the Video.js 10 player, with chapters and playlist tabs.
 A list button in the control bar, left of the settings button, opens it; the
 drawer sits above the bar on the right, like the settings menu, and hosts
 `<caramel-chapters-panel>` and `<caramel-playlist-panel>`, so viewers can jump
-to a chapter or another video without leaving the player. A tab appears only
-when it has content (a chapters track, a playlist with two or more items);
-with neither, the button stays hidden and the player looks as before.
+to a chapter or another video without leaving the player. A tab has content
+with a chapters track or a playlist of two or more items; with neither, the
+button stays hidden and the player looks as before.
+
+Tabs and pills: with a playlist bound, the tab bar always shows both pills,
+so it does not jump while items change. On an item without chapters the
+Chapters pill is disabled: dimmed, skipped by clicks and arrow keys, marked
+`aria-disabled="true"` and described by the hint "No chapters in this video"
+(`caramel.drawer.noChapters`, Turkish "Bu videoda bölüm yok"), also shown as
+its tooltip. If Chapters was selected, the drawer switches to Playlist; when
+chapters come back the pill re-enables and the selection stays put. Without a
+playlist, chapters alone show no tab bar. The `tabs` property and the
+`caramel-drawer-tabs` event report the tabs with content (so the toggle
+hides when it is empty); `data-tabs` on the element counts the rendered
+pills. The exported `renderedTabs(tabs)` maps one to the other.
 
 ```sh
 npm install @esershnr/caramel-drawer @videojs/html
@@ -52,7 +64,8 @@ import { Drawer } from '@esershnr/caramel-drawer/react';
 | `open` | boolean | Open state, reflected to the attribute. Setting the property opens or closes the drawer. |
 | `tab` | `chapters` \| `playlist` | Selected tab. A tab without content is applied once it has some. |
 | `controller` | element, read only | The bound `<caramel-playlist>`, or `null`. |
-| `tabs` | `('chapters' \| 'playlist')[]`, read only | Tabs that have content, in display order. |
+| `tabs` | `('chapters' \| 'playlist')[]`, read only | Tabs that have content, in display order. With a playlist the tab bar renders both pills; a rendered pill missing here is disabled. |
+| `data-tabs` | attribute, set by the drawer | Number of rendered pills (`2` with a playlist, `1` with chapters only, `0` with nothing). The tab bar shows only at `2`. |
 | `panelId` | string, read only | Id of the drawer's panel region (the toggle's `aria-controls`). |
 
 | Method | Description |
@@ -65,7 +78,7 @@ import { Drawer } from '@esershnr/caramel-drawer/react';
 | --- | --- |
 | `caramel-drawer-toggle` | `{ open: boolean }` |
 | `caramel-drawer-tab` | `{ tab: 'chapters' \| 'playlist' }` |
-| `caramel-drawer-tabs` | `{ tabs: ('chapters' \| 'playlist')[] }`, when the tabs with content change |
+| `caramel-drawer-tabs` | `{ tabs: ('chapters' \| 'playlist')[] }`, when the tabs with content change (not the rendered pills) |
 
 `<caramel-drawer-toggle>` takes one attribute, `for` (id of the
 `<caramel-drawer>`; default: the one inside the same `<video-player>`), and
