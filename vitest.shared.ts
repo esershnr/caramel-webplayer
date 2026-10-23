@@ -10,3 +10,9 @@ export const sourceResolve = {
   resolve: { conditions },
   ssr: { resolve: { conditions } },
 };
+
+/** One place for every project's test defaults. `testTimeout` is raised because a
+ *  cold run on Windows spawns one worker per project and a dynamic import can
+ *  take several seconds under that load (chapters ssr.test.ts timed out at ~5.2 s
+ *  against the 5 s default). */
+export const sharedTest = { testTimeout: 15_000 } as const;
