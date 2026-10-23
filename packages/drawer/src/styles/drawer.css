@@ -1,7 +1,7 @@
 /*
  * <caramel-drawer> styles. The drawer sits inside <media-container> on the
- * right edge, on top of the video, so the whole drawer (handle, tab bar,
- * panel) is the player's dark glass in both page themes: the overlay roles
+ * right, above the control bar, on top of the video, so the whole drawer
+ * (tab bar, panel) is the player's dark glass in both page themes: the overlay roles
  * plus the skip button's blur. The panel keeps its .caramel-theme scope and
  * the hosted chapters and playlist panels carry their own, so the drawer
  * remaps the role inputs (--caramel-<role>) on the panel; every nested scope
@@ -26,26 +26,71 @@
  * accent on hover 4.0 over white; the stronger glass keeps the accent above
  * 4.5 on every row and steadies busy frames, which the table does not count.
  *
- * Custom property: --caramel-drawer-width (default clamp(260px, 38%, 380px),
- * 100% on narrow players).
+ * Custom properties: --caramel-drawer-width (default clamp(260px, 38%, 380px),
+ * full width on narrow players), --caramel-drawer-inset-top and
+ * --caramel-drawer-inset-bottom (defaults below).
+ *
+ * Geometry: the open drawer floats above the control bar on the right, like
+ * the settings menu. With s = --media-spacing (4px at the default scale) and
+ * g = --media-popover-side-offset (3s, the gap the settings menu keeps above
+ * its trigger), the skin's bar is:
+ *   >= 42rem  bar at bottom 3s, height 9s (--media-control-size) + 2s padding
+ *             top edge 14s, so inset-bottom = 14s + g (17s)
+ *   >= 32rem  bar at bottom 2s, same height, top edge 13s: 13s + g (16s)
+ *   <  32rem  primary pill at bottom 2s, 9s buttons + 0.5s padding each side,
+ *             top edge 12s: 12s + g (15s). The secondary pill floats at the
+ *             top right (top 2s, same 10s height, bottom edge 12s), so the
+ *             top inset there is 12s + 2s (14s) instead of 2s.
+ * The inline-end inset follows the bar's side inset: 3s at >= 42rem, 2s
+ * below, 0 under 30rem (full width). The closed transform uses the same value.
+ * Everything is a multiple of --media-spacing, so it follows the skin's scale.
  */
 @import '@esershnr/caramel-theme/tokens.css';
 
 caramel-drawer {
+  --_caramel-drawer-s: var(--media-spacing, 4px);
+  --_caramel-drawer-gap: var(--media-popover-side-offset, calc(var(--_caramel-drawer-s) * 3));
+  --_caramel-drawer-inset-top: calc(var(--_caramel-drawer-s) * 2);
+  --_caramel-drawer-inset-bottom: calc(var(--_caramel-drawer-s) * 13 + var(--_caramel-drawer-gap));
+  --_caramel-drawer-inset-end: calc(var(--_caramel-drawer-s) * 2);
+  /* 1 slides out to the right, -1 to the left (right to left pages). */
+  --_caramel-drawer-out: 1;
+
   position: absolute;
-  inset-block: 0;
-  inset-inline-end: 0;
+  inset-block-start: var(--caramel-drawer-inset-top, var(--_caramel-drawer-inset-top));
+  inset-block-end: var(--caramel-drawer-inset-bottom, var(--_caramel-drawer-inset-bottom));
+  inset-inline-end: var(--_caramel-drawer-inset-end);
   z-index: 40;
   display: block;
   width: var(--caramel-drawer-width, clamp(260px, 38%, 380px));
-  /* The closed drawer lets the video through; only the handle and the panel take pointers. */
+  /* The closed drawer lets the video through; only the open panel takes pointers. */
   pointer-events: none;
-  transform: translateX(100%);
+  /* Closed: pushed past the player's edge by its width, its inset and the
+     1px ring, so nothing peeks in; the container clips it. */
+  transform: translateX(calc((100% + var(--_caramel-drawer-inset-end) + 2px) * var(--_caramel-drawer-out)));
   transition: transform var(--caramel-duration-enter) var(--caramel-ease-enter);
   font-family: var(--caramel-font-body);
   /* The drawer's glass: overlay-surface-strong made denser (black at 86%). */
   --_caramel-drawer-glass: color-mix(in srgb, var(--caramel-overlay-surface-strong), black 30%);
   --_caramel-drawer-blur: blur(12px) saturate(110%);
+}
+
+caramel-drawer:dir(rtl) {
+  --_caramel-drawer-out: -1;
+}
+
+@container media-root (width >= 42rem) {
+  caramel-drawer {
+    --_caramel-drawer-inset-bottom: calc(var(--_caramel-drawer-s) * 14 + var(--_caramel-drawer-gap));
+    --_caramel-drawer-inset-end: calc(var(--_caramel-drawer-s) * 3);
+  }
+}
+
+@container media-root (width < 32rem) {
+  caramel-drawer {
+    --_caramel-drawer-inset-top: calc(var(--_caramel-drawer-s) * 14);
+    --_caramel-drawer-inset-bottom: calc(var(--_caramel-drawer-s) * 12 + var(--_caramel-drawer-gap));
+  }
 }
 
 /* No backdrop blur, or the viewer asks for less transparency: a near-opaque
@@ -65,71 +110,6 @@ caramel-drawer {
 }
 
 caramel-drawer[data-open] {
-  transform: none;
-}
-
-/* Handle: a tab glued to the drawer's left edge. When closed it sits on the
-   player's right edge. */
-.caramel-drawer-handle {
-  position: absolute;
-  top: 50%;
-  inset-inline-end: 100%;
-  z-index: 35;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 64px;
-  margin: 0;
-  padding: 0;
-  translate: 0 -50%;
-  border: 1px solid var(--caramel-overlay-border);
-  border-inline-end: 0;
-  border-radius: var(--caramel-radius-box) 0 0 var(--caramel-radius-box);
-  background: var(--_caramel-drawer-glass);
-  color: var(--caramel-overlay-text);
-  backdrop-filter: var(--_caramel-drawer-blur);
-  font: inherit;
-  cursor: pointer;
-  pointer-events: auto;
-  /* Drags on the handle are ours, not the page's. */
-  touch-action: none;
-  -webkit-tap-highlight-color: transparent;
-  opacity: 1;
-  transition: opacity var(--caramel-duration-controls) var(--caramel-ease-enter);
-}
-
-.caramel-drawer-handle[hidden] {
-  display: none;
-}
-
-.caramel-drawer-handle:hover {
-  background: color-mix(in srgb, var(--_caramel-drawer-glass), white 8%);
-}
-
-.caramel-drawer-handle:focus-visible {
-  outline: 2px solid var(--caramel-overlay-accent);
-  outline-offset: var(--caramel-focus-offset);
-}
-
-/* The handle follows the control bar; keyboard focus keeps it visible. */
-media-container:not([data-controls-visible])
-  caramel-drawer:not([data-open])
-  .caramel-drawer-handle:not(:focus-visible) {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Chevron: points left (open me) when closed, right (push me back) when open. */
-.caramel-drawer-handle-icon {
-  display: block;
-  width: 20px;
-  height: 20px;
-  transform: rotate(180deg);
-  transition: transform var(--caramel-duration-fast) var(--caramel-ease-enter);
-}
-
-caramel-drawer[data-open] .caramel-drawer-handle-icon {
   transform: none;
 }
 
@@ -157,7 +137,10 @@ caramel-drawer .caramel-drawer-panel {
 
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
   height: 100%;
+  overflow: clip;
+  border-radius: var(--caramel-radius-box);
   background: var(--_caramel-drawer-glass);
   color: var(--caramel-overlay-text);
   backdrop-filter: var(--_caramel-drawer-blur);
@@ -309,12 +292,17 @@ caramel-drawer:not([data-tabs='2']) .caramel-drawer-header {
   height: 100%;
 }
 
-/* Narrow players: the drawer covers the whole video. The handle stays glued
-   to the drawer's left edge, which is off screen while open, so the close
-   button takes over. */
+/* Narrow players: the drawer spans the width above the bar, square edged,
+   and its header shows a close button. */
 @container media-root (width < 30rem) {
   caramel-drawer {
-    width: 100%;
+    --_caramel-drawer-inset-end: 0px;
+    inset-inline-start: 0;
+    width: auto;
+  }
+
+  caramel-drawer .caramel-drawer-panel {
+    border-radius: 0;
   }
 
   caramel-drawer[data-tabs] .caramel-drawer-header {
@@ -327,21 +315,11 @@ caramel-drawer:not([data-tabs='2']) .caramel-drawer-header {
 }
 
 @media (forced-colors: active) {
-  .caramel-drawer-handle {
-    border: 1px solid ButtonText;
-    background: ButtonFace;
-    color: ButtonText;
-  }
-
-  .caramel-drawer-handle,
   caramel-drawer .caramel-drawer-panel {
-    backdrop-filter: none;
-  }
-
-  caramel-drawer .caramel-drawer-panel {
-    border-inline-start: 1px solid CanvasText;
+    border: 1px solid CanvasText;
     background: Canvas;
     color: CanvasText;
+    backdrop-filter: none;
   }
 
   .caramel-drawer-tab,
@@ -354,7 +332,6 @@ caramel-drawer:not([data-tabs='2']) .caramel-drawer-header {
     color: HighlightText;
   }
 
-  .caramel-drawer-handle:focus-visible,
   .caramel-drawer-panel :is(.caramel-drawer-tab, .caramel-drawer-close):focus-visible {
     outline: 2px solid Highlight;
   }

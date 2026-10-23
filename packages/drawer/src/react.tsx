@@ -21,9 +21,11 @@ type DrawerElement = HTMLElement & { open: boolean };
 
 /**
  * React wrapper for <caramel-drawer>. Place it inside `<CaramelVideoSkin extras>`
- * so it lands directly in the player's container. Registers the element (and
- * the chapters and playlist panels it hosts) in the browser only, so it is
- * safe in the Next.js App Router.
+ * so it lands directly in the player's container. Registers the element, the
+ * `<caramel-drawer-toggle>` control bar button and the chapters and playlist
+ * panels it hosts in the browser only, so it is safe in the Next.js App
+ * Router. The toggle needs no wrapper: the skin's control bar carries it as a
+ * placeholder (left of the settings button), which the registration upgrades.
  */
 export function Drawer({ for: forId, open, tab, onToggle, onTabChange, className, style }: DrawerProps) {
   const ref = useRef<HTMLElement>(null);

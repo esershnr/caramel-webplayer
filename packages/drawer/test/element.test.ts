@@ -6,7 +6,6 @@ interface Fixture {
   drawer: CaramelDrawerElement;
   container: HTMLElement;
   panel: HTMLElement;
-  handle: HTMLButtonElement;
 }
 
 /**
@@ -26,7 +25,6 @@ function mount(): Fixture {
     drawer,
     container: document.querySelector('media-container') as HTMLElement,
     panel: drawer.querySelector('.caramel-drawer-panel') as HTMLElement,
-    handle: drawer.querySelector('.caramel-drawer-handle') as HTMLButtonElement,
   };
 }
 
@@ -53,23 +51,28 @@ describe('<caramel-drawer>', () => {
     expect(drawer.querySelector('caramel-playlist-panel[embedded][no-heading][nav="none"]')).not.toBeNull();
   });
 
+  it('renders only the panel, no edge handle', () => {
+    const { drawer, panel } = mount();
+    expect(Array.from(drawer.children)).toEqual([panel]);
+    expect(drawer.querySelector('.caramel-drawer-handle')).toBeNull();
+    expect(drawer.panelId).toBe(panel.id);
+    expect(drawer.tabs).toEqual([]);
+  });
+
   it('is inert while closed', () => {
-    const { drawer, panel, handle } = mount();
+    const { drawer, panel } = mount();
     expect(drawer.open).toBe(false);
     expect(panel.hasAttribute('inert')).toBe(true);
-    expect(handle.getAttribute('aria-expanded')).toBe('false');
-    expect(handle.getAttribute('aria-controls')).toBe(panel.id);
   });
 
   it('show() opens, reflects and dispatches caramel-drawer-toggle', () => {
-    const { drawer, panel, handle } = mount();
+    const { drawer, panel } = mount();
     const seen = toggles(drawer);
     drawer.show();
     expect(drawer.open).toBe(true);
     expect(panel.hasAttribute('inert')).toBe(false);
     expect(drawer.hasAttribute('open')).toBe(true);
     expect(drawer.hasAttribute('data-open')).toBe(true);
-    expect(handle.getAttribute('aria-expanded')).toBe('true');
     drawer.show();
     expect(seen).toEqual([true]);
   });
@@ -97,13 +100,12 @@ describe('<caramel-drawer>', () => {
   });
 
   it('hide() restores inert and dispatches caramel-drawer-toggle once', () => {
-    const { drawer, panel, handle } = mount();
+    const { drawer, panel } = mount();
     drawer.show();
     const seen = toggles(drawer);
     drawer.hide();
     drawer.hide();
     expect(panel.hasAttribute('inert')).toBe(true);
-    expect(handle.getAttribute('aria-expanded')).toBe('false');
     expect(seen).toEqual([false]);
   });
 

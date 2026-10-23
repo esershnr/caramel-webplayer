@@ -10,5 +10,11 @@ export {
 } from './swipe.js';
 export { LAST_TAB_KEY, readLastTab, writeLastTab } from './session.js';
 export { DRAWER_KEYS, DRAWER_DEFAULTS, registerDrawerI18n } from './i18n.js';
-export { CaramelDrawerElement, type DrawerToggleDetail, type DrawerTabDetail } from './element.js';
+export {
+  CaramelDrawerElement,
+  type DrawerToggleDetail,
+  type DrawerTabDetail,
+  type DrawerTabsDetail,
+} from './element.js';
+export { CaramelDrawerToggleElement } from './toggle.js';
 export { defineCaramelDrawer } from './define.js';

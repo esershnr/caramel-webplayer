@@ -13,7 +13,8 @@ import { CHAPTERS_DEFAULTS, CHAPTERS_KEYS } from '@esershnr/caramel-chapters';
 import { PLAYLIST_DEFAULTS, PLAYLIST_KEYS, type CaramelPlaylistElement } from '@esershnr/caramel-playlist';
 import { DRAWER_DEFAULTS, DRAWER_KEYS, registerDrawerI18n } from './i18n.js';
 import { readLastTab, writeLastTab } from './session.js';
-import { SWIPE_SLOP, swipeDecision } from './swipe.js';
+import { undefinedAncestorTag } from './provider.js';
+import { swipeDecision } from './swipe.js';
 import { DRAWER_TABS, chaptersPresent, isDrawerTab, resolveTab, visibleTabs, type DrawerTab } from './tabs.js';
 
 /** HTMLElement stand-in so the module can be imported during SSR. */
@@ -28,6 +29,10 @@ export interface DrawerTabDetail {
   tab: DrawerTab;
 }
 
+export interface DrawerTabsDetail {
+  tabs: readonly DrawerTab[];
+}
+
 /** Frame retries while looking for the playlist controller (frameworks append siblings later). */
 const LOOKUP_RETRIES = 30;
 /** Below this container width a pick closes the drawer (it covers the whole video there). */
@@ -38,7 +43,6 @@ type PlaylistPanel = HTMLElement & { controller: CaramelPlaylistElement | null }
 
 interface Drag {
   id: number;
-  source: 'handle' | 'panel';
   x: number;
   y: number;
   lastX: number;
@@ -52,10 +56,11 @@ let counter = 0;
  * <caramel-drawer>
  *
  * A side drawer inside the player: a direct child of `<media-container>`
- * (pass it in the skin's `extras`), with a chevron handle on the right edge.
- * It opens to show two tabs, chapters and playlist, hosting
+ * (pass it in the skin's `extras`). It opens from a `<caramel-drawer-toggle>`
+ * button in the control bar and sits above the bar on the right, like the
+ * settings menu, with two tabs, chapters and playlist, hosting
  * `<caramel-chapters-panel>` and `<caramel-playlist-panel>`. A tab is shown only
- * when it has content; with no content the handle hides.
+ * when it has content; with no content the toggle hides.
  *
  *   <caramel-drawer for="queue"></caramel-drawer>
  *
@@ -65,15 +70,23 @@ let counter = 0;
  *   open   boolean, reflected
  *   tab    `chapters` or `playlist`
  *
- * Properties: `open`, `tab`, `controller` (read only).
+ * Properties: `open`, `tab`, `tabs`, `controller` and `panelId` (the last
+ * three read only).
  * Methods: `show()`, `hide()`, `toggle()`.
  * Events: `caramel-drawer-toggle` (detail: DrawerToggleDetail),
- * `caramel-drawer-tab` (detail: DrawerTabDetail). Both bubble.
+ * `caramel-drawer-tab` (detail: DrawerTabDetail), `caramel-drawer-tabs`
+ * (detail: DrawerTabsDetail, the visible tabs changed). All bubble.
+ *
+ * The drawer and the player's menus (the settings menu, any root
+ * `<media-menu>` in the same `<video-player>`) take turns: `show()` closes
+ * every open menu, and a menu that opens while the drawer is open closes the
+ * drawer.
  *
  * The drawer never touches playback. Keys typed inside the panel stay inside
- * it (the player's hotkeys never see them), pointer gestures inside it are
- * ignored by the player (`data-interactive`), and the controls stay visible
- * while it is open (a controls lock).
+ * it (the player's hotkeys never see them), Escape closes it and returns
+ * focus to the toggle, pointer gestures inside it are ignored by the player
+ * (`data-interactive`), a touch drag to the right closes it, and the controls
+ * stay visible while it is open (a controls lock).
  */
 export class CaramelDrawerElement extends Base {
   static readonly tagName = 'caramel-drawer';
@@ -107,7 +120,6 @@ export class CaramelDrawerElement extends Base {
   /** Tag of the undefined ancestor we wait for, so one connect waits once. */
   #waitingFor: string | null = null;
 
-  #handle: HTMLButtonElement | null = null;
   #panel: HTMLDivElement | null = null;
   #tablist: HTMLDivElement | null = null;
   #closeButton: HTMLButtonElement | null = null;
@@ -116,7 +128,7 @@ export class CaramelDrawerElement extends Base {
   #playlistPanel: PlaylistPanel | null = null;
 
   #drag: Drag | null = null;
-  #suppressClick = false;
+  #menuObserver: MutationObserver | null = null;
 
   /** Whether the drawer is open. Setting it opens or closes it. */
   get open(): boolean {
@@ -149,6 +161,16 @@ export class CaramelDrawerElement extends Base {
     return this.#controller;
   }
 
+  /** Tabs that have content, in display order. Empty: nothing to open. */
+  get tabs(): readonly DrawerTab[] {
+    return this.#visible;
+  }
+
+  /** Id of the panel region, for a toggle's `aria-controls`. Empty before the first connect. */
+  get panelId(): string {
+    return this.#panel?.id ?? '';
+  }
+
   override connectedCallback(): void {
     super.connectedCallback();
     registerDrawerI18n();
@@ -160,6 +182,7 @@ export class CaramelDrawerElement extends Base {
     if (isDrawerTab(tab) && !this.#explicitTab) this.tab = tab;
     if (this.hasAttribute('open') && !this.#open) this.#show(false);
     this.#awaitProvider();
+    this.#observeMenus();
     this.requestUpdate();
   }
 
@@ -169,6 +192,8 @@ export class CaramelDrawerElement extends Base {
     this.#detachController();
     this.#bindTrack(null);
     this.#drag = null;
+    this.#menuObserver?.disconnect();
+    this.#menuObserver = null;
   }
 
   override attributeChangedCallback(name: string, old: string | null, value: string | null): void {
@@ -198,22 +223,20 @@ export class CaramelDrawerElement extends Base {
     this.#show(true);
   }
 
-  /** Closes the drawer. Focus inside it returns to the handle. */
+  /** Closes the drawer. Focus inside it returns to the toggle button. */
   hide(): void {
     if (!this.#open) return;
     const panel = this.#panel;
     const active = typeof document === 'undefined' ? null : document.activeElement;
-    // Focus returns to the handle only when it was inside: a programmatic close must not steal it.
+    // Focus returns to the toggle only when it was inside: a programmatic close must not steal it.
     const hadFocus = !!active && this.contains(active);
     this.#open = false;
     this.removeAttribute('data-open');
     this.removeAttribute('open');
-    this.#handle?.setAttribute('aria-expanded', 'false');
     panel?.setAttribute('inert', '');
     this.#releaseLock();
     this.#render();
-    const handle = this.#handle;
-    if (hadFocus && handle && !handle.hidden) handle.focus({ preventScroll: true });
+    if (hadFocus) this.#toggleButton()?.focus({ preventScroll: true });
     this.#emit('caramel-drawer-toggle', { open: false } satisfies DrawerToggleDetail);
   }
 
@@ -246,7 +269,7 @@ export class CaramelDrawerElement extends Base {
     }
     this.setAttribute('data-open', '');
     if (!this.hasAttribute('open')) this.setAttribute('open', '');
-    this.#handle?.setAttribute('aria-expanded', 'true');
+    this.#closeMenus();
     this.#panel?.removeAttribute('inert');
     this.#takeLock();
     this.#render();
@@ -263,7 +286,52 @@ export class CaramelDrawerElement extends Base {
     target?.focus({ preventScroll: true });
   }
 
-  /** Keeps the control bar (and so the handle) visible while the drawer is open. */
+  /**
+   * The button of the `<caramel-drawer-toggle>` bound to this drawer (or,
+   * while none reports a binding, the first one in the player), when shown.
+   */
+  #toggleButton(): HTMLButtonElement | null {
+    if (typeof document === 'undefined') return null;
+    const toggles = Array.from(document.querySelectorAll<HTMLElement & { drawer?: unknown }>('caramel-drawer-toggle'));
+    const toggle =
+      toggles.find((el) => el.drawer === this) ??
+      this.closest('video-player')?.querySelector<HTMLElement>('caramel-drawer-toggle') ??
+      null;
+    if (!toggle || toggle.hidden) return null;
+    return toggle.querySelector<HTMLButtonElement>('.caramel-drawer-toggle-button');
+  }
+
+  // Menus ------------------------------------------------------------------
+
+  /** Opening the drawer closes the player's open menus (the settings menu). */
+  #closeMenus(): void {
+    const player = this.closest('video-player');
+    if (!player) return;
+    for (const menu of player.querySelectorAll<HTMLElement & { closeMenu?: unknown }>('media-menu[data-open]')) {
+      if (typeof menu.closeMenu === 'function') (menu.closeMenu as () => void).call(menu);
+    }
+  }
+
+  /** A menu that opens while the drawer is open closes the drawer. */
+  #observeMenus(): void {
+    if (this.#menuObserver || typeof MutationObserver === 'undefined') return;
+    const player = this.closest('video-player');
+    if (!player) return;
+    this.#menuObserver = new MutationObserver((records) => {
+      if (!this.#open) return;
+      // Read the current state: a menu that opened and closed again in one task is ignored.
+      const opened = records.some(
+        (record) =>
+          record.target instanceof Element &&
+          record.target.localName === 'media-menu' &&
+          record.target.hasAttribute('data-open'),
+      );
+      if (opened) this.hide();
+    });
+    this.#menuObserver.observe(player, { attributes: true, attributeFilter: ['data-open'], subtree: true });
+  }
+
+  /** Keeps the control bar (and so the toggle) visible while the drawer is open. */
   #takeLock(): void {
     if (this.#release) return;
     const controls = this.#controls.value;
@@ -306,6 +374,7 @@ export class CaramelDrawerElement extends Base {
     const visible = visibleTabs({ chapters, playlist });
     if (sameTabs(visible, this.#visible)) return;
     this.#visible = visible;
+    this.#emit('caramel-drawer-tabs', { tabs: visible } satisfies DrawerTabsDetail);
 
     let next = resolveTab(this.#tab, visible, readLastTab());
     const requested = this.#requestedTab;
@@ -439,14 +508,6 @@ export class CaramelDrawerElement extends Base {
     // The skin's Space redirect leaves buttons inside to their native activation.
     this.setAttribute('data-caramel-native-space', '');
 
-    const handle = document.createElement('button');
-    handle.type = 'button';
-    handle.className = 'caramel-drawer-handle';
-    handle.setAttribute('aria-expanded', 'false');
-    handle.setAttribute('aria-controls', panelId);
-    handle.setAttribute('aria-label', DRAWER_DEFAULTS.open);
-    handle.append(createIconElement(icons.chevron, { className: 'caramel-drawer-handle-icon' }));
-
     const panel = document.createElement('div');
     panel.className = 'caramel-drawer-panel caramel-theme';
     panel.id = panelId;
@@ -514,14 +575,8 @@ export class CaramelDrawerElement extends Base {
 
     // Listeners on own children live as long as the element; a disconnect
     // and reconnect must not strip them, so no abort signal here.
-    handle.addEventListener('click', () => this.#onHandleClick());
-    handle.addEventListener('pointerdown', (event) => this.#onPointerDown(event, 'handle'));
-    handle.addEventListener('pointermove', (event) => this.#onPointerMove(event));
-    handle.addEventListener('pointerup', (event) => this.#onPointerEnd(event));
-    handle.addEventListener('pointercancel', (event) => this.#onPointerEnd(event));
-
     panel.addEventListener('pointerdown', (event) => {
-      if (event.pointerType === 'touch') this.#onPointerDown(event, 'panel');
+      if (event.pointerType === 'touch') this.#onPointerDown(event);
     });
     panel.addEventListener('pointermove', (event) => this.#onPointerMove(event));
     panel.addEventListener('pointerup', (event) => this.#onPointerEnd(event));
@@ -541,8 +596,7 @@ export class CaramelDrawerElement extends Base {
     tablist.addEventListener('keydown', (event) => this.#onTablistKey(event));
     close.addEventListener('click', () => this.hide());
 
-    this.replaceChildren(handle, panel);
-    this.#handle = handle;
+    this.replaceChildren(panel);
     this.#panel = panel;
     this.#tablist = tablist;
     this.#closeButton = close;
@@ -551,15 +605,13 @@ export class CaramelDrawerElement extends Base {
   }
 
   #render(): void {
-    const handle = this.#handle;
     const panel = this.#panel;
     const tablist = this.#tablist;
-    if (!handle || !panel || !tablist) return;
+    if (!panel || !tablist) return;
     const visible = this.#visible;
     const selected = this.#tab;
 
     this.dataset['tabs'] = String(visible.length);
-    handle.hidden = visible.length === 0;
     tablist.hidden = visible.length < 2;
 
     for (const tab of DRAWER_TABS) {
@@ -580,11 +632,6 @@ export class CaramelDrawerElement extends Base {
   #renderText(): void {
     const t = this.#i18n.value;
     const text = (key: string, fallback: string): string => t(key, { default: fallback });
-    setAttr(
-      this.#handle,
-      'aria-label',
-      this.#open ? text(DRAWER_KEYS.close, DRAWER_DEFAULTS.close) : text(DRAWER_KEYS.open, DRAWER_DEFAULTS.open),
-    );
     setAttr(this.#closeButton, 'aria-label', text(DRAWER_KEYS.close, DRAWER_DEFAULTS.close));
     setAttr(this.#panel, 'aria-label', text(DRAWER_KEYS.panel, DRAWER_DEFAULTS.panel));
     setText(this.#tabButtons.get('chapters'), text(CHAPTERS_KEYS.heading, CHAPTERS_DEFAULTS.heading));
@@ -593,28 +640,11 @@ export class CaramelDrawerElement extends Base {
 
   // Interaction ------------------------------------------------------------
 
-  #onHandleClick(): void {
-    if (this.#suppressClick) {
-      // The click that ends a drag on the handle.
-      this.#suppressClick = false;
-      return;
-    }
-    this.toggle();
-  }
-
-  #onPointerDown(event: PointerEvent, source: Drag['source']): void {
+  /** A touch drag on the open panel: a swipe to the right closes it. */
+  #onPointerDown(event: PointerEvent): void {
     if (!event.isPrimary || event.button !== 0) return;
-    if (source === 'handle') {
-      this.#suppressClick = false;
-      try {
-        this.#handle?.setPointerCapture(event.pointerId);
-      } catch {
-        // Synthetic or already released pointer: tracking still works without capture.
-      }
-    }
     this.#drag = {
       id: event.pointerId,
-      source,
       x: event.clientX,
       y: event.clientY,
       lastX: event.clientX,
@@ -638,14 +668,8 @@ export class CaramelDrawerElement extends Base {
     const ended = event.type === 'pointerup';
     const dx = (ended ? event.clientX : drag.lastX) - drag.x;
     const dy = (ended ? event.clientY : drag.lastY) - drag.y;
-    if (drag.source === 'handle' && Math.hypot(dx, dy) > SWIPE_SLOP) this.#suppressClick = true;
     const decision = swipeDecision({ dx, dy, dt: event.timeStamp - drag.time, width: this.#containerWidth() });
-    if (drag.source === 'handle') {
-      if (!this.#open && decision === 'left') this.show();
-      else if (this.#open && decision === 'right') this.hide();
-    } else if (this.#open && decision === 'right') {
-      this.hide();
-    }
+    if (this.#open && decision === 'right') this.hide();
   }
 
   #containerWidth(): number {
@@ -723,15 +747,6 @@ function setAttr(element: Element | null | undefined, name: string, value: strin
 
 function setText(element: Element | null | undefined, value: string): void {
   if (element && element.textContent !== value) element.textContent = value;
-}
-
-/** Local name of the closest ancestor that is a custom element not defined yet. */
-function undefinedAncestorTag(element: Element): string | null {
-  for (let node = element.parentElement; node; node = node.parentElement) {
-    const tag = node.localName;
-    if (tag.includes('-') && !customElements.get(tag)) return tag;
-  }
-  return null;
 }
 
 declare global {

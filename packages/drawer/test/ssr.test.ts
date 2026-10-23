@@ -10,6 +10,8 @@ describe('SSR import', () => {
     const mod = await import('../src/index.js');
     expect(typeof mod.CaramelDrawerElement).toBe('function');
     expect(mod.CaramelDrawerElement.tagName).toBe('caramel-drawer');
+    expect(typeof mod.CaramelDrawerToggleElement).toBe('function');
+    expect(mod.CaramelDrawerToggleElement.tagName).toBe('caramel-drawer-toggle');
     expect(typeof mod.defineCaramelDrawer).toBe('function');
     expect(() => mod.defineCaramelDrawer()).not.toThrow();
     expect(mod.DRAWER_KEYS.open).toBe('caramel.drawer.open');
