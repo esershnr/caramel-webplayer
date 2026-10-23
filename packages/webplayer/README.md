@@ -2,8 +2,8 @@
 
 Caramel Webplayer in one package: a themed Video.js 10 player with a skin of
 morphing Lucide icons, skip intro / recap / outro / sponsor, a chapter list and
-a playlist with resume. It depends on and re-exports the six
-`@esershnr/caramel-*` packages.
+a playlist with resume, and a side drawer that holds the chapters and the
+playlist. It depends on and re-exports the seven `@esershnr/caramel-*` packages.
 
 ```sh
 npm install @esershnr/caramel-webplayer @videojs/html
@@ -29,18 +29,18 @@ React:
 ```tsx
 'use client';
 import '@esershnr/caramel-webplayer/webplayer.css';
-import { CaramelVideoSkin, SkipSegments } from '@esershnr/caramel-webplayer/react';
+import { CaramelVideoSkin, SkipSegments, Drawer } from '@esershnr/caramel-webplayer/react';
 
-<CaramelVideoSkin id="player" lang="tr" extras={<SkipSegments segments={[{ start: 0, end: 30, type: 'intro' }]} />}>
+<CaramelVideoSkin id="player" lang="tr" extras={<><SkipSegments segments={[{ start: 0, end: 30, type: 'intro' }]} /><Drawer /></>}>
   <video src="/video.mp4" playsInline />
 </CaramelVideoSkin>
 ```
 
 | Entry | Contents |
 | --- | --- |
-| `@esershnr/caramel-webplayer` | Every export of theme, icons, skin, skip-segments, chapters, playlist. `findActiveIndex` exists twice upstream, so it is `findActiveSegmentIndex` and `findActiveChapterIndex` here. |
-| `/define` | Registers all elements and loads their stylesheets (browser only). |
-| `/react` | All React wrappers (`CaramelVideoSkin`, `SkipSegments`, `ChaptersPanel`, `Playlist`, `PlaylistPanel`, `Icon`, `MorphIcon`). |
+| `@esershnr/caramel-webplayer` | Every export of theme, icons, skin, skip-segments, chapters, playlist, drawer. `findActiveIndex` exists twice upstream, so it is `findActiveSegmentIndex` and `findActiveChapterIndex` here. |
+| `/define` | Registers all elements, the drawer included, and loads their stylesheets (browser only). |
+| `/react` | All React wrappers (`CaramelVideoSkin`, `SkipSegments`, `ChaptersPanel`, `Playlist`, `PlaylistPanel`, `Drawer`, `Icon`, `MorphIcon`). |
 | `/webplayer.css` | Theme tokens and the complete skin stylesheet, for loading CSS before the elements register (SSR). |
 
 Full guide, theming and the modular packages: [root README](https://github.com/esershnr/caramel-webplayer#readme).
