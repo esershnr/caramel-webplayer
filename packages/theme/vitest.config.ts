@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitest/config';
-import { sourceResolve } from '../../vitest.shared';
+import { sourceResolve } from '../../vitest.shared.ts';
 
 export default defineConfig({
   ...sourceResolve,
