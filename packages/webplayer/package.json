@@ -71,6 +71,7 @@
   },
   "dependencies": {
     "@esershnr/caramel-chapters": "workspace:*",
+    "@esershnr/caramel-drawer": "workspace:*",
     "@esershnr/caramel-icons": "workspace:*",
     "@esershnr/caramel-playlist": "workspace:*",
     "@esershnr/caramel-skin": "workspace:*",
