@@ -35,6 +35,9 @@ importers:
       '@esershnr/caramel-chapters':
         specifier: workspace:*
         version: link:../../packages/chapters
+      '@esershnr/caramel-drawer':
+        specifier: workspace:*
+        version: link:../../packages/drawer
       '@esershnr/caramel-icons':
         specifier: workspace:*
         version: link:../../packages/icons
@@ -81,6 +84,9 @@ importers:
       '@esershnr/caramel-chapters':
         specifier: workspace:*
         version: link:../../packages/chapters
+      '@esershnr/caramel-drawer':
+        specifier: workspace:*
+        version: link:../../packages/drawer
       '@esershnr/caramel-icons':
         specifier: workspace:*
         version: link:../../packages/icons
@@ -125,6 +131,43 @@ importers:
       '@videojs/html':
         specifier: 10.0.1
         version: 10.0.1(react@19.3.0)
+      react:
+        specifier: ^19.2.0
+        version: 19.3.0
+      typescript:
+        specifier: ^5.9.0
+        version: 5.9.3
+      vitest:
+        specifier: ^5.0.4
+        version: 5.0.4(@types/node@26.6.5)(happy-dom@21.0.3)(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.6.1)(tsx@4.23.15)(yaml@2.9.1))
+
+  packages/drawer:
+    dependencies:
+      '@esershnr/caramel-chapters':
+        specifier: workspace:*
+        version: link:../chapters
+      '@esershnr/caramel-icons':
+        specifier: workspace:*
+        version: link:../icons
+      '@esershnr/caramel-playlist':
+        specifier: workspace:*
+        version: link:../playlist
+      '@esershnr/caramel-theme':
+        specifier: workspace:*
+        version: link:../theme
+      react-dom:
+        specifier: '>=19'
+        version: 19.3.0(react@19.3.0)
+    devDependencies:
+      '@types/react':
+        specifier: ^19.1.0
+        version: 19.3.0
+      '@videojs/html':
+        specifier: 10.0.1
+        version: 10.0.1(react@19.3.0)
+      happy-dom:
+        specifier: ^21.0.3
+        version: 21.0.3
       react:
         specifier: ^19.2.0
         version: 19.3.0
@@ -280,6 +323,9 @@ importers:
       '@esershnr/caramel-chapters':
         specifier: workspace:*
         version: link:../chapters
+      '@esershnr/caramel-drawer':
+        specifier: workspace:*
+        version: link:../drawer
       '@esershnr/caramel-icons':
         specifier: workspace:*
         version: link:../icons
