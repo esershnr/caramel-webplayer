@@ -187,6 +187,7 @@ export function normalizeItems(input: unknown): PlaylistItem[] {
     }
     if (Array.isArray(value['segments'])) item.segments = value['segments'] as PlaylistItem['segments'];
     if (typeof value['duration'] === 'number' && Number.isFinite(value['duration'])) item.duration = value['duration'];
+    if (typeof value['group'] === 'string' && value['group']) item.group = value['group'];
     items.push(item);
   }
   return items;

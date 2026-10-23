@@ -17,6 +17,7 @@ export {
   type ResumeEntry,
 } from './resume.js';
 export { formatDuration } from './format.js';
+export { groupRuns, type GroupRun } from './groups.js';
 export { PLAYLIST_KEYS, PLAYLIST_DEFAULTS, registerPlaylistI18n, createPlaylistTranslator } from './i18n.js';
 export {
   CaramelPlaylistElement,
