@@ -1,5 +1,11 @@
 # @esershnr/caramel-chapters
 
+## 0.3.0
+
+### Minor Changes
+
+- 8717cc2: `<caramel-chapters-panel>` gains an `embedded` attribute (and `<ChaptersPanel embedded>`) for hosting the list inside another surface, used by the new drawer package.
+
 ## 0.2.0
 
 ### Minor Changes
