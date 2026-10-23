@@ -18,6 +18,8 @@
  *   text (white)       15.6  12.2   10.0      21.0  18.4   15.6
  *   muted (white 80%)  10.4   8.5    7.1      13.1  11.9   10.4
  *   accent (text, ring) 7.7   6.0    4.9      10.3   9.0    7.7
+ *   Selected tab (overlay accent 22% on the glass): text 9.8 / 14.8,
+ *   focus ring 4.8 / 7.3 (white / black frame).
  *   Fallback glass (black 94%, no blur) is darker: every pair above or higher.
  *   Solid: overlay-on-accent on overlay-accent 8.8, on the hover fill 9.8.
  * Bare overlay-surface-strong (black 80%) would already give text 12.6 and
@@ -189,7 +191,7 @@ caramel-drawer.caramel-drawer .caramel-theme:is(.caramel-drawer-panel, caramel-c
   flex: none;
   align-items: center;
   gap: 8px;
-  padding: 8px 8px 0;
+  padding: 8px;
   border-block-end: 1px solid var(--_caramel-divider);
 }
 
@@ -199,11 +201,13 @@ caramel-drawer:not([data-tabs='2']) .caramel-drawer-header {
   display: none;
 }
 
+/* Tab bar: a pill segmented control, sized like the player's control buttons
+   (--media-control-size, 36px at the default scale). */
 .caramel-drawer-tabs {
   display: flex;
   flex: 1 1 auto;
   min-width: 0;
-  gap: 4px;
+  gap: 6px;
 }
 
 .caramel-drawer-tabs[hidden] {
@@ -213,10 +217,12 @@ caramel-drawer:not([data-tabs='2']) .caramel-drawer-header {
 .caramel-drawer-tab {
   flex: 0 1 auto;
   min-width: 0;
+  box-sizing: border-box;
+  height: var(--media-control-size, 36px);
   margin: 0;
-  padding: 10px 12px;
+  padding: 0 14px;
   border: 0;
-  border-radius: 8px 8px 0 0;
+  border-radius: var(--caramel-radius-chip);
   background: transparent;
   color: var(--_caramel-muted);
   font: inherit;
@@ -228,8 +234,6 @@ caramel-drawer:not([data-tabs='2']) .caramel-drawer-header {
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
-  /* Selection marker: a primary underline drawn inside the tab. */
-  box-shadow: inset 0 -2px 0 transparent;
 }
 
 .caramel-drawer-tab[hidden] {
@@ -237,13 +241,14 @@ caramel-drawer:not([data-tabs='2']) .caramel-drawer-header {
 }
 
 .caramel-drawer-tab:hover {
-  background: color-mix(in srgb, var(--_caramel-text) 8%, transparent);
-  color: var(--_caramel-text);
+  background: color-mix(in srgb, white 8%, transparent);
+  color: var(--caramel-overlay-text);
 }
 
+/* Selected: the skin's --media-accent fill (overlay accent at 22%). */
 .caramel-drawer-tab[aria-selected='true'] {
-  color: var(--_caramel-text);
-  box-shadow: inset 0 -2px 0 var(--_caramel-primary);
+  background: color-mix(in srgb, var(--caramel-overlay-accent) 22%, transparent);
+  color: var(--caramel-overlay-text);
 }
 
 .caramel-drawer-close {
@@ -251,20 +256,21 @@ caramel-drawer:not([data-tabs='2']) .caramel-drawer-header {
   flex: none;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  margin: 0 0 4px auto;
+  box-sizing: border-box;
+  width: var(--media-control-size, 36px);
+  height: var(--media-control-size, 36px);
+  margin: 0 0 0 auto;
   padding: 0;
   border: 0;
   border-radius: var(--caramel-radius-chip);
   background: transparent;
-  color: var(--_caramel-text);
+  color: var(--caramel-overlay-text);
   font: inherit;
   cursor: pointer;
 }
 
 .caramel-drawer-close:hover {
-  background: color-mix(in srgb, var(--_caramel-text) 8%, transparent);
+  background: color-mix(in srgb, white 8%, transparent);
 }
 
 .caramel-drawer-close-icon {
@@ -274,8 +280,8 @@ caramel-drawer:not([data-tabs='2']) .caramel-drawer-header {
 }
 
 .caramel-drawer-panel :is(.caramel-drawer-tab, .caramel-drawer-close):focus-visible {
-  outline: var(--_caramel-focus-ring);
-  outline-offset: calc(var(--caramel-focus-offset) * -1);
+  outline: 2px solid var(--caramel-overlay-accent);
+  outline-offset: var(--caramel-focus-offset);
 }
 
 .caramel-drawer-body {
@@ -343,10 +349,9 @@ caramel-drawer:not([data-tabs='2']) .caramel-drawer-header {
     color: ButtonText;
   }
 
-  /* Forced colors drop box-shadow, so the marker becomes a border. */
   .caramel-drawer-tab[aria-selected='true'] {
-    color: Highlight;
-    border-block-end: 2px solid Highlight;
+    background: Highlight;
+    color: HighlightText;
   }
 
   .caramel-drawer-handle:focus-visible,
