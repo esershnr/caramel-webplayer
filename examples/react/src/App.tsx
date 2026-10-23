@@ -1,12 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CaramelVideoSkin } from '@esershnr/caramel-skin/react';
 import { SkipSegments } from '@esershnr/caramel-skip-segments/react';
 import { ChaptersPanel } from '@esershnr/caramel-chapters/react';
 import { Playlist, PlaylistPanel } from '@esershnr/caramel-playlist/react';
+import { Drawer } from '@esershnr/caramel-drawer/react';
+import type { DrawerTabDetail, DrawerToggleDetail } from '@esershnr/caramel-drawer';
 import type { Segment, SkipEventDetail } from '@esershnr/caramel-skip-segments';
 import type { PlaylistItem } from '@esershnr/caramel-playlist';
 import { watchTheme, type Theme } from '@esershnr/caramel-theme';
-import { PLAYLIST } from '../../vanilla/src/playlist-data';
+import { muxPlaylist } from '../../vanilla/src/playlist-data';
 import { loadManifest } from '../../vanilla/src/manifest';
 
 type Choice = 'light' | 'dark' | 'system';
@@ -38,7 +40,8 @@ export function App() {
   const [resolved, setResolved] = useState<Theme>('light');
   const [lang, setLang] = useState<'tr' | 'en'>('tr');
   const [log, setLog] = useState<string[]>([]);
-  const [items, setItems] = useState<PlaylistItem[]>(PLAYLIST);
+  const [encodedItems, setEncodedItems] = useState<PlaylistItem[]>([]);
+  const items = useMemo(() => [...muxPlaylist(lang), ...encodedItems], [lang, encodedItems]);
 
   // encode-hls output, when present (served from repo out/ by the Vite plugin).
   useEffect(() => {
@@ -49,7 +52,7 @@ export function App() {
         item ? { ...item, id: `${item.id}-r2`, title: `${item.title} (R2)` } : null,
       ),
     ]).then((extra) => {
-      if (!cancelled) setItems([...PLAYLIST, ...extra.filter((item): item is PlaylistItem => item !== null)]);
+      if (!cancelled) setEncodedItems(extra.filter((item): item is PlaylistItem => item !== null));
     });
     return () => {
       cancelled = true;
@@ -81,6 +84,11 @@ export function App() {
     [push],
   );
   const onPlaylistEnded = useCallback(() => push('playlist ended'), [push]);
+  const onDrawerToggle = useCallback(
+    ({ open }: DrawerToggleDetail) => push(`drawer ${open ? 'open' : 'closed'}`),
+    [push],
+  );
+  const onDrawerTab = useCallback(({ tab }: DrawerTabDetail) => push(`drawer tab ${tab}`), [push]);
   const onChapter = useCallback(
     ({ cue }: { cue: { text: string; startTime: number } }) => push(`chapter ${cue.text} @ ${fmt(cue.startTime)}`),
     [push],
@@ -129,6 +137,7 @@ export function App() {
                   onChange={onPlaylistChange}
                   onEnded={onPlaylistEnded}
                 />
+                <Drawer onToggle={onDrawerToggle} onTabChange={onDrawerTab} />
               </>
             }
           >

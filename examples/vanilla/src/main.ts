@@ -4,13 +4,15 @@ import '@esershnr/caramel-skin/define';
 import '@esershnr/caramel-skip-segments/define';
 import '@esershnr/caramel-chapters/define';
 import '@esershnr/caramel-playlist/define';
+import '@esershnr/caramel-drawer/define';
 import '@videojs/html/media/hls-video';
 import { mountSkin } from '@esershnr/caramel-skin';
 import { watchTheme } from '@esershnr/caramel-theme';
 import type { Segment, SkipEventDetail } from '@esershnr/caramel-skip-segments';
 import type { PlaylistItem } from '@esershnr/caramel-playlist';
-import { PLAYLIST } from './playlist-data';
-import { TOS_PLAYLIST } from './tos-data';
+import type { DrawerTabDetail, DrawerToggleDetail } from '@esershnr/caramel-drawer';
+import { muxPlaylist } from './playlist-data';
+import { tosPlaylist } from './tos-data';
 import { loadManifest } from './manifest';
 
 // Player ------------------------------------------------------------------
@@ -32,10 +34,22 @@ playlist.setAttribute('list-id', 'demo');
 // The demo plays the Tears of Steel clips only. On the dev server `?dev` adds the
 // Mux test streams and the encode-hls output (local `out/` and the R2 copy).
 const DEV_EXTRAS = import.meta.env.DEV && new URLSearchParams(location.search).has('dev');
-const BASE_ITEMS = DEV_EXTRAS ? [...TOS_PLAYLIST, ...PLAYLIST] : TOS_PLAYLIST;
-playlist.items = BASE_ITEMS;
+// Group names are per language, so the items are rebuilt on a language switch. The
+// controller keeps the current item by id, so playback is not reloaded.
+let currentLang: 'tr' | 'en' = 'tr';
+let encodedItems: PlaylistItem[] = [];
+function applyItems() {
+  playlist.items = [
+    ...tosPlaylist(currentLang),
+    ...(DEV_EXTRAS ? muxPlaylist(currentLang, false) : []),
+    ...encodedItems,
+  ];
+}
+applyItems();
 
-mountSkin(player, { media, extras: [skip, playlist], uid: 'demo' });
+const drawer = document.createElement('caramel-drawer');
+
+mountSkin(player, { media, extras: [skip, playlist, drawer], uid: 'demo' });
 
 // encode-hls output, when present: `pnpm --filter @esershnr/caramel-encode-hls start -- media/<slug> --base-url ...`
 // The Vite plugin serves repo `out/` under /out/ with Range support.
@@ -47,7 +61,8 @@ if (DEV_EXTRAS) {
       item ? { ...item, id: `${item.id}-r2`, title: `${item.title} (R2)` } : null,
     ),
   ]).then((extra) => {
-    playlist.items = [...BASE_ITEMS, ...extra.filter((item): item is NonNullable<typeof item> => item !== null)];
+    encodedItems = extra.filter((item): item is NonNullable<typeof item> => item !== null);
+    applyItems();
   });
 }
 
@@ -77,6 +92,14 @@ playlist.addEventListener('caramel-playlist-ended', () => addLog('playlist ended
 document.querySelector('caramel-chapters-panel')?.addEventListener('caramel-chapter-select', (e) => {
   const { cue } = (e as CustomEvent<{ cue: { text: string; startTime: number } }>).detail;
   addLog(`chapter ${cue.text} @ ${fmt(cue.startTime)}`);
+});
+drawer.addEventListener('caramel-drawer-toggle', (e) => {
+  const { open } = (e as CustomEvent<DrawerToggleDetail>).detail;
+  addLog(`drawer ${open ? 'open' : 'closed'}`);
+});
+drawer.addEventListener('caramel-drawer-tab', (e) => {
+  const { tab } = (e as CustomEvent<DrawerTabDetail>).detail;
+  addLog(`drawer tab ${tab}`);
 });
 
 // Theme switch ------------------------------------------------------------
@@ -151,6 +174,8 @@ const i18n = document.querySelector<HTMLElement>('#i18n')!;
 
 function setLang(lang: Lang) {
   strings = STRINGS[lang];
+  currentLang = lang;
+  applyItems();
   i18n.setAttribute('lang', lang);
   document.documentElement.lang = lang;
   document.querySelectorAll<HTMLElement>('[data-i18n]').forEach((el) => {

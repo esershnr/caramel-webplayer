@@ -137,7 +137,7 @@ for (const base of urls) {
     // Encoded item (encode-hls output or the R2 copy): the last playlist entry
     // when more than the three demo clips are listed. Exercises byte-range HLS,
     // the quality menu, per-language chapters, subtitles, skip and fullscreen.
-    const items = page.locator('caramel-playlist-panel li button');
+    const items = page.locator('caramel-playlist-panel .caramel-playlist-item');
     if ((await items.count()) > 3) {
       await items.last().click();
       await page.waitForTimeout(3500);

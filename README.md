@@ -29,7 +29,7 @@ https://github.com/user-attachments/assets/9d378b7f-71d3-46bc-96da-5ce669c75c35
 
 A themed Video.js 10 player, built for esersahiner.com: skin with morphing
 Lucide icons, skip intro / recap / outro / sponsor, chapter list, playlist with
-resume. Built on `@videojs/html` custom elements with thin React wrappers
+resume, side drawer. Built on `@videojs/html` custom elements with thin React wrappers
 (`'use client'`, elements registered in the browser only, so the Next.js App
 Router stays SSR clean).
 
@@ -92,6 +92,7 @@ only need some of them (see "Modular install").
 | `@esershnr/caramel-skip-segments` | [![npm](https://img.shields.io/npm/v/@esershnr/caramel-skip-segments?label=)](https://www.npmjs.com/package/@esershnr/caramel-skip-segments) | `<caramel-skip-segments>`: skip intro / recap / outro / sponsor button, auto-skip per type, timeline markers; `<SkipSegments>` for React |
 | `@esershnr/caramel-chapters` | [![npm](https://img.shields.io/npm/v/@esershnr/caramel-chapters?label=)](https://www.npmjs.com/package/@esershnr/caramel-chapters) | `<caramel-chapters-panel>`: chapter list outside the video, fed by the player's chapters track; `<ChaptersPanel>` |
 | `@esershnr/caramel-playlist` | [![npm](https://img.shields.io/npm/v/@esershnr/caramel-playlist?label=)](https://www.npmjs.com/package/@esershnr/caramel-playlist) | `PlaylistModel`, `<caramel-playlist>` controller (title, poster, media, tracks and segments per item, resume via localStorage, auto advance) and `<caramel-playlist-panel>`; `<Playlist>`, `<PlaylistPanel>` |
+| `@esershnr/caramel-drawer` | [![npm](https://img.shields.io/npm/v/@esershnr/caramel-drawer?label=)](https://www.npmjs.com/package/@esershnr/caramel-drawer) | `<caramel-drawer>`: side drawer inside the player with chapters and playlist tabs, opened from a handle on the right edge; `<Drawer>` for React |
 | `@esershnr/caramel-gen-thumbs` | not published (`scripts/`) | `caramel-gen-thumbs`: ffmpeg sprite sheets plus a `#xywh=` WebVTT storyboard (`scripts/gen-thumbs/README.md`) |
 | `@esershnr/caramel-encode-hls` | not published (`scripts/`) | `caramel-encode-hls`: `media/<slug>` (video, SRT, meta.yaml) to publish-ready `out/<slug>` (byte-range HLS, poster, thumbnails, chapters, subtitles, manifest). Guide: `scripts/encode-hls/README.md` |
 
@@ -129,12 +130,14 @@ everything per item (see `packages/playlist/src/types.ts` for the contract):
 ```ts
 import '@esershnr/caramel-chapters/define';
 import '@esershnr/caramel-playlist/define';
+import '@esershnr/caramel-drawer/define';
 import '@videojs/html/media/hls-video'; // for .m3u8 items
 
 const playlist = document.createElement('caramel-playlist');
 playlist.id = 'playlist';
 playlist.items = items; // PlaylistItem[]
-mountSkin(player, { media: document.createElement('hls-video'), extras: [skip, playlist] });
+const drawer = document.createElement('caramel-drawer'); // optional: chapters and playlist tabs
+mountSkin(player, { media: document.createElement('hls-video'), extras: [skip, playlist, drawer] });
 ```
 
 ```html
@@ -147,8 +150,9 @@ mountSkin(player, { media: document.createElement('hls-video'), extras: [skip, p
 ```tsx
 import { CaramelVideoSkin } from '@esershnr/caramel-skin/react';
 import { SkipSegments } from '@esershnr/caramel-skip-segments/react';
+import { Drawer } from '@esershnr/caramel-drawer/react';
 
-<CaramelVideoSkin id="player" lang="tr" extras={<><SkipSegments segments={[]} autoSkip={['recap']} /><Playlist id="playlist" items={items} /></>}>
+<CaramelVideoSkin id="player" lang="tr" extras={<><SkipSegments segments={[]} autoSkip={['recap']} /><Playlist id="playlist" items={items} /><Drawer /></>}>
   <hls-video playsinline="" crossorigin="anonymous" />
 </CaramelVideoSkin>
 <ChaptersPanel playerId="player" />
