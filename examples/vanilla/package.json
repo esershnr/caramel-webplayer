@@ -16,7 +16,7 @@
     "@esershnr/caramel-skin": "workspace:*",
     "@esershnr/caramel-skip-segments": "workspace:*",
     "@esershnr/caramel-theme": "workspace:*",
-    "@videojs/html": "10.0.1"
+    "@videojs/html": "10.1.0"
   },
   "devDependencies": {
     "typescript": "^5.9.0",
