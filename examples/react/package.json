@@ -16,9 +16,9 @@
     "@esershnr/caramel-skin": "workspace:*",
     "@esershnr/caramel-skip-segments": "workspace:*",
     "@esershnr/caramel-theme": "workspace:*",
-    "@videojs/html": "10.0.1",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "@videojs/html": "10.1.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   },
   "devDependencies": {
     "@types/react": "^19.1.0",
