@@ -69,7 +69,7 @@
   },
   "dependencies": {
     "lucide": "^1.59.0",
-    "morphicons": "^1.7.1"
+    "morphicons": "^2.0.0"
   },
   "peerDependencies": {
     "react": ">=19",

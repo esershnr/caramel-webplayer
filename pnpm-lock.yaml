@@ -184,8 +184,8 @@ importers:
         specifier: ^1.59.0
         version: 1.59.0
       morphicons:
-        specifier: ^1.7.1
-        version: 1.7.1(react@19.3.1)
+        specifier: ^2.0.0
+        version: 2.0.0(react@19.3.1)
     devDependencies:
       '@types/react':
         specifier: ^19.1.0
@@ -1344,8 +1344,8 @@ packages:
   magic-string@1.4.3:
     resolution: {integrity: sha512-z12OxmaPGE0F4xlpGdjuAUckipLpQlTAuAmyGhNoD7ODpYUzvDfvtxUbjM/jwznyP178oju/KDdyi220wNJ0RQ==}
 
-  morphicons@1.7.1:
-    resolution: {integrity: sha512-q5ylxy5/d7vBg0OAzanlooXf05PekovMYDuuQVpr6vAQZxl99lrJbaIi+jJ32PXQf9WEEaDO2pbNBsx1ZhEnFQ==}
+  morphicons@2.0.0:
+    resolution: {integrity: sha512-/pyqQjUhq8FUKz2SjJ6sXe4KjAa0QEmEbtzG13158/pl+G6bCJGvo1zIEDGNQ+Hagl69hIu4Mn9kJgTvvTf8Ew==}
     peerDependencies:
       react: '>=18'
       react-native: '>=0.71'
@@ -2418,7 +2418,7 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.6.0
 
-  morphicons@1.7.1(react@19.3.1):
+  morphicons@2.0.0(react@19.3.1):
     optionalDependencies:
       react: 19.3.1
 
