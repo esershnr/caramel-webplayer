@@ -93,6 +93,7 @@
     "@videojs/html": "10.0.1",
     "happy-dom": "^21.0.3",
     "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "typescript": "^5.9.0",
     "vitest": "^5.0.4"
   },
