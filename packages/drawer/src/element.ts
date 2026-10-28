@@ -330,8 +330,8 @@ export class CaramelDrawerElement extends Base {
   #closeMenus(): void {
     const player = this.closest('video-player');
     if (!player) return;
-    for (const menu of player.querySelectorAll<HTMLElement & { closeMenu?: unknown }>('media-menu[data-open]')) {
-      if (typeof menu.closeMenu === 'function') (menu.closeMenu as () => void).call(menu);
+    for (const menu of player.querySelectorAll<HTMLElement & { close?: unknown }>('media-menu[data-open]')) {
+      if (typeof menu.close === 'function') (menu.close as () => void).call(menu);
     }
   }
 
