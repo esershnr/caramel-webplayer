@@ -93,6 +93,31 @@
   /* Stripes on bands of auto-skipped types */
   --caramel-segment-hatch: color-mix(in srgb, black 40%, transparent);
 
+  /* Caption colors (settings). Captions sit on the video, so one value serves
+     both schemes. The text colors are the choices offered for caption text;
+     --caramel-caption-bg is the box behind it and --caramel-caption-shadow
+     the outline or drop shadow color.
+
+     Contrast (WCAG, computed) of each text color on --caramel-caption-bg.
+     The box is 75% black, so the worst case is a white video frame behind
+     it (about #404040); the best case is a black frame (#000000).
+                 worst   black
+       white     10.4    21.0
+       yellow     8.0    16.1
+       cyan       6.8    13.7
+       green      6.5    13.2
+       magenta    4.8     9.6
+       red        4.5     9.2
+     Every pair stays at 4.5:1 or better. */
+  --caramel-caption-white: #ffffff;
+  --caramel-caption-yellow: #ffe14d;
+  --caramel-caption-cyan: #5fe3f0;
+  --caramel-caption-green: #7ce38b;
+  --caramel-caption-magenta: #f08ce8;
+  --caramel-caption-red: #ff8a80;
+  --caramel-caption-bg: rgb(0 0 0 / 0.75);
+  --caramel-caption-shadow: #000000;
+
   /* Focus ring: 2px solid primary (resolved below), 2px offset */
   --caramel-focus-offset: 2px;
 
