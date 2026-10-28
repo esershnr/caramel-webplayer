@@ -50,4 +50,30 @@ describe('<caramel-settings-slider> under the popup observer', () => {
     expect(changes).toBe(1);
     expect(slider.getAttribute('aria-valuenow')).toBe('30');
   });
+
+  it('ignores keys and shows its hint while disabled, and is marked unavailable for the menu', async () => {
+    const slider = document.createElement('caramel-settings-slider') as CaramelSettingsSliderElement;
+    slider.range = { min: 0, max: 10, step: 1 };
+    slider.format = (value) => `${value} s`;
+    slider.setLabel('Countdown');
+    document.body.append(slider);
+    slider.value = 3;
+    slider.hint = 'Skipping at once';
+    slider.disabled = true;
+    await frame();
+    expect(slider.getAttribute('aria-disabled')).toBe('true');
+    expect(slider.getAttribute('data-availability')).toBe('unavailable');
+    expect(slider.querySelector('.caramel-settings-slider-value')!.getAttribute('data-value')).toBe('Skipping at once');
+    let changes = 0;
+    slider.addEventListener('caramel-settings-slider-change', () => changes++);
+    slider.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+    slider.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight', bubbles: true }));
+    await frame();
+    expect(slider.value).toBe(3);
+    expect(changes).toBe(0);
+    slider.disabled = false;
+    await frame();
+    expect(slider.hasAttribute('aria-disabled')).toBe(false);
+    expect(slider.querySelector('.caramel-settings-slider-value')!.getAttribute('data-value')).toBe('3 s');
+  });
 });

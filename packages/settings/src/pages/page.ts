@@ -102,7 +102,12 @@ export class PageBuilder {
     return control.item;
   }
 
-  sliderRow(key: NumericSettingsKey, label: SettingsI18nName, format: (t: Translate, value: number) => string) {
+  sliderRow(
+    key: NumericSettingsKey,
+    label: SettingsI18nName,
+    format: (t: Translate, value: number) => string,
+    disabled?: { when: () => boolean; hint: SettingsI18nName },
+  ) {
     const slider = document.createElement('caramel-settings-slider') as CaramelSettingsSliderElement;
     slider.className = 'media-menu-radio-item caramel-settings-slider';
     slider.dataset['key'] = key;
@@ -119,6 +124,10 @@ export class PageBuilder {
         slider.format = (value) => format(t, value);
       }
       if (!slider.dragging) slider.value = this.host.settings[key];
+      if (disabled) {
+        slider.hint = translate(t, disabled.hint);
+        slider.disabled = disabled.when();
+      }
     });
     this.append(slider);
     return slider;

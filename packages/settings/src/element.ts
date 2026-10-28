@@ -47,6 +47,7 @@ export interface SettingsAvailabilityDetail {
 /** Elements whose arrival or removal changes what the settings act on. */
 const WATCHED = 'media-container, media-hotkey, media-gesture, caramel-skip-segments, caramel-playlist, video';
 const BOUND: ReadonlySet<SettingsKey> = new Set(BOUND_KEYS);
+const AUTO_SKIP_KEYS: readonly SettingsKey[] = ['player.autoSkipIntro', 'player.autoSkipOutro', 'player.autoSkipDelay'];
 const CAPTION_COLOR_NAMES = [...CAPTION_COLORS, 'bg', 'shadow'] as const;
 
 let counter = 0;
@@ -367,9 +368,14 @@ export class CaramelSettingsElement extends Base {
     return this.#player ?? this.#container;
   }
 
-  /** Keys the binder writes: the user's choices and the keys the site named in `defaults`. */
+  /**
+   * Keys the binder writes: the user's choices, the keys the site named in
+   * `defaults`, and the auto-skip keys always, because their defaults (count
+   * down 3 seconds, then skip) are a deliberate change to what the siblings do
+   * on their own.
+   */
   #activeKeys(): Set<SettingsKey> {
-    const active = new Set<SettingsKey>();
+    const active = new Set<SettingsKey>(AUTO_SKIP_KEYS);
     const store = this.#store;
     for (const key of SETTINGS_KEYS) {
       if (store?.has(key) || Object.hasOwn(this.#defaults, key)) active.add(key);

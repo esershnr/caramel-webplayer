@@ -185,6 +185,15 @@ caramel-settings-menu:not([hidden]) {
   transform: scale(1.2);
 }
 
+/* Disabled: the row stays in place with its hint, dimmed, and the menu skips it. */
+.caramel-settings-slider[aria-disabled='true'] {
+  opacity: 0.55;
+}
+
+.caramel-settings-slider[aria-disabled='true'] .caramel-settings-slider-track {
+  cursor: default;
+}
+
 /* ------------------------------------------------------------------ */
 /* Switch                                                               */
 /* ------------------------------------------------------------------ */

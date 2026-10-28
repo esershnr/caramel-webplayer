@@ -103,6 +103,8 @@ export class CaramelSettingsSliderElement extends Base {
   #pointer: number | null = null;
   /** Value of keyboard steps not committed yet. */
   #keyPreview: number | null = null;
+  #disabled = false;
+  #hint = '';
   #keyCommitTimer: ReturnType<typeof setTimeout> | null = null;
   #frame: number | null = null;
 
@@ -135,6 +137,37 @@ export class CaramelSettingsSliderElement extends Base {
   set format(fn: (value: number) => string) {
     if (typeof fn !== 'function') return;
     this.#format = fn;
+    this.#render();
+  }
+
+  /**
+   * A disabled slider keeps its place and label, shows `hint` instead of the
+   * value, ignores keys and pointers, and is skipped by the menu's arrow
+   * navigation (`data-availability="unavailable"`, which the menu treats as
+   * not navigable).
+   */
+  get disabled(): boolean {
+    return this.#disabled;
+  }
+
+  set disabled(value: boolean) {
+    const next = Boolean(value);
+    if (next === this.#disabled) return;
+    this.#disabled = next;
+    if (next) {
+      this.#endDrag(false);
+      this.#commitKeys();
+    }
+    this.#render();
+  }
+
+  /** Short text shown in place of the value while disabled. */
+  get hint(): string {
+    return this.#hint;
+  }
+
+  set hint(value: string) {
+    this.#hint = String(value ?? '');
     this.#render();
   }
 
@@ -227,6 +260,7 @@ export class CaramelSettingsSliderElement extends Base {
     // The menu moves its highlight on Home / End even when default-prevented: stop it here.
     event.preventDefault();
     event.stopPropagation();
+    if (this.#disabled) return;
     const current = this.#keyPreview ?? this.#value;
     const next = sliderKeyValue(event.key, current, this.#range, this.#isRtl());
     if (next === null) return;
@@ -257,7 +291,7 @@ export class CaramelSettingsSliderElement extends Base {
   #onPointerDown(event: PointerEvent): void {
     // Nothing behind the menu (the gesture layer) gets the press.
     event.stopPropagation();
-    if (event.button !== 0 || this.#pointer !== null) return;
+    if (event.button !== 0 || this.#pointer !== null || this.#disabled) return;
     event.preventDefault();
     this.#pointer = event.pointerId;
     try {
@@ -326,11 +360,18 @@ export class CaramelSettingsSliderElement extends Base {
   #paint(): void {
     if (!this.#track || !this.#text) return;
     const value = this.#preview ?? this.#keyPreview ?? this.#value;
-    const text = this.#format(value);
+    const text = this.#disabled && this.#hint ? this.#hint : this.#format(value);
     setAttr(this, 'aria-valuemin', String(this.#range.min));
     setAttr(this, 'aria-valuemax', String(this.#range.max));
     setAttr(this, 'aria-valuenow', String(value));
     setAttr(this, 'aria-valuetext', text);
+    if (this.#disabled) {
+      setAttr(this, 'aria-disabled', 'true');
+      setAttr(this, 'data-availability', 'unavailable');
+    } else {
+      this.removeAttribute('aria-disabled');
+      this.removeAttribute('data-availability');
+    }
     // Rendered by CSS (`content: attr(data-value)`), so the text node is never touched.
     setAttr(this.#text, 'data-value', text);
     const progress = String(sliderRatio(value, this.#range));

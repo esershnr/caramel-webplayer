@@ -154,20 +154,21 @@ export function App() {
           <section className="demo-panel">
             <h2 className="caramel-heading">Zaman çizelgesi bantları</h2>
             <p className="demo-muted">
-              Çizgili bant otomatik atlanır (demo: özet). Önizleme kartı fare bandın üstündeyken türü gösterir.
+              Çizgili bantlar otomatik atlanır: intro ve özet anında (site varsayılanı), jenerik 3 sn geri sayımdan
+              sonra (ayar varsayılanı). Önizleme kartı fare bandın üstündeyken türü gösterir.
             </p>
             <ul className="demo-list demo-legend">
               <li>
-                <span className="demo-swatch" data-type="intro" />
-                İntro
+                <span className="demo-swatch" data-type="intro" data-auto="" />
+                İntro (anında atlanır)
               </li>
               <li>
                 <span className="demo-swatch" data-type="recap" data-auto="" />
-                Özet (otomatik atlanır)
+                Özet (anında atlanır)
               </li>
               <li>
-                <span className="demo-swatch" data-type="outro" />
-                Jenerik
+                <span className="demo-swatch" data-type="outro" data-auto="" />
+                Jenerik (3 sn geri sayım)
               </li>
               <li>
                 <span className="demo-swatch" data-type="sponsor" />

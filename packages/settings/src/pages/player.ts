@@ -11,9 +11,17 @@ export function buildPlayerPage(host: SettingsHost, id: string): SettingsPageVie
   page.bindAvailability(page.switchRow('player.numberKeys', 'numberKeys'), 'player.numberKeys');
   page.bindAvailability(page.switchRow('player.autoSkipIntro', 'autoSkipIntro'), 'player.autoSkipIntro');
   page.bindAvailability(page.switchRow('player.autoSkipOutro', 'autoSkipOutro'), 'player.autoSkipOutro');
+  // The countdown applies to the types that are not skipped at once; with
+  // every switch on it has nothing to do and the row is disabled.
   page.bindAvailability(
-    page.sliderRow('player.autoSkipDelay', 'autoSkipDelay', (t, value) =>
-      value === 0 ? translate(t, 'off') : formatSeconds(t, value),
+    page.sliderRow(
+      'player.autoSkipDelay',
+      'autoSkipDelay',
+      (t, value) => (value === 0 ? translate(t, 'off') : formatSeconds(t, value)),
+      {
+        when: () => host.settings['player.autoSkipIntro'] && host.settings['player.autoSkipOutro'],
+        hint: 'autoSkipDelayInstant',
+      },
     ),
     'player.autoSkipDelay',
   );

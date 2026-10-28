@@ -13,6 +13,15 @@
  * up exactly as the site set them. When the site changes a value after our
  * write (the live value no longer equals what we wrote), the live value
  * becomes the new snapshot.
+ *
+ * Auto-skip follows its own model and is always written while a
+ * `<caramel-skip-segments>` exists (the controller keeps its three keys
+ * active): a switch that is on skips its types at once; a switch that is off
+ * counts down `player.autoSkipDelay` seconds before the skip, or only shows
+ * the button when the delay is 0. Recap follows the intro switch; sponsor is
+ * never touched. The site's `auto-skip` maps to the switches (a type the site
+ * skips at once is "on", one it counts down is "off" with the site's delay)
+ * and `auto-skip-delay` to the delay default.
  */
 import { normalizeValue, type SettingsKey, type SettingsValues } from './schema.js';
 
@@ -87,7 +96,7 @@ function autoSkipTokens(value: string | null): string[] {
   return [...known.filter((t) => seen.includes(t)), ...seen.filter((t) => !known.includes(t))];
 }
 
-type SkipLike = Element & { autoSkip?: Record<string, boolean>; autoSkipDelay?: number; skip?: unknown };
+type SkipLike = Element & { autoSkip?: Record<string, boolean>; autoSkipDelay?: unknown; skip?: unknown };
 type PlaylistLike = Element & { autoAdvance?: boolean; select?: unknown };
 
 /** The element has upgraded to the caramel class (its methods exist). */
@@ -113,18 +122,52 @@ const AUTO_SKIP: Binding = {
   },
 };
 
+type DelayMap = Record<(typeof ALL_SEGMENT_TYPES)[number], number>;
+
+function toDelay(value: unknown): number {
+  const n = typeof value === 'string' && value.trim() === '' ? NaN : Number(value);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+
+/** Seconds per type from a skip-segments delay value: a number, a per type object, or the attribute text. */
+function delayMap(value: unknown): DelayMap {
+  const map: DelayMap = { intro: 0, recap: 0, outro: 0, sponsor: 0 };
+  if (value === null || value === undefined || value === '') return map;
+  if (typeof value === 'string' && value.includes(':')) {
+    for (const part of value.split(',')) {
+      const [type = '', seconds = ''] = part.split(':').map((s) => s.trim());
+      if (type in map) map[type as keyof DelayMap] = toDelay(seconds);
+    }
+    return map;
+  }
+  if (typeof value === 'object') {
+    for (const type of ALL_SEGMENT_TYPES) map[type] = toDelay((value as Record<string, unknown>)[type]);
+    return map;
+  }
+  const all = toDelay(value);
+  for (const type of ALL_SEGMENT_TYPES) map[type] = all;
+  return map;
+}
+
+/** The canonical per type text of a delay map, also the attribute form skip-segments parses. */
+function delayString(map: DelayMap): string {
+  return ALL_SEGMENT_TYPES.map((type) => `${type}:${map[type]}`).join(',');
+}
+
 const DELAY_ATTRIBUTE = attribute('auto-skip-delay');
-/** Auto-skip delay: the `autoSkipDelay` property on an upgraded element, else the attribute. */
+/** Auto-skip delay per type: the `autoSkipDelay` property on an upgraded element, else the attribute. */
 const AUTO_SKIP_DELAY: Binding = {
   name: 'auto-skip-delay',
   read: (element) => {
-    if (!upgradedSkip(element)) return DELAY_ATTRIBUTE.read(element);
-    const delay = Number(element.autoSkipDelay);
-    return Number.isFinite(delay) && delay > 0 ? String(delay) : null;
+    if (!upgradedSkip(element)) {
+      const raw = DELAY_ATTRIBUTE.read(element);
+      return raw === null ? null : delayString(delayMap(raw));
+    }
+    return delayString(delayMap(element.autoSkipDelay));
   },
   write: (element, value) => {
     if (!upgradedSkip(element)) return DELAY_ATTRIBUTE.write(element, value);
-    element.autoSkipDelay = value === null ? 0 : Number(value);
+    element.autoSkipDelay = value === null ? 0 : delayMap(value);
   },
 };
 
@@ -191,10 +234,23 @@ function siteSeekStep(element: Element): number | undefined {
   return normalizeValue('player.seekStep', n);
 }
 
-function siteDelay(element: Element): number {
-  const raw = siteValue(element, AUTO_SKIP_DELAY);
-  const n = raw === null || raw.trim() === '' ? 0 : Number(raw);
-  return normalizeValue('player.autoSkipDelay', Number.isFinite(n) && n > 0 ? n : 0) ?? 0;
+/**
+ * The settings a site's skip-segments configuration stands for: a type the
+ * site skips at once puts its switch on; a type it counts down puts the switch
+ * off and the delay default to the site's seconds. The delay is returned only
+ * when the site set one, so the package default applies otherwise.
+ */
+export function autoSkipSiteDefaults(tokens: readonly string[], delays: DelayMap): Partial<SettingsValues> {
+  const out: Partial<SettingsValues> = {};
+  const introType = tokens.includes('intro') ? 'intro' : tokens.includes('recap') ? 'recap' : null;
+  out['player.autoSkipIntro'] = introType !== null && delays[introType] === 0;
+  out['player.autoSkipOutro'] = tokens.includes('outro') && delays.outro === 0;
+  const seconds = [delays.intro, delays.recap, delays.outro].find((d) => d > 0);
+  if (seconds !== undefined) {
+    const delay = normalizeValue('player.autoSkipDelay', seconds);
+    if (delay !== undefined) out['player.autoSkipDelay'] = delay;
+  }
+  return out;
 }
 
 /**
@@ -216,12 +272,10 @@ export function readSiteDefaults(root: ParentNode): Partial<SettingsValues> {
 
   const skip = root.querySelector(SKIP);
   if (skip) {
-    const tokens = autoSkipTokens(siteValue(skip, AUTO_SKIP));
-    // Recap follows the intro switch when written, but a site that skips only
-    // recaps does not auto-skip intros, so the switch shows off.
-    out['player.autoSkipIntro'] = tokens.includes('intro');
-    out['player.autoSkipOutro'] = OUTRO_TYPES.some((t) => tokens.includes(t));
-    out['player.autoSkipDelay'] = siteDelay(skip);
+    Object.assign(
+      out,
+      autoSkipSiteDefaults(autoSkipTokens(siteValue(skip, AUTO_SKIP)), delayMap(siteValue(skip, AUTO_SKIP_DELAY))),
+    );
   }
 
   const playlist = root.querySelector(PLAYLIST);
@@ -230,20 +284,30 @@ export function readSiteDefaults(root: ParentNode): Partial<SettingsValues> {
   return out;
 }
 
-/**
- * The `auto-skip` list for one element: the site's list with the groups the
- * user set replaced. A group left alone keeps the site's tokens, and sponsor
- * (or any other type) is never touched.
- */
-function composeAutoSkip(element: Element, values: SettingsValues, active: ReadonlySet<SettingsKey>): string {
-  const intro = active.has('player.autoSkipIntro');
-  const outro = active.has('player.autoSkipOutro');
-  let tokens = autoSkipTokens(siteValue(element, AUTO_SKIP));
-  if (intro) tokens = tokens.filter((t) => !INTRO_TYPES.includes(t));
-  if (outro) tokens = tokens.filter((t) => !OUTRO_TYPES.includes(t));
-  if (intro && values['player.autoSkipIntro']) tokens.push(...INTRO_TYPES);
-  if (outro && values['player.autoSkipOutro']) tokens.push(...OUTRO_TYPES);
-  return autoSkipTokens(tokens.join(',')).join(',');
+/** What skip-segments should do for the effective settings: the `auto-skip` tokens and the delay per type. */
+export function composeAutoSkip(
+  siteTokens: readonly string[],
+  siteDelays: DelayMap,
+  values: SettingsValues,
+): { tokens: string; delays: DelayMap } {
+  const delay = values['player.autoSkipDelay'];
+  const introOn = values['player.autoSkipIntro'];
+  const outroOn = values['player.autoSkipOutro'];
+  const introAuto = introOn || delay >= 1;
+  const outroAuto = outroOn || delay >= 1;
+  const tokens = siteTokens.filter((t) => !INTRO_TYPES.includes(t) && !OUTRO_TYPES.includes(t));
+  if (introAuto) tokens.push(...INTRO_TYPES);
+  if (outroAuto) tokens.push(...OUTRO_TYPES);
+  const introDelay = introAuto && !introOn ? delay : 0;
+  return {
+    tokens: autoSkipTokens(tokens.join(',')).join(','),
+    delays: {
+      intro: introDelay,
+      recap: introDelay,
+      outro: outroAuto && !outroOn ? delay : 0,
+      sponsor: siteDelays.sponsor,
+    },
+  };
 }
 
 function each(root: ParentNode, selector: string, fn: (element: Element) => boolean): boolean {
@@ -291,37 +355,26 @@ export function applyBinding(
     );
   }
 
-  const skips = root.querySelectorAll(SKIP);
+  // Auto-skip: the three keys describe one configuration, written together.
   {
-    const intro = active.has('player.autoSkipIntro');
-    const outro = active.has('player.autoSkipOutro');
-    for (const element of skips) {
-      let did: boolean;
-      if (intro || outro) {
-        // An empty list is written as auto-skip="" (or an empty config), which means no auto-skip.
-        did = write(element, AUTO_SKIP, composeAutoSkip(element, values, active));
-      } else {
-        did = restore(element, AUTO_SKIP);
-      }
-      if (did) {
-        // The value is shared; credit the active keys, or both when restoring.
-        if (intro || !outro) wrote.add('player.autoSkipIntro');
-        if (outro || !intro) wrote.add('player.autoSkipOutro');
-      }
-    }
-  }
-
-  {
-    const key: SettingsKey = 'player.autoSkipDelay';
-    const on = active.has(key);
-    for (const element of skips) {
+    const on =
+      active.has('player.autoSkipIntro') || active.has('player.autoSkipOutro') || active.has('player.autoSkipDelay');
+    for (const element of root.querySelectorAll(SKIP)) {
       if (!on) {
-        mark(key, restore(element, AUTO_SKIP_DELAY));
+        const did = restore(element, AUTO_SKIP);
+        mark('player.autoSkipIntro', did);
+        mark('player.autoSkipOutro', did);
+        mark('player.autoSkipDelay', restore(element, AUTO_SKIP_DELAY));
         continue;
       }
-      const delay = values[key];
-      const hadNone = siteValue(element, AUTO_SKIP_DELAY) === null;
-      mark(key, write(element, AUTO_SKIP_DELAY, delay === 0 && hadNone ? null : String(delay)));
+      const siteTokens = autoSkipTokens(siteValue(element, AUTO_SKIP));
+      const siteDelays = delayMap(siteValue(element, AUTO_SKIP_DELAY));
+      const composed = composeAutoSkip(siteTokens, siteDelays, values);
+      // An empty list is written as auto-skip="" (or an empty config), which means no auto-skip.
+      const did = write(element, AUTO_SKIP, composed.tokens);
+      mark('player.autoSkipIntro', did);
+      mark('player.autoSkipOutro', did);
+      mark('player.autoSkipDelay', write(element, AUTO_SKIP_DELAY, delayString(composed.delays)));
     }
   }
 

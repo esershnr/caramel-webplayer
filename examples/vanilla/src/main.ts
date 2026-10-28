@@ -128,10 +128,11 @@ const STRINGS = {
     system: 'Sistem',
     resolved: 'çözülen',
     bands: 'Zaman çizelgesi bantları',
-    bandsHint: 'Çizgili bant otomatik atlanır (demo: özet). Önizleme kartı fare bandın üstündeyken türü gösterir.',
-    intro: 'İntro',
-    recap: 'Özet (otomatik atlanır)',
-    outro: 'Jenerik',
+    bandsHint:
+      'Çizgili bantlar otomatik atlanır: intro ve özet anında (site varsayılanı), jenerik 3 sn geri sayımdan sonra (ayar varsayılanı). Önizleme kartı fare bandın üstündeyken türü gösterir.',
+    intro: 'İntro (anında atlanır)',
+    recap: 'Özet (anında atlanır)',
+    outro: 'Jenerik (3 sn geri sayım)',
     events: 'Olaylar',
   },
   en: {
@@ -143,10 +144,10 @@ const STRINGS = {
     resolved: 'resolved',
     bands: 'Timeline segment bands',
     bandsHint:
-      'The striped band is skipped automatically (demo: recap). The preview card shows the type while hovering a band.',
-    intro: 'Intro',
-    recap: 'Recap (auto-skipped)',
-    outro: 'Credits',
+      'Striped bands are skipped automatically: intro and recap at once (site default), credits after a 3 s countdown (settings default). The preview card shows the type while hovering a band.',
+    intro: 'Intro (skipped at once)',
+    recap: 'Recap (skipped at once)',
+    outro: 'Credits (3 s countdown)',
     events: 'Events',
   },
 };

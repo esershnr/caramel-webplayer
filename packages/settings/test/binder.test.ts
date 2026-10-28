@@ -36,10 +36,10 @@ describe('readSiteDefaults', () => {
     expect(readSiteDefaults(root)).toEqual({
       'player.seekStep': 5,
       'player.numberKeys': true,
-      // The site skips recaps only, so the intro switch shows off.
-      'player.autoSkipIntro': false,
+      // The site skips recaps at once: the intro switch (recap follows it) shows on.
+      // No delay from the site, so the package default applies (the key is absent).
+      'player.autoSkipIntro': true,
       'player.autoSkipOutro': false,
-      'player.autoSkipDelay': 0,
       'player.autoAdvance': true,
     });
   });
@@ -54,15 +54,27 @@ describe('readSiteDefaults', () => {
     root.querySelector(skip)!.setAttribute('auto-skip', 'outro');
     root.querySelector(skip)!.setAttribute('auto-skip-delay', '3');
     root.querySelector('caramel-playlist')!.setAttribute('no-auto-advance', '');
+    // The site counts outros down 3 s: the switch is off and 3 s is the countdown default.
     expect(readSiteDefaults(root)).toMatchObject({
       'player.numberKeys': false,
       'player.autoSkipIntro': false,
-      'player.autoSkipOutro': true,
+      'player.autoSkipOutro': false,
       'player.autoSkipDelay': 3,
       'player.autoAdvance': false,
     });
     root.querySelector(skip)!.setAttribute('auto-skip', 'all');
+    expect(readSiteDefaults(root)).toMatchObject({ 'player.autoSkipIntro': false, 'player.autoSkipOutro': false });
+    root.querySelector(skip)!.removeAttribute('auto-skip-delay');
     expect(readSiteDefaults(root)).toMatchObject({ 'player.autoSkipIntro': true, 'player.autoSkipOutro': true });
+    expect(readSiteDefaults(root)).not.toHaveProperty('player.autoSkipDelay');
+    // A per type site delay: intro at once, outro counted down.
+    root.querySelector(skip)!.setAttribute('auto-skip', 'intro,outro');
+    root.querySelector(skip)!.setAttribute('auto-skip-delay', 'intro:0,outro:2');
+    expect(readSiteDefaults(root)).toMatchObject({
+      'player.autoSkipIntro': true,
+      'player.autoSkipOutro': false,
+      'player.autoSkipDelay': 2,
+    });
   });
 
   it('returns only keys whose element exists', () => {
@@ -109,55 +121,61 @@ describe('applyBinding', () => {
     expect(attr(sel, 'disabled')).toBeNull();
   });
 
-  it('composes auto-skip, keeps sponsor and round trips the site list', () => {
-    applyBinding(root, values({ 'player.autoSkipIntro': true }), keys('player.autoSkipIntro'));
-    expect(attr(skip, 'auto-skip')).toBe('intro,recap');
-    applyBinding(root, values({ 'player.autoSkipIntro': false }), keys('player.autoSkipIntro'));
-    expect(attr(skip, 'auto-skip')).toBe('');
-    applyBinding(
-      root,
-      values({ 'player.autoSkipIntro': false, 'player.autoSkipOutro': true }),
-      keys('player.autoSkipIntro', 'player.autoSkipOutro'),
-    );
-    expect(attr(skip, 'auto-skip')).toBe('outro');
-    expect(applyBinding(root, values(), keys())).toEqual(['player.autoSkipIntro', 'player.autoSkipOutro']);
-    expect(attr(skip, 'auto-skip')).toBe('recap');
+  const autoSkipKeys = keys('player.autoSkipIntro', 'player.autoSkipOutro', 'player.autoSkipDelay');
 
+  it('writes the auto-skip model: switch on skips at once, off counts down, off with 0 shows the button only', () => {
+    // Intro at once, outro counted down 3 s (the package default).
+    expect(applyBinding(root, values({ 'player.autoSkipIntro': true }), autoSkipKeys)).toEqual([
+      'player.autoSkipIntro',
+      'player.autoSkipOutro',
+      'player.autoSkipDelay',
+    ]);
+    expect(attr(skip, 'auto-skip')).toBe('intro,recap,outro');
+    expect(attr(skip, 'auto-skip-delay')).toBe('intro:0,recap:0,outro:3,sponsor:0');
+    // Both off: every type counts down.
+    applyBinding(root, values(), autoSkipKeys);
+    expect(attr(skip, 'auto-skip')).toBe('intro,recap,outro');
+    expect(attr(skip, 'auto-skip-delay')).toBe('intro:3,recap:3,outro:3,sponsor:0');
+    // Both off and countdown 0: no auto-skip at all.
+    applyBinding(root, values({ 'player.autoSkipDelay': 0 }), autoSkipKeys);
+    expect(attr(skip, 'auto-skip')).toBe('');
+    expect(attr(skip, 'auto-skip-delay')).toBe('intro:0,recap:0,outro:0,sponsor:0');
+    // Both on: everything at once, the countdown has nothing to do.
+    applyBinding(root, values({ 'player.autoSkipIntro': true, 'player.autoSkipOutro': true }), autoSkipKeys);
+    expect(attr(skip, 'auto-skip')).toBe('intro,recap,outro');
+    expect(attr(skip, 'auto-skip-delay')).toBe('intro:0,recap:0,outro:0,sponsor:0');
+    // Restore: the site's list is back and the delay it never set is gone.
+    expect(applyBinding(root, values(), keys())).toEqual(autoSkipKeys.size === 3 ? [...autoSkipKeys] : []);
+    expect(attr(skip, 'auto-skip')).toBe('recap');
+    expect(root.querySelector(skip)!.hasAttribute('auto-skip-delay')).toBe(false);
+  });
+
+  it('keeps sponsor and its site delay and round trips the site list', () => {
     root.querySelector(skip)!.setAttribute('auto-skip', 'sponsor, outro');
-    applyBinding(root, values({ 'player.autoSkipIntro': true }), keys('player.autoSkipIntro'));
+    root.querySelector(skip)!.setAttribute('auto-skip-delay', 'sponsor:2');
+    applyBinding(root, values({ 'player.autoSkipIntro': true }), autoSkipKeys);
     expect(attr(skip, 'auto-skip')).toBe('intro,recap,outro,sponsor');
-    applyBinding(root, values({ 'player.autoSkipOutro': false }), keys('player.autoSkipOutro'));
+    expect(attr(skip, 'auto-skip-delay')).toBe('intro:0,recap:0,outro:3,sponsor:2');
+    applyBinding(root, values({ 'player.autoSkipDelay': 0 }), autoSkipKeys);
     expect(attr(skip, 'auto-skip')).toBe('sponsor');
     applyBinding(root, values(), keys());
     expect(attr(skip, 'auto-skip')).toBe('sponsor, outro');
+    // The delay comes back in its per type form, which skip-segments reads the same way.
+    expect(attr(skip, 'auto-skip-delay')).toBe('intro:0,recap:0,outro:0,sponsor:2');
   });
 
-  it('expands all before removing the groups', () => {
+  it('expands all before replacing the groups', () => {
     root.querySelector(skip)!.setAttribute('auto-skip', 'all');
-    applyBinding(root, values({ 'player.autoSkipIntro': false }), keys('player.autoSkipIntro'));
-    expect(attr(skip, 'auto-skip')).toBe('outro,sponsor');
+    applyBinding(root, values({ 'player.autoSkipDelay': 0 }), autoSkipKeys);
+    expect(attr(skip, 'auto-skip')).toBe('sponsor');
   });
 
-  it('writes an empty list when the site had none and the user turned skipping off', () => {
+  it('writes an empty list when the site had none and nothing is auto-skipped', () => {
     root.querySelector(skip)!.removeAttribute('auto-skip');
-    expect(applyBinding(root, values(), keys('player.autoSkipIntro'))).toEqual(['player.autoSkipIntro']);
+    applyBinding(root, values({ 'player.autoSkipDelay': 0 }), autoSkipKeys);
     expect(attr(skip, 'auto-skip')).toBe('');
     applyBinding(root, values(), keys());
     expect(root.querySelector(skip)!.hasAttribute('auto-skip')).toBe(false);
-  });
-
-  it('writes the auto-skip delay', () => {
-    applyBinding(root, values({ 'player.autoSkipDelay': 5 }), keys('player.autoSkipDelay'));
-    expect(attr(skip, 'auto-skip-delay')).toBe('5');
-    applyBinding(root, values({ 'player.autoSkipDelay': 0 }), keys('player.autoSkipDelay'));
-    expect(root.querySelector(skip)!.hasAttribute('auto-skip-delay')).toBe(false);
-    applyBinding(root, values(), keys());
-
-    root.querySelector(skip)!.setAttribute('auto-skip-delay', '3');
-    applyBinding(root, values({ 'player.autoSkipDelay': 0 }), keys('player.autoSkipDelay'));
-    expect(attr(skip, 'auto-skip-delay')).toBe('0');
-    applyBinding(root, values(), keys());
-    expect(attr(skip, 'auto-skip-delay')).toBe('3');
   });
 
   it('toggles auto advance', () => {
@@ -193,14 +211,14 @@ describe('applyBinding', () => {
 
   it('reaches elements added later', () => {
     const chosen = values({ 'player.autoSkipOutro': true, 'player.autoSkipDelay': 2 });
-    const active = keys('player.autoSkipOutro', 'player.autoSkipDelay');
-    applyBinding(root, chosen, active);
+    applyBinding(root, chosen, autoSkipKeys);
     const late = document.createElement('caramel-skip-segments');
     late.setAttribute('auto-skip', 'sponsor');
     root.querySelector('media-container')!.append(late);
-    expect(applyBinding(root, chosen, active)).toEqual(['player.autoSkipOutro', 'player.autoSkipDelay']);
-    expect(late.getAttribute('auto-skip')).toBe('outro,sponsor');
-    expect(late.getAttribute('auto-skip-delay')).toBe('2');
+    expect(applyBinding(root, chosen, autoSkipKeys)).toEqual([...autoSkipKeys]);
+    // Outro at once, intro and recap counted down 2 s, sponsor as the site set it.
+    expect(late.getAttribute('auto-skip')).toBe('intro,recap,outro,sponsor');
+    expect(late.getAttribute('auto-skip-delay')).toBe('intro:2,recap:2,outro:0,sponsor:0');
     applyBinding(root, chosen, keys());
     expect(late.getAttribute('auto-skip')).toBe('sponsor');
     expect(late.hasAttribute('auto-skip-delay')).toBe(false);
@@ -210,7 +228,7 @@ describe('applyBinding', () => {
     // Stand-ins for the upgraded elements: the methods the binder looks for exist.
     class FakeSkip extends HTMLElement {
       autoSkip: Record<string, boolean> = { sponsor: true };
-      autoSkipDelay = 0;
+      autoSkipDelay: number | Record<string, number> = 0;
       skip(): boolean {
         return false;
       }
@@ -239,12 +257,15 @@ describe('applyBinding', () => {
     const active = keys('player.autoSkipIntro', 'player.autoSkipDelay', 'player.autoAdvance');
     expect(applyBinding(player, chosen, active)).toEqual([
       'player.autoSkipIntro',
+      'player.autoSkipOutro',
       'player.autoSkipDelay',
       'player.autoAdvance',
     ]);
-    expect(skip.autoSkip).toEqual({ sponsor: true, intro: true, recap: true });
-    expect(skip.autoSkipDelay).toBe(3);
+    // Intro at once; outro (switch off) counts down the 3 s; sponsor untouched.
+    expect(skip.autoSkip).toEqual({ sponsor: true, intro: true, recap: true, outro: true });
+    expect(skip.autoSkipDelay).toEqual({ intro: 0, recap: 0, outro: 3, sponsor: 0 });
     expect(skip.hasAttribute('auto-skip')).toBe(false);
+    expect(skip.hasAttribute('auto-skip-delay')).toBe(false);
     expect(playlist.autoAdvance).toBe(true);
     expect(playlist.hasAttribute('no-auto-advance')).toBe(false);
     expect(playlist.loop).toBe(true);
@@ -264,7 +285,7 @@ describe('applyBinding', () => {
       'player.autoAdvance',
     ]);
     expect(skip.autoSkip).toEqual({ outro: true, sponsor: true });
-    expect(skip.autoSkipDelay).toBe(0);
+    expect(skip.autoSkipDelay).toEqual({ intro: 0, recap: 0, outro: 0, sponsor: 0 });
     expect(playlist.autoAdvance).toBe(false);
   });
 });

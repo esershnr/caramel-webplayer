@@ -5,7 +5,10 @@
  *
  * Keys are flat and dotted (`captions.scale`); the first part is the settings
  * page they belong to. Every default is "what the player does today" so that a
- * mounted settings package with no stored choice changes nothing.
+ * mounted settings package with no stored choice changes nothing, with one
+ * deliberate exception: `player.autoSkipDelay` defaults to 3, so a player with
+ * the settings package counts down 3 seconds and skips segments the site does
+ * not already skip at once.
  */
 
 export const SETTINGS_VERSION = 1;
@@ -41,11 +44,11 @@ export interface SettingsValues {
   'player.seekStep': number;
   /** The 0 to 9 keys seek to a percentage. */
   'player.numberKeys': boolean;
-  /** Auto-skip intro and recap segments. */
+  /** Skip intro and recap segments at once. Off: they count down `player.autoSkipDelay` seconds, or only show the button at 0. */
   'player.autoSkipIntro': boolean;
-  /** Auto-skip outro segments. */
+  /** Skip outro segments at once. Off: they count down `player.autoSkipDelay` seconds, or only show the button at 0. */
   'player.autoSkipOutro': boolean;
-  /** Seconds the skip button counts down before an auto-skip; 0 skips at once. */
+  /** Seconds the skip button counts down before an auto-skip of a type that is not skipped at once; 0 means no auto-skip. */
   'player.autoSkipDelay': number;
   /** Playlist advances to the next item when one ends. */
   'player.autoAdvance': boolean;
@@ -69,7 +72,7 @@ export const SETTINGS_DEFAULTS: Readonly<SettingsValues> = Object.freeze({
   'player.numberKeys': true,
   'player.autoSkipIntro': false,
   'player.autoSkipOutro': false,
-  'player.autoSkipDelay': 0,
+  'player.autoSkipDelay': 3,
   'player.autoAdvance': true,
   'player.autoFullscreen': false,
   'display.aspect': 'default',

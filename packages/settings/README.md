@@ -6,7 +6,9 @@ Player (seek step, number key seeking, auto-skip intro and outro, auto-skip
 delay, autoplay next, fullscreen on play) and Display (aspect ratio, video
 filter). Choices are remembered in `localStorage` and applied on the next
 visit. One opt-in element does it all; without it the player is unchanged, and
-with it and no stored choice the player still looks and acts exactly as before.
+with it and no stored choice the player still looks and acts as before, with
+one deliberate exception: segments the site does not already skip at once get
+a 3 second countdown and are then skipped (see "Auto-skip" below).
 
 ```sh
 npm install @esershnr/caramel-settings @videojs/html
@@ -60,9 +62,9 @@ the player does without this package.
 | `captions.bold` | boolean | `false` | |
 | `player.seekStep` | number | `5` | Seconds for the arrow keys, j / l and the double taps. 5 to 30 in steps of 5. |
 | `player.numberKeys` | boolean | `true` | The 0 to 9 keys seek to a percentage. |
-| `player.autoSkipIntro` | boolean | `false` | Auto-skip `intro` and `recap` segments. |
-| `player.autoSkipOutro` | boolean | `false` | Auto-skip `outro` segments. `sponsor` stays as the site set it. |
-| `player.autoSkipDelay` | number | `0` | Seconds the skip button counts down before an auto-skip; 0 skips at once. 0 to 10. |
+| `player.autoSkipIntro` | boolean | `false` | Skip `intro` and `recap` segments at once. |
+| `player.autoSkipOutro` | boolean | `false` | Skip `outro` segments at once. `sponsor` stays as the site set it. |
+| `player.autoSkipDelay` | number | `3` | Countdown, in seconds, for the types that are not skipped at once; 0 means no auto-skip, only the button. 0 to 10. |
 | `player.autoAdvance` | boolean | `true` | The playlist plays the next item when one ends. |
 | `player.autoFullscreen` | boolean | `false` | Enter fullscreen when the viewer starts playback. |
 | `display.aspect` | `default` `4:3` `16:9` | `default` | Forces the display ratio inside the player (letterboxed, picture stretched to the ratio). |
@@ -75,6 +77,27 @@ and, for the keys that mirror a sibling element, from what that element says
 site default for the skip switches). Reset on a page forgets the viewer's
 choices of that page, so the site defaults apply again. A key the viewer has
 not touched is never written to the siblings.
+
+### Auto-skip
+
+The two switches and the countdown describe one behavior per segment type:
+
+- Switch on: the type is skipped at once, no countdown. While every switch is
+  on the countdown row is shown disabled.
+- Switch off and countdown 1 s or more: the skip button appears with a
+  countdown of that many seconds and then skips (media time, pauses with the
+  video, the button skips at once, the close button or Escape cancels this
+  occurrence, seeking out cancels, rewinding re-arms).
+- Switch off and countdown 0: no auto-skip, only the skip button.
+
+The defaults are switches off and a 3 second countdown, so a player with this
+package counts down and skips by default. Recap follows the intro switch;
+sponsor stays as the site set it. The site's own `auto-skip` on
+`<caramel-skip-segments>` becomes the site default: a type it skips at once
+puts that switch on, a type it counts down (`auto-skip-delay`) puts the switch
+off with the site's seconds as the countdown default. Without this package
+`<caramel-skip-segments>` behaves as before (its own default is instant, and
+only the site's `auto-skip` applies).
 
 ## Elements and API
 
@@ -119,8 +142,9 @@ the element classes and `defineCaramelSettings`. The host loads its own
 
 - Hotkeys and gestures: `value` on the `media-hotkey` and `media-gesture`
   elements with `action="seekStep"`, `disabled` on the `0-9` hotkey.
-- `<caramel-skip-segments>`: the `auto-skip` and `auto-skip-delay` attributes.
-- `<caramel-playlist>`: the `no-auto-advance` attribute.
+- `<caramel-skip-segments>`: `autoSkip` and `autoSkipDelay` (per type) once the
+  element is upgraded, their attributes before.
+- `<caramel-playlist>`: `autoAdvance` once upgraded, `no-auto-advance` before.
 - Captions and display: a stylesheet scoped to the player (and an adopted
   stylesheet inside `<hls-video>`, whose video lives in a shadow root). Only
   keys that differ from the default emit CSS.
