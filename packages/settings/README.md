@@ -127,9 +127,12 @@ only the site's `auto-skip` applies).
 binds to the `<caramel-settings>` in the same `<video-player>` and stays
 hidden otherwise.
 
-CSS: `--caramel-settings-page-width` (default `15rem`) is the minimum inline
-size of the rows on the three pages, so the popup keeps one width across
-them and while a slider moves.
+CSS: the pages share one row width, the widest row across the root page and
+the three pages in the current language, measured when the menu first opens
+and again after a language change (`--caramel-settings-menu-width` on the
+`<media-menu>`), clamped to the space the popup has; labels wrap on narrow
+players and the pages never scroll sideways. `--caramel-settings-page-width`
+(default `0px`) is an optional floor for that width.
 
 Exports: `createSettingsStore`, `getSettingsStore`, `resolveSettings`,
 `SETTINGS_DEFAULTS`, `SETTINGS_KEYS`, `SETTINGS_RANGES`, `SETTINGS_VERSION`,

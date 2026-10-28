@@ -17,6 +17,59 @@ const LOOKUP_RETRIES = 30;
 
 let counter = 0;
 
+/** Custom property on the `<media-menu>` that fixes the row width of the pages. */
+export const MENU_WIDTH_PROPERTY = '--caramel-settings-menu-width';
+
+/** Measures with temporary inline styles and puts the element's own back. */
+function withStyle<T>(element: HTMLElement, css: string, read: () => T): T {
+  const previous = element.getAttribute('style');
+  element.style.cssText = `${previous ?? ''};${css}`;
+  try {
+    return read();
+  } finally {
+    if (previous === null) element.removeAttribute('style');
+    else element.setAttribute('style', previous);
+  }
+}
+
+/**
+ * Widest natural (max-content) row of a page, measured row by row the way the
+ * popup measures them (`width: max-content; min-width: 0` inline), while the
+ * popup is on screen. Inactive pages carry `hidden`, which the skin's base
+ * stylesheet enforces with an important rule, so the attribute is lifted for
+ * the measurement (the page stays invisible and absolutely positioned) and put
+ * back right after, within the same task.
+ */
+function widestRow(page: HTMLElement): number {
+  const wasHidden = page.hidden;
+  if (wasHidden) page.hidden = false;
+  try {
+    return withStyle(
+      page,
+      'display:flex;flex-direction:column;visibility:hidden;position:absolute;inset-inline-start:0;width:max-content;min-width:0;max-width:none',
+      () => {
+        // The popup is still scaling in when it reports open, so client rects
+        // are transformed sizes; the page's own rect over its layout width
+        // gives the scale, and rows keep their fractions.
+        const scale = page.offsetWidth > 0 ? page.getBoundingClientRect().width / page.offsetWidth : 1;
+        let widest = 0;
+        for (const row of page.children) {
+          if (!(row instanceof HTMLElement) || row.hidden) continue;
+          const width = withStyle(
+            row,
+            'width:max-content;min-width:0;max-width:none;flex:none',
+            () => row.getBoundingClientRect().width / (scale || 1),
+          );
+          if (width > widest) widest = width;
+        }
+        return widest;
+      },
+    );
+  } finally {
+    if (wasHidden) page.hidden = true;
+  }
+}
+
 interface Rendered {
   views: SettingsPageView[];
   hints: HTMLSpanElement[];
@@ -44,6 +97,10 @@ export class CaramelSettingsMenuElement extends Base {
   #retries = 0;
   #waitingForController = false;
   #rendered: Rendered | null = null;
+  #menuObserver: MutationObserver | null = null;
+  /** The pages changed (render, locale) and the row width must be measured again at the next chance. */
+  #widthDirty = true;
+  #locale: string | null = null;
 
   /** The bound `<caramel-settings>`, or null. */
   get controller(): CaramelSettingsElement | null {
@@ -134,7 +191,7 @@ export class CaramelSettingsMenuElement extends Base {
   /** Builds the rows and pages. Returns false when there is no menu to put the pages in. */
   #render(): boolean {
     const controller = this.#controller;
-    const menu = this.closest('media-menu');
+    const menu = this.closest<HTMLElement>('media-menu');
     if (!controller || !menu) return false;
     const views = [
       buildSubtitlesPage(controller, `${this.#prefix}-captions`),
@@ -154,6 +211,9 @@ export class CaramelSettingsMenuElement extends Base {
     menu.append(...views.map((view) => view.element));
     this.#rendered = { views, hints };
     this.hidden = false;
+    this.#widthDirty = true;
+    this.#observeMenu(menu);
+    if (menu.hasAttribute('data-open')) this.#measureWidth();
     return true;
   }
 
@@ -167,17 +227,82 @@ export class CaramelSettingsMenuElement extends Base {
       const value = view.hint(t);
       if (hint && hint.textContent !== value) hint.textContent = value;
     });
+    const locale = String(this.#i18n.locale ?? '');
+    if (locale !== this.#locale) {
+      // New labels: measure again once the `media-text` elements have updated.
+      const first = this.#locale === null;
+      this.#locale = locale;
+      if (!first) {
+        this.#widthDirty = true;
+        if (typeof requestAnimationFrame === 'function') {
+          requestAnimationFrame(() => requestAnimationFrame(() => this.#measureWidth()));
+        } else {
+          this.#measureWidth();
+        }
+      }
+    }
+  }
+
+  /**
+   * Layout contract with the Video.js menu popup, part two: the popup sizes
+   * itself per page from the max-content width of that page's rows, measured
+   * with `min-width: 0` forced inline. So the pages are given one row width,
+   * the widest row across the root page and the three settings pages, as a
+   * custom property on the menu that the stylesheet applies as an important
+   * minimum. Measured once per render and locale, while the popup is on
+   * screen, never per drag or per page switch.
+   */
+  #measureWidth(): void {
+    const rendered = this.#rendered;
+    const menu = this.closest<HTMLElement>('media-menu');
+    if (!rendered || !menu || !this.#widthDirty) return;
+    if (!menu.hasAttribute('data-open') || typeof getComputedStyle !== 'function') return;
+    const root = this.closest<HTMLElement>('media-menu-content');
+    const pages = [...rendered.views.map((view) => view.element), ...(root ? [root] : [])];
+    // Rows must not carry the previous width while they are measured.
+    menu.style.setProperty(MENU_WIDTH_PROPERTY, '0px');
+    let widest = 0;
+    for (const page of pages) widest = Math.max(widest, widestRow(page));
+    if (!(widest > 0)) {
+      // Not laid out yet (the popup is still opening): try again on the next frame.
+      menu.style.removeProperty(MENU_WIDTH_PROPERTY);
+      if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => this.#measureWidth());
+      return;
+    }
+    this.#widthDirty = false;
+    menu.style.setProperty(MENU_WIDTH_PROPERTY, `${Math.ceil(widest)}px`);
+    // The popup measured its current page before the width was set: a child
+    // mutation of the root page makes it measure again.
+    if (root) {
+      const marker = document.createComment('');
+      root.append(marker);
+      marker.remove();
+    }
+  }
+
+  /** Measures when the menu opens, if the pages changed since the last measurement. */
+  #observeMenu(menu: HTMLElement): void {
+    if (this.#menuObserver || typeof MutationObserver === 'undefined') return;
+    const observer = new MutationObserver(() => {
+      if (menu.hasAttribute('data-open')) this.#measureWidth();
+    });
+    observer.observe(menu, { attributes: true, attributeFilter: ['data-open'] });
+    this.#menuObserver = observer;
   }
 
   #unbind(): void {
     this.#controllerAbort?.abort();
     this.#controllerAbort = null;
     this.#controller = null;
+    this.#menuObserver?.disconnect();
+    this.#menuObserver = null;
+    this.closest<HTMLElement>('media-menu')?.style.removeProperty(MENU_WIDTH_PROPERTY);
     if (this.#rendered) {
       for (const view of this.#rendered.views) view.element.remove();
       this.#rendered = null;
       this.replaceChildren();
     }
+    this.#widthDirty = true;
     this.hidden = true;
   }
 }

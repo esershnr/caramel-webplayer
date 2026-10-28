@@ -412,6 +412,8 @@ export class CaramelSettingsElement extends Base {
     const fullscreen = this.#fullscreen.value;
     const fullscreenOk = autoFullscreenSupported() && fullscreen?.fullscreenAvailability !== 'unsupported';
     const next = SETTINGS_KEYS.filter((key) => {
+      // The countdown's site default exists only when the site set one; the row follows the switches.
+      if (key === 'player.autoSkipDelay') return Object.hasOwn(present, 'player.autoSkipIntro');
       if (BOUND.has(key)) return Object.hasOwn(present, key);
       if (key === 'player.autoFullscreen') return fullscreenOk;
       return true;

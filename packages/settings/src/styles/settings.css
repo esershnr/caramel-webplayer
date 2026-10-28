@@ -36,14 +36,26 @@ caramel-settings-menu:not([hidden]) {
 
 .caramel-settings-page {
   font-variant-numeric: tabular-nums;
-  /* Inline size of the pages, so the popup keeps one width across them and
-   * while a slider value changes. Rows take it as their minimum; the popup
-   * measures rows at max-content, so a minimum is what keeps it stable. */
-  --caramel-settings-page-width: 15rem;
+  /* Never sideways: a row that does not fit wraps its label instead. */
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* Optional floor for the row width, on top of the measured one. */
+  --caramel-settings-page-width: 0px;
 }
 
-.caramel-settings-page > * {
-  min-inline-size: var(--caramel-settings-page-width);
+/* One row width for the root rows and the three pages: the widest row, measured
+ * by <caramel-settings-menu> into --caramel-settings-menu-width on the menu.
+ * Video.js measures each page's rows with `width: max-content; min-width: 0`
+ * forced inline, so the minimum has to be important to survive that; it is
+ * clamped to the space the popup has (the menu positioner publishes it) minus
+ * the popup and page padding and a classic scrollbar, so narrow players get
+ * wrapping labels instead of a sideways scrollbar. */
+.caramel-settings-page > *,
+caramel-settings-menu > * {
+  min-width: min(
+    max(var(--caramel-settings-menu-width, 0px), var(--caramel-settings-page-width, 0px)),
+    calc(var(--media-menu-available-width, 100vw) - 4 * var(--media-spacing, 4px) - 16px)
+  ) !important;
 }
 
 .caramel-settings-label {
@@ -103,19 +115,28 @@ caramel-settings-menu:not([hidden]) {
 /* Slider: label and value on top, the track below                     */
 /* ------------------------------------------------------------------ */
 
+/* A one column grid, not a wrapping flex row: with `flex: 1 1 100%` children
+ * the row's max-content would equal its current width, and the popup, which
+ * measures rows at max-content, would grow the page by a pixel per measurement. */
 .caramel-settings-slider {
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   row-gap: var(--media-spacing, 4px);
   cursor: default;
 }
 
 .caramel-settings-slider-head {
   display: flex;
-  flex: 1 1 100%;
   align-items: center;
   justify-content: space-between;
   gap: calc(var(--media-spacing, 4px) * 2);
   min-width: 0;
+}
+
+.caramel-settings-slider-label {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 /* The value is rendered from `data-value` (an attribute: the menu popup does
@@ -136,7 +157,6 @@ caramel-settings-menu:not([hidden]) {
 
 .caramel-settings-slider-track {
   position: relative;
-  flex: 1 1 100%;
   height: 20px;
   cursor: pointer;
   touch-action: none;
@@ -200,13 +220,13 @@ caramel-settings-menu:not([hidden]) {
 
 .caramel-settings-switch-label {
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .caramel-settings-switch-track {
-  position: relative;
   flex-shrink: 0;
+  position: relative;
   width: 32px;
   height: 18px;
   margin-inline-start: auto;
