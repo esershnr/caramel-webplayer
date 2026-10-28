@@ -7,6 +7,24 @@ control. A subtree marked `data-caramel-native-space` keeps Space for its own bu
 
 The control bar carries two placeholders upgraded by other packages: `<caramel-playlist-nav>` (previous / next) and `<caramel-drawer-toggle>` (drawer button before the settings gear); below 28rem a visible drawer toggle replaces the mute button.
 
+The settings menu carries a third one, `<caramel-settings-menu hidden>`, as the
+last entry of its root page. `@esershnr/caramel-settings` fills it with the
+Subtitles, Player and Display pages; without that package it stays hidden and
+the menu looks as before.
+
+Seeking: the arrow keys, `j` / `l` and a double tap on the left or right side
+step 5 seconds. The step is the `value` on the `seekStep` hotkeys and gestures
+in the template (`value="5"`, and `value="-5"` for backwards); change it there,
+or let `@esershnr/caramel-settings` change it at runtime.
+
+Speed: the speed menu (`<caramel-playback-rate-radio-group>`) lists the
+Video.js rates, 0.2x to 2x, plus 3x. The `>` and `<` hotkeys step through the
+Video.js list only, so from 3x `>` wraps to 0.2x and `<` goes to 2x.
+
+Clicking or tapping outside an open settings menu only closes the menu. It no
+longer plays / pauses the video or shows / hides the controls on the same
+press.
+
 ```sh
 npm install @esershnr/caramel-skin @videojs/html
 ```

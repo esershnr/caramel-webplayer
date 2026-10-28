@@ -274,6 +274,8 @@
 </template>
 </media-captions-radio-group>
 </media-menu-content>
+<caramel-settings-menu class="caramel-settings-menu" hidden>
+</caramel-settings-menu>
 </media-menu-content>
 </media-menu>
 </media-controls-group>
@@ -332,13 +334,13 @@
 </media-hotkey>
 <media-hotkey keys="m" action="toggleMuted">
 </media-hotkey>
-<media-hotkey keys="ArrowRight" action="seekStep">
+<media-hotkey keys="ArrowRight" action="seekStep" value="5">
 </media-hotkey>
-<media-hotkey keys="ArrowLeft" action="seekStep">
+<media-hotkey keys="ArrowLeft" action="seekStep" value="-5">
 </media-hotkey>
-<media-hotkey keys="l" action="seekStep">
+<media-hotkey keys="l" action="seekStep" value="5">
 </media-hotkey>
-<media-hotkey keys="j" action="seekStep">
+<media-hotkey keys="j" action="seekStep" value="-5">
 </media-hotkey>
 <media-hotkey keys="ArrowUp" action="volumeStep">
 </media-hotkey>
@@ -364,11 +366,11 @@
 </media-gesture>
 <media-gesture type="tap" action="toggleControls" pointer="touch">
 </media-gesture>
-<media-gesture type="doubletap" action="seekStep" region="left">
+<media-gesture type="doubletap" action="seekStep" region="left" value="-5">
 </media-gesture>
 <media-gesture type="doubletap" action="toggleFullscreen" region="center">
 </media-gesture>
-<media-gesture type="doubletap" action="seekStep" region="right">
+<media-gesture type="doubletap" action="seekStep" region="right" value="5">
 </media-gesture>
 <media-status-announcer class="media-status-announcer">
 </media-status-announcer>
