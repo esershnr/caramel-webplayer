@@ -6,10 +6,10 @@ describe the change for the changelog. See `CONTRIBUTING.md`.
 
 ## Versioning policy
 
-The seven published packages are versioned independently (no `fixed` or
+The eight published packages are versioned independently (no `fixed` or
 `linked` groups):
 
-- A fix in one package should not publish six unchanged packages with new
+- A fix in one package should not publish seven unchanged packages with new
   numbers; independent versions keep changelogs and npm diffs honest.
 - Internal dependencies are published as exact versions (`workspace:*`), so
   when a package is bumped every package that depends on it, including the
