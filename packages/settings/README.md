@@ -91,8 +91,9 @@ The two switches and the countdown describe one behavior per segment type:
 - Switch off and countdown 0: no auto-skip, only the skip button.
 
 The defaults are switches off and a 3 second countdown, so a player with this
-package counts down and skips by default. Recap follows the intro switch;
-sponsor stays as the site set it. The site's own `auto-skip` on
+package counts down and skips by default. Recap follows the intro switch once
+the viewer (or the site's `defaults`) has set it; until then recap, like
+sponsor, stays as the site set it. The site's own `auto-skip` on
 `<caramel-skip-segments>` becomes the site default: a type it skips at once
 puts that switch on, a type it counts down (`auto-skip-delay`) puts the switch
 off with the site's seconds as the countdown default. Without this package

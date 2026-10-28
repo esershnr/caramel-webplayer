@@ -368,19 +368,23 @@ export class CaramelSettingsElement extends Base {
     return this.#player ?? this.#container;
   }
 
-  /**
-   * Keys the binder writes: the user's choices, the keys the site named in
-   * `defaults`, and the auto-skip keys always, because their defaults (count
-   * down 3 seconds, then skip) are a deliberate change to what the siblings do
-   * on their own.
-   */
-  #activeKeys(): Set<SettingsKey> {
-    const active = new Set<SettingsKey>(AUTO_SKIP_KEYS);
+  /** Keys the viewer chose or the site named in `defaults`. */
+  #touchedKeys(): Set<SettingsKey> {
+    const touched = new Set<SettingsKey>();
     const store = this.#store;
     for (const key of SETTINGS_KEYS) {
-      if (store?.has(key) || Object.hasOwn(this.#defaults, key)) active.add(key);
+      if (store?.has(key) || Object.hasOwn(this.#defaults, key)) touched.add(key);
     }
-    return active;
+    return touched;
+  }
+
+  /**
+   * Keys the binder writes: the touched keys, and the auto-skip keys always,
+   * because their defaults (count down 3 seconds, then skip) are a deliberate
+   * change to what the siblings do on their own.
+   */
+  #activeKeys(touched: ReadonlySet<SettingsKey>): Set<SettingsKey> {
+    return new Set<SettingsKey>([...AUTO_SKIP_KEYS, ...touched]);
   }
 
   /**
@@ -421,7 +425,10 @@ export class CaramelSettingsElement extends Base {
 
   #apply(): void {
     const root = this.#root();
-    if (root) applyBinding(root, this.#settings, this.#activeKeys());
+    if (root) {
+      const touched = this.#touchedKeys();
+      applyBinding(root, this.#settings, this.#activeKeys(touched), touched);
+    }
     this.#applyStyles();
     this.#applyFullscreen();
   }

@@ -18,8 +18,10 @@
  * `<caramel-skip-segments>` exists (the controller keeps its three keys
  * active): a switch that is on skips its types at once; a switch that is off
  * counts down `player.autoSkipDelay` seconds before the skip, or only shows
- * the button when the delay is 0. Recap follows the intro switch; sponsor is
- * never touched. The site's `auto-skip` maps to the switches (a type the site
+ * the button when the delay is 0. Recap follows the intro switch once the
+ * viewer (or the site's `defaults`) has set that switch; until then recap, like
+ * sponsor and any other type without a switch of its own, keeps what the site
+ * configured. The site's `auto-skip` maps to the switches (a type the site
  * skips at once is "on", one it counts down is "off" with the site's delay)
  * and `auto-skip-delay` to the delay default.
  */
@@ -237,13 +239,14 @@ function siteSeekStep(element: Element): number | undefined {
 /**
  * The settings a site's skip-segments configuration stands for: a type the
  * site skips at once puts its switch on; a type it counts down puts the switch
- * off and the delay default to the site's seconds. The delay is returned only
- * when the site set one, so the package default applies otherwise.
+ * off and the delay default to the site's seconds. Only `intro` speaks for the
+ * intro switch: a site that skips recaps alone leaves it off, and recap keeps
+ * the site's behavior until the switch is set. The delay is returned only when
+ * the site set one, so the package default applies otherwise.
  */
 export function autoSkipSiteDefaults(tokens: readonly string[], delays: DelayMap): Partial<SettingsValues> {
   const out: Partial<SettingsValues> = {};
-  const introType = tokens.includes('intro') ? 'intro' : tokens.includes('recap') ? 'recap' : null;
-  out['player.autoSkipIntro'] = introType !== null && delays[introType] === 0;
+  out['player.autoSkipIntro'] = tokens.includes('intro') && delays.intro === 0;
   out['player.autoSkipOutro'] = tokens.includes('outro') && delays.outro === 0;
   const seconds = [delays.intro, delays.recap, delays.outro].find((d) => d > 0);
   if (seconds !== undefined) {
@@ -284,26 +287,34 @@ export function readSiteDefaults(root: ParentNode): Partial<SettingsValues> {
   return out;
 }
 
-/** What skip-segments should do for the effective settings: the `auto-skip` tokens and the delay per type. */
+/**
+ * What skip-segments should do for the effective settings: the `auto-skip`
+ * tokens and the delay per type. `recapFollows` is true once the intro switch
+ * was set by the viewer or the site's `defaults`; before that recap keeps the
+ * site's own configuration.
+ */
 export function composeAutoSkip(
   siteTokens: readonly string[],
   siteDelays: DelayMap,
   values: SettingsValues,
+  recapFollows = true,
 ): { tokens: string; delays: DelayMap } {
   const delay = values['player.autoSkipDelay'];
   const introOn = values['player.autoSkipIntro'];
   const outroOn = values['player.autoSkipOutro'];
   const introAuto = introOn || delay >= 1;
   const outroAuto = outroOn || delay >= 1;
-  const tokens = siteTokens.filter((t) => !INTRO_TYPES.includes(t) && !OUTRO_TYPES.includes(t));
-  if (introAuto) tokens.push(...INTRO_TYPES);
+  const ours = recapFollows ? [...INTRO_TYPES, ...OUTRO_TYPES] : ['intro', ...OUTRO_TYPES];
+  const tokens = siteTokens.filter((t) => !ours.includes(t));
+  if (introAuto) tokens.push('intro');
+  if (recapFollows ? introAuto : siteTokens.includes('recap')) tokens.push('recap');
   if (outroAuto) tokens.push(...OUTRO_TYPES);
   const introDelay = introAuto && !introOn ? delay : 0;
   return {
     tokens: autoSkipTokens(tokens.join(',')).join(','),
     delays: {
       intro: introDelay,
-      recap: introDelay,
+      recap: recapFollows ? introDelay : siteDelays.recap,
       outro: outroAuto && !outroOn ? delay : 0,
       sponsor: siteDelays.sponsor,
     },
@@ -318,13 +329,16 @@ function each(root: ParentNode, selector: string, fn: (element: Element) => bool
 
 /**
  * Writes the active keys to the sibling elements and restores the site's
- * values for the others. Idempotent: a value that is already there is not
- * touched. Returns the keys that caused a write.
+ * values for the others. `touched` names the keys the viewer or the site's
+ * `defaults` set (by default every active key); it decides whether recap
+ * follows the intro switch yet. Idempotent: a value that is already there is
+ * not touched. Returns the keys that caused a write.
  */
 export function applyBinding(
   root: ParentNode,
   values: SettingsValues,
   active: ReadonlySet<SettingsKey>,
+  touched: ReadonlySet<SettingsKey> = active,
 ): SettingsKey[] {
   const wrote = new Set<SettingsKey>();
   const mark = (key: SettingsKey, did: boolean) => {
@@ -369,7 +383,7 @@ export function applyBinding(
       }
       const siteTokens = autoSkipTokens(siteValue(element, AUTO_SKIP));
       const siteDelays = delayMap(siteValue(element, AUTO_SKIP_DELAY));
-      const composed = composeAutoSkip(siteTokens, siteDelays, values);
+      const composed = composeAutoSkip(siteTokens, siteDelays, values, touched.has('player.autoSkipIntro'));
       // An empty list is written as auto-skip="" (or an empty config), which means no auto-skip.
       const did = write(element, AUTO_SKIP, composed.tokens);
       mark('player.autoSkipIntro', did);

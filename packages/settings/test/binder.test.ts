@@ -36,12 +36,14 @@ describe('readSiteDefaults', () => {
     expect(readSiteDefaults(root)).toEqual({
       'player.seekStep': 5,
       'player.numberKeys': true,
-      // The site skips recaps at once: the intro switch (recap follows it) shows on.
+      // The site skips recaps only: that does not speak for the intro switch, which stays off.
       // No delay from the site, so the package default applies (the key is absent).
-      'player.autoSkipIntro': true,
+      'player.autoSkipIntro': false,
       'player.autoSkipOutro': false,
       'player.autoAdvance': true,
     });
+    root.querySelector(skip)!.setAttribute('auto-skip', 'intro');
+    expect(readSiteDefaults(root)['player.autoSkipIntro']).toBe(true);
   });
 
   it('uses the Video.js step when the hotkey has no value', () => {
@@ -148,6 +150,30 @@ describe('applyBinding', () => {
     expect(applyBinding(root, values(), keys())).toEqual(autoSkipKeys.size === 3 ? [...autoSkipKeys] : []);
     expect(attr(skip, 'auto-skip')).toBe('recap');
     expect(root.querySelector(skip)!.hasAttribute('auto-skip-delay')).toBe(false);
+  });
+
+  it('leaves recap to the site until the intro switch is set', () => {
+    // Site: recap at once, nothing else. Untouched settings: intro counts down the
+    // default 3 s, recap keeps skipping at once, outro counts down too.
+    expect(applyBinding(root, values(), autoSkipKeys, keys())).toEqual([...autoSkipKeys]);
+    expect(attr(skip, 'auto-skip')).toBe('intro,recap,outro');
+    expect(attr(skip, 'auto-skip-delay')).toBe('intro:3,recap:0,outro:3,sponsor:0');
+    // Countdown 0 and nothing touched: recap is still the site's.
+    applyBinding(root, values({ 'player.autoSkipDelay': 0 }), autoSkipKeys, keys('player.autoSkipDelay'));
+    expect(attr(skip, 'auto-skip')).toBe('recap');
+    // The viewer sets the intro switch: recap follows it from now on.
+    applyBinding(root, values({ 'player.autoSkipIntro': true }), autoSkipKeys, keys('player.autoSkipIntro'));
+    expect(attr(skip, 'auto-skip')).toBe('intro,recap,outro');
+    expect(attr(skip, 'auto-skip-delay')).toBe('intro:0,recap:0,outro:3,sponsor:0');
+    applyBinding(
+      root,
+      values({ 'player.autoSkipIntro': false, 'player.autoSkipDelay': 0 }),
+      autoSkipKeys,
+      keys('player.autoSkipIntro', 'player.autoSkipDelay'),
+    );
+    expect(attr(skip, 'auto-skip')).toBe('');
+    applyBinding(root, values(), keys());
+    expect(attr(skip, 'auto-skip')).toBe('recap');
   });
 
   it('keeps sponsor and its site delay and round trips the site list', () => {

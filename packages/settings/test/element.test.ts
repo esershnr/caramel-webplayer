@@ -124,19 +124,23 @@ describe('<caramel-settings>', () => {
     expect(settings.settings['player.autoSkipIntro']).toBe(false);
   });
 
-  it('applies the auto-skip defaults to skip-segments: site types at once, the rest after a 3 s countdown', () => {
+  it('applies the auto-skip defaults: a 3 s countdown for intro and outro, recap as the site set it', () => {
     const { settings } = mount('after');
     const skip = document.querySelector('caramel-skip-segments')!;
-    // The site skipped recaps at once, so the intro switch is on; outro counts down.
-    expect(settings.settings['player.autoSkipIntro']).toBe(true);
+    // The site skips recaps at once; that leaves the intro switch off, so intro
+    // and outro count down the default 3 s while recap keeps skipping at once.
+    expect(settings.settings['player.autoSkipIntro']).toBe(false);
     expect(settings.settings['player.autoSkipOutro']).toBe(false);
     expect(settings.settings['player.autoSkipDelay']).toBe(3);
     expect(skip.getAttribute('auto-skip')).toBe('intro,recap,outro');
+    expect(skip.getAttribute('auto-skip-delay')).toBe('intro:3,recap:0,outro:3,sponsor:0');
+    // Touching the intro switch makes recap follow it: both at once now.
+    settings.set({ 'player.autoSkipIntro': true });
     expect(skip.getAttribute('auto-skip-delay')).toBe('intro:0,recap:0,outro:3,sponsor:0');
     // With both switches on the countdown has nothing to do.
     settings.set({ 'player.autoSkipOutro': true });
     expect(skip.getAttribute('auto-skip-delay')).toBe('intro:0,recap:0,outro:0,sponsor:0');
-    // Countdown 0 with a switch off: that type only shows the button.
+    // Countdown 0 with a switch off: that type (and recap with it) only shows the button.
     settings.set({ 'player.autoSkipIntro': false, 'player.autoSkipDelay': 0 });
     expect(skip.getAttribute('auto-skip')).toBe('outro');
     settings.remove();
@@ -149,7 +153,7 @@ describe('<caramel-settings>', () => {
     const values = settings.settings;
     expect(values['player.seekStep']).toBe(5);
     expect(values['player.numberKeys']).toBe(true);
-    expect(values['player.autoSkipIntro']).toBe(true);
+    expect(values['player.autoSkipIntro']).toBe(false);
     expect(values['player.autoSkipOutro']).toBe(false);
     expect(values['player.autoAdvance']).toBe(true);
     expect(settings.availableKeys).toContain('player.autoAdvance');
@@ -170,12 +174,12 @@ describe('<caramel-settings>', () => {
     const skip = document.querySelector('caramel-skip-segments')!;
     skip.setAttribute('auto-skip', 'recap,sponsor');
     settings.set({ 'player.autoSkipOutro': true });
+    // Outro at once; intro counts down; recap and sponsor stay as the site set them.
     expect(skip.getAttribute('auto-skip')).toBe('intro,recap,outro,sponsor');
-    expect(skip.getAttribute('auto-skip-delay')).toBe('intro:0,recap:0,outro:0,sponsor:0');
+    expect(skip.getAttribute('auto-skip-delay')).toBe('intro:3,recap:0,outro:0,sponsor:0');
     settings.reset();
-    // Back to the defaults: recap (and intro with it) at once as the site set, outro counted down.
     expect(skip.getAttribute('auto-skip')).toBe('intro,recap,outro,sponsor');
-    expect(skip.getAttribute('auto-skip-delay')).toBe('intro:0,recap:0,outro:3,sponsor:0');
+    expect(skip.getAttribute('auto-skip-delay')).toBe('intro:3,recap:0,outro:3,sponsor:0');
   });
 
   it('writes the value to a hotkey added later', async () => {
