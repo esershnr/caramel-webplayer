@@ -1,4 +1,13 @@
-import { findActiveIndex, normalizeSegments, skipTarget, type AutoSkipConfig, type Segment } from './segments.js';
+import {
+  autoSkipDelayFor,
+  findActiveIndex,
+  normalizeSegments,
+  parseAutoSkipDelay,
+  skipTarget,
+  type AutoSkipConfig,
+  type AutoSkipDelayConfig,
+  type Segment,
+} from './segments.js';
 
 export interface SkipModelOptions {
   autoSkip?: AutoSkipConfig | undefined;
@@ -13,14 +22,14 @@ export interface SkipModelOptions {
    * Seconds of media time to wait before an automatic skip, counted from the
    * point where playback entered the segment. 0 skips on the first tick. Default 0.
    */
-  autoSkipDelay?: number | undefined;
+  autoSkipDelay?: AutoSkipDelayConfig | undefined;
 }
 
 interface ResolvedOptions {
   autoSkip: AutoSkipConfig;
   hideAfter: number;
   rearmTolerance: number;
-  autoSkipDelay: number;
+  autoSkipDelay: AutoSkipDelayConfig;
 }
 
 /** Playhead position that counts as "the start" for segments starting within the tolerance of 0. */
@@ -109,7 +118,7 @@ export class SkipModel {
       autoSkip: options.autoSkip ?? {},
       hideAfter: options.hideAfter ?? 0,
       rearmTolerance: options.rearmTolerance ?? 0.5,
-      autoSkipDelay: sanitizeDelay(options.autoSkipDelay ?? 0),
+      autoSkipDelay: parseAutoSkipDelay(options.autoSkipDelay ?? 0),
     };
   }
 
@@ -131,7 +140,7 @@ export class SkipModel {
       hideAfter: options.hideAfter ?? this.#options.hideAfter,
       rearmTolerance: options.rearmTolerance ?? this.#options.rearmTolerance,
       autoSkipDelay:
-        options.autoSkipDelay === undefined ? this.#options.autoSkipDelay : sanitizeDelay(options.autoSkipDelay),
+        options.autoSkipDelay === undefined ? this.#options.autoSkipDelay : parseAutoSkipDelay(options.autoSkipDelay),
     };
   }
 
@@ -204,7 +213,8 @@ export class SkipModel {
       // a back-seek inside the segment moves it back.
       const anchor = this.#countdown ? Math.min(this.#countdown.anchor, time) : time;
       this.#countdown = { index, anchor };
-      const state = autoSkipCountdown({ time, segment: active, anchor, delay: this.#options.autoSkipDelay });
+      const delay = autoSkipDelayFor(this.#options.autoSkipDelay, active.type);
+      const state = autoSkipCountdown({ time, segment: active, anchor, delay });
       if (state.shouldSkip) {
         this.#autoSkipped.add(index);
         this.#countdown = null;
@@ -249,9 +259,4 @@ export class SkipModel {
     this.#countdown = null;
     return true;
   }
-}
-
-/** Delays are seconds of media time; anything invalid or negative means none. */
-function sanitizeDelay(value: number): number {
-  return Number.isFinite(value) && value > 0 ? value : 0;
 }

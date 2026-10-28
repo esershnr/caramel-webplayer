@@ -167,6 +167,27 @@ describe('SkipModel autoSkipDelay', () => {
     expect(at(m, 61).seekTo).toBe(90);
   });
 
+  it('counts down per type when the delay is a map', () => {
+    const m = new SkipModel({ autoSkip: { intro: true, outro: true }, autoSkipDelay: { intro: 0, outro: 3 } });
+    m.setSegments(
+      [
+        { start: 10, end: 20, type: 'intro' },
+        { start: 40, end: 50, type: 'outro' },
+      ],
+      60,
+    );
+    // Intro: no delay, skipped on the first tick.
+    expect(m.update({ time: 10, duration: 60 })).toMatchObject({ seekTo: 20, countdown: null });
+    // Outro: a 3 second countdown, then the skip.
+    expect(m.update({ time: 40, duration: 60 })).toMatchObject({ seekTo: null, countdown: 3 });
+    expect(m.update({ time: 42, duration: 60 })).toMatchObject({ seekTo: null, countdown: 1 });
+    expect(m.update({ time: 43, duration: 60 }).seekTo).toBe(50);
+    // A type missing from the map has no delay.
+    const r = new SkipModel({ autoSkip: { recap: true }, autoSkipDelay: { outro: 3 } });
+    r.setSegments([{ start: 5, end: 9, type: 'recap' }], 60);
+    expect(r.update({ time: 5, duration: 60 }).seekTo).toBe(9);
+  });
+
   it('returns false when dismissing outside a segment', () => {
     const m = model({ autoSkipDelay: 5 });
     at(m, 40);

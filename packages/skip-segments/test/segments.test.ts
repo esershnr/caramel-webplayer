@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
+  autoSkipDelayFor,
   findActiveIndex,
   geometryInLane,
   laneRange,
   normalizeSegments,
   parseAutoSkip,
+  parseAutoSkipDelay,
   segmentAtRatio,
   segmentGeometry,
   skipTarget,
@@ -49,6 +51,22 @@ describe('normalizeSegments', () => {
   it('returns an empty list for non arrays', () => {
     expect(normalizeSegments(undefined)).toEqual([]);
     expect(normalizeSegments({})).toEqual([]);
+  });
+});
+
+describe('parseAutoSkipDelay', () => {
+  it('reads seconds for every type or per type', () => {
+    expect(parseAutoSkipDelay(null)).toBe(0);
+    expect(parseAutoSkipDelay('')).toBe(0);
+    expect(parseAutoSkipDelay('3')).toBe(3);
+    expect(parseAutoSkipDelay(2.5)).toBe(2.5);
+    expect(parseAutoSkipDelay('-1')).toBe(0);
+    expect(parseAutoSkipDelay('abc')).toBe(0);
+    expect(parseAutoSkipDelay('intro:0, outro:3,bogus:4,recap:-2')).toEqual({ intro: 0, outro: 3, recap: 0 });
+    expect(parseAutoSkipDelay({ intro: 1, sponsor: '2', other: 5 })).toEqual({ intro: 1, sponsor: 2 });
+    expect(autoSkipDelayFor(3, 'intro')).toBe(3);
+    expect(autoSkipDelayFor({ outro: 3 }, 'outro')).toBe(3);
+    expect(autoSkipDelayFor({ outro: 3 }, 'intro')).toBe(0);
   });
 });
 

@@ -14,7 +14,8 @@ export interface SkipSegmentsProps {
    * Seconds of media time the button counts down before an automatic skip.
    * 0 (the default) skips at once.
    */
-  autoSkipDelay?: number | undefined;
+  /** Seconds before an automatic skip, for every type or per type (`{ intro: 0, outro: 3 }`). */
+  autoSkipDelay?: number | Partial<Record<SegmentType, number>> | undefined;
   /** Disable timeline markers. */
   noMarkers?: boolean | undefined;
   onSkip?: ((detail: SkipEventDetail) => void) | undefined;
@@ -95,10 +96,18 @@ export function SkipSegments({
       segments={json}
       auto-skip={auto}
       hide-after={hideAfter === undefined ? undefined : String(hideAfter)}
-      auto-skip-delay={autoSkipDelay === undefined ? undefined : String(autoSkipDelay)}
+      auto-skip-delay={formatDelay(autoSkipDelay)}
       no-markers={noMarkers ? '' : undefined}
     />
   );
+}
+
+function formatDelay(delay: SkipSegmentsProps['autoSkipDelay']): string | undefined {
+  if (delay === undefined) return undefined;
+  if (typeof delay === 'number') return String(delay);
+  return Object.entries(delay)
+    .map(([type, seconds]) => `${type}:${seconds}`)
+    .join(',');
 }
 
 declare module 'react' {

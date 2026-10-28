@@ -20,12 +20,15 @@ import {
 } from './i18n.js';
 import { SkipModel, type SkipResult } from './model.js';
 import {
+  autoSkipDelayFor,
   geometryInLane,
   laneRange,
   parseAutoSkip,
+  parseAutoSkipDelay,
   segmentAtRatio,
   segmentGeometry,
   type AutoSkipConfig,
+  type AutoSkipDelayConfig,
   type LaneRange,
   type Segment,
 } from './segments.js';
@@ -70,7 +73,8 @@ const OPTION_ATTRIBUTES = ['segments', 'auto-skip', 'hide-after', 'auto-skip-del
  * Attributes / properties:
  *   segments    JSON array (attribute) or Segment[] (property)
  *   auto-skip        comma separated types, or `all`
- *   auto-skip-delay  seconds of media time to count down before an auto-skip (0 = instant)
+ *   auto-skip-delay  seconds of media time to count down before an auto-skip (0 = instant),
+ *                    for every type (`3`) or per type (`intro:0,outro:3`)
  *   hide-after       seconds after which the button hides (0 = never)
  *   no-markers       disable timeline markers
  *
@@ -147,13 +151,13 @@ export class CaramelSkipSegmentsElement extends Base {
     this.requestUpdate();
   }
 
-  /** Seconds of media time to count down before an automatic skip. 0 skips at once. */
-  get autoSkipDelay(): number {
+  /** Seconds of media time to count down before an automatic skip, for every type or per type. 0 skips at once. */
+  get autoSkipDelay(): AutoSkipDelayConfig {
     return this.#model.options.autoSkipDelay;
   }
 
-  set autoSkipDelay(value: number) {
-    this.#model.setOptions({ autoSkipDelay: parseDelay(value) });
+  set autoSkipDelay(value: AutoSkipDelayConfig) {
+    this.#model.setOptions({ autoSkipDelay: parseAutoSkipDelay(value) });
     this.requestUpdate();
   }
 
@@ -322,7 +326,7 @@ export class CaramelSkipSegmentsElement extends Base {
         break;
       }
       case 'auto-skip-delay':
-        this.#model.setOptions({ autoSkipDelay: parseDelay(value) });
+        this.#model.setOptions({ autoSkipDelay: parseAutoSkipDelay(value) });
         break;
     }
   }
@@ -400,7 +404,7 @@ export class CaramelSkipSegmentsElement extends Base {
       return;
     }
     const remaining = result.countdown;
-    const delay = this.#model.options.autoSkipDelay;
+    const delay = autoSkipDelayFor(this.#model.options.autoSkipDelay, segment.type);
     const seconds = Math.ceil(remaining);
     const text = String(seconds);
     if (digits.textContent !== text) digits.textContent = text;
@@ -680,13 +684,6 @@ function readLanes(slider: HTMLElement): Lane[] {
     });
   }
   return lanes.length ? lanes : [FULL_LANE];
-}
-
-/** Parses `auto-skip-delay`: seconds, anything invalid or negative means 0. */
-function parseDelay(value: unknown): number {
-  if (value === null || value === undefined || value === '') return 0;
-  const n = Number(value);
-  return Number.isFinite(n) && n > 0 ? n : 0;
 }
 
 /** Local name of the closest ancestor that is a custom element not defined yet. */

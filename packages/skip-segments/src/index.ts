@@ -3,6 +3,8 @@ export {
   isSegmentType,
   normalizeSegments,
   parseAutoSkip,
+  parseAutoSkipDelay,
+  autoSkipDelayFor,
   findActiveIndex,
   segmentAtRatio,
   skipTarget,
@@ -10,6 +12,7 @@ export {
   type Segment,
   type SegmentType,
   type AutoSkipConfig,
+  type AutoSkipDelayConfig,
   type SegmentGeometry,
 } from './segments.js';
 export {

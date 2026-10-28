@@ -30,7 +30,9 @@ import { SkipSegments } from '@esershnr/caramel-skip-segments/react';
 ```
 
 Auto-skip delay: by default an auto-skipped segment is skipped on the first
-frame inside it. Set `auto-skip-delay` (attribute, seconds) or `autoSkipDelay`
+frame inside it. Set `auto-skip-delay` (attribute, seconds for every type, or
+per type as `intro:0,outro:3`; types not listed get 0) or `autoSkipDelay`
+(a number or `{ intro: 0, outro: 3 }`)
 (property, or the React prop) to count down first:
 
 ```html
