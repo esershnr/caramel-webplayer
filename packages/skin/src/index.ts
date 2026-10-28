@@ -76,3 +76,4 @@ export {
   type SeekDirection,
 } from './seek-indicator.js';
 export { installSpaceKey, shouldRedirectSpace, POINTER_FOCUS_ATTR, type SpaceTarget } from './space-key.js';
+export { installMenuGuard, isInsideMenu } from './menu-guard.js';
