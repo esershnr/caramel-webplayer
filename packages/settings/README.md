@@ -103,6 +103,10 @@ not touched is never written to the siblings.
 binds to the `<caramel-settings>` in the same `<video-player>` and stays
 hidden otherwise.
 
+CSS: `--caramel-settings-page-width` (default `15rem`) is the minimum inline
+size of the rows on the three pages, so the popup keeps one width across
+them and while a slider moves.
+
 Exports: `createSettingsStore`, `getSettingsStore`, `resolveSettings`,
 `SETTINGS_DEFAULTS`, `SETTINGS_KEYS`, `SETTINGS_RANGES`, `SETTINGS_VERSION`,
 `normalizeValues`, `registerCaptionFont({ id, label: { tr, en }, family })`,

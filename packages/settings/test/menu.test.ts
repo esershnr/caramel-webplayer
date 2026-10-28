@@ -127,6 +127,9 @@ describe('<caramel-settings-menu>', () => {
 
     const slider = player!.querySelector('caramel-settings-slider') as HTMLElement;
     slider.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+    // A keyboard step previews at once and commits on the key release.
+    expect(controller.settings['player.seekStep']).toBe(5);
+    slider.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight', bubbles: true }));
     expect(controller.settings['player.seekStep']).toBe(10);
     await settle();
     expect(slider.getAttribute('aria-valuetext')).toBe('10 s');

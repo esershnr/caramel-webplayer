@@ -59,6 +59,9 @@ export function sliderKeyValue(key: string, value: number, range: SettingsRange,
 /** Keys the slider consumes so the menu never sees them. */
 const OWN_KEYS = new Set(['ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown', ' ']);
 
+/** Keyboard steps commit on key release, or after this pause when no keyup arrives. */
+const KEY_COMMIT_IDLE_MS = 250;
+
 let counter = 0;
 
 /**
@@ -68,12 +71,21 @@ let counter = 0;
  * focuses it like any other row, ArrowUp and ArrowDown still move between
  * rows, and ArrowLeft / ArrowRight / Home / End / PageUp / PageDown change the
  * value (the menu never sees those, so ArrowLeft does not close the page).
- * Pointer drags on the track preview the value and commit it on release.
+ * Pointer drags on the track preview the value and commit it on release;
+ * keyboard steps preview at once and commit on key release or after a short
+ * pause.
+ *
+ * Layout contract with the Video.js menu popup: the popup watches every page
+ * for child, subtree and text mutations and re-measures all rows on each one,
+ * so a moving value must not touch the DOM tree. The value text is an
+ * attribute rendered by CSS (`data-value` on the value span), the fill and
+ * thumb follow an inline custom property, and the ARIA values are attributes
+ * too; all of them are written at most once per animation frame. The DOM is
+ * built once; nothing is replaced per step.
  *
  * Properties: `range` ({ min, max, step }), `value`, `format` (value text,
- * also the `aria-valuetext`). Methods: `setLabel(node)`.
- * Event: `caramel-settings-slider-change` (detail: { value }) after a key step
- * or a drag, bubbling.
+ * also the `aria-valuetext`), `dragging` (read only). Methods: `setLabel(node)`.
+ * Event: `caramel-settings-slider-change` (detail: { value }) on commit, bubbling.
  */
 export class CaramelSettingsSliderElement extends Base {
   static readonly tagName = 'caramel-settings-slider';
@@ -89,6 +101,10 @@ export class CaramelSettingsSliderElement extends Base {
   #text: HTMLSpanElement | null = null;
   #track: HTMLSpanElement | null = null;
   #pointer: number | null = null;
+  /** Value of keyboard steps not committed yet. */
+  #keyPreview: number | null = null;
+  #keyCommitTimer: ReturnType<typeof setTimeout> | null = null;
+  #frame: number | null = null;
 
   get range(): SettingsRange {
     return this.#range;
@@ -122,9 +138,9 @@ export class CaramelSettingsSliderElement extends Base {
     this.#render();
   }
 
-  /** True while a pointer drag is running (the host should not overwrite the value then). */
+  /** True while a pointer drag or a run of keyboard steps is in progress (the host should not overwrite the value then). */
   get dragging(): boolean {
-    return this.#pointer !== null;
+    return this.#pointer !== null || this.#keyPreview !== null;
   }
 
   /** Puts the visible label (text or a `<media-text>`) into the row; it names the slider. */
@@ -144,6 +160,9 @@ export class CaramelSettingsSliderElement extends Base {
     super.disconnectedCallback();
     this.#registration?.disconnect();
     this.#endDrag(false);
+    this.#commitKeys();
+    if (this.#frame !== null && typeof cancelAnimationFrame === 'function') cancelAnimationFrame(this.#frame);
+    this.#frame = null;
   }
 
   /** Builds the row once. Own-child listeners live with the element and survive reconnects. */
@@ -177,6 +196,9 @@ export class CaramelSettingsSliderElement extends Base {
     this.#track = track;
 
     this.addEventListener('keydown', (event) => this.#onKeyDown(event));
+    this.addEventListener('keyup', (event) => {
+      if (OWN_KEYS.has(event.key)) this.#commitKeys();
+    });
     this.addEventListener('pointerenter', () => this.#registration?.highlightFromPointer());
     track.addEventListener('pointerdown', (event) => this.#onPointerDown(event));
     track.addEventListener('pointermove', (event) => this.#onPointerMove(event));
@@ -205,9 +227,24 @@ export class CaramelSettingsSliderElement extends Base {
     // The menu moves its highlight on Home / End even when default-prevented: stop it here.
     event.preventDefault();
     event.stopPropagation();
-    const next = sliderKeyValue(event.key, this.#value, this.#range, this.#isRtl());
+    const current = this.#keyPreview ?? this.#value;
+    const next = sliderKeyValue(event.key, current, this.#range, this.#isRtl());
     if (next === null) return;
-    this.#commit(next);
+    // Preview now; the commit (storage, siblings, the change event) waits for
+    // the key release or a short pause, so a held key is one change.
+    this.#keyPreview = next;
+    if (this.#keyCommitTimer !== null) clearTimeout(this.#keyCommitTimer);
+    this.#keyCommitTimer = setTimeout(() => this.#commitKeys(), KEY_COMMIT_IDLE_MS);
+    this.#render();
+  }
+
+  #commitKeys(): void {
+    if (this.#keyCommitTimer !== null) clearTimeout(this.#keyCommitTimer);
+    this.#keyCommitTimer = null;
+    const preview = this.#keyPreview;
+    if (preview === null) return;
+    this.#keyPreview = null;
+    this.#commit(preview);
   }
 
   #ratioAt(event: PointerEvent): number {
@@ -272,16 +309,34 @@ export class CaramelSettingsSliderElement extends Base {
     );
   }
 
+  /** Paints at most once per animation frame (synchronously without one, as in SSR-like hosts). */
   #render(): void {
+    if (this.#frame !== null) return;
+    if (typeof requestAnimationFrame !== 'function') {
+      this.#paint();
+      return;
+    }
+    this.#frame = requestAnimationFrame(() => {
+      this.#frame = null;
+      this.#paint();
+    });
+  }
+
+  /** Attribute writes only: the popup observer ignores attributes, so a moving value never re-measures the menu. */
+  #paint(): void {
     if (!this.#track || !this.#text) return;
-    const value = this.#preview ?? this.#value;
+    const value = this.#preview ?? this.#keyPreview ?? this.#value;
     const text = this.#format(value);
     setAttr(this, 'aria-valuemin', String(this.#range.min));
     setAttr(this, 'aria-valuemax', String(this.#range.max));
     setAttr(this, 'aria-valuenow', String(value));
     setAttr(this, 'aria-valuetext', text);
-    if (this.#text.textContent !== text) this.#text.textContent = text;
-    this.style.setProperty('--caramel-settings-slider-progress', String(sliderRatio(value, this.#range)));
+    // Rendered by CSS (`content: attr(data-value)`), so the text node is never touched.
+    setAttr(this.#text, 'data-value', text);
+    const progress = String(sliderRatio(value, this.#range));
+    if (this.style.getPropertyValue('--caramel-settings-slider-progress') !== progress) {
+      this.style.setProperty('--caramel-settings-slider-progress', progress);
+    }
   }
 }
 

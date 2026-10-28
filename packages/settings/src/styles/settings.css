@@ -36,6 +36,14 @@ caramel-settings-menu:not([hidden]) {
 
 .caramel-settings-page {
   font-variant-numeric: tabular-nums;
+  /* Inline size of the pages, so the popup keeps one width across them and
+   * while a slider value changes. Rows take it as their minimum; the popup
+   * measures rows at max-content, so a minimum is what keeps it stable. */
+  --caramel-settings-page-width: 15rem;
+}
+
+.caramel-settings-page > * {
+  min-inline-size: var(--caramel-settings-page-width);
 }
 
 .caramel-settings-label {
@@ -110,9 +118,20 @@ caramel-settings-menu:not([hidden]) {
   min-width: 0;
 }
 
+/* The value is rendered from `data-value` (an attribute: the menu popup does
+ * not observe attributes, so a moving value never makes it re-measure) into a
+ * reserved width that fits the longest TR and EN values ("30 sn", "%200"),
+ * so the row keeps its size while dragging. */
 .caramel-settings-slider-value {
+  min-inline-size: 6ch;
+  text-align: end;
+  white-space: nowrap;
   opacity: 0.65;
   font-variant-numeric: tabular-nums;
+}
+
+.caramel-settings-slider-value::after {
+  content: attr(data-value);
 }
 
 .caramel-settings-slider-track {
