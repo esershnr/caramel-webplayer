@@ -26,8 +26,8 @@ media.setAttribute('playsinline', '');
 media.setAttribute('crossorigin', 'anonymous');
 media.setAttribute('preload', 'metadata');
 
+// No site auto-skip: the settings default (a 3 s countdown, then the skip) is what the demo shows.
 const skip = document.createElement('caramel-skip-segments');
-skip.setAttribute('auto-skip', 'recap');
 
 const playlist = document.createElement('caramel-playlist');
 playlist.id = 'playlist';
@@ -129,9 +129,9 @@ const STRINGS = {
     resolved: 'çözülen',
     bands: 'Zaman çizelgesi bantları',
     bandsHint:
-      'Çizgili bantlar otomatik atlanır: intro ve özet anında (site varsayılanı), jenerik 3 sn geri sayımdan sonra (ayar varsayılanı). Önizleme kartı fare bandın üstündeyken türü gösterir.',
-    intro: 'İntro (anında atlanır)',
-    recap: 'Özet (anında atlanır)',
+      'Çizgili bantlar 3 sn geri sayımdan sonra otomatik atlanır (ayar varsayılanı); Ayarlar > Oynatıcı bir türü anında atlamaya çevirir. Önizleme kartı fare bandın üstündeyken türü gösterir.',
+    intro: 'İntro (3 sn geri sayım)',
+    recap: 'Özet (3 sn geri sayım)',
     outro: 'Jenerik (3 sn geri sayım)',
     events: 'Olaylar',
   },
@@ -144,9 +144,9 @@ const STRINGS = {
     resolved: 'resolved',
     bands: 'Timeline segment bands',
     bandsHint:
-      'Striped bands are skipped automatically: intro and recap at once (site default), credits after a 3 s countdown (settings default). The preview card shows the type while hovering a band.',
-    intro: 'Intro (skipped at once)',
-    recap: 'Recap (skipped at once)',
+      'Striped bands are skipped automatically after a 3 s countdown (settings default); Settings > Player switches a type to an instant skip. The preview card shows the type while hovering a band.',
+    intro: 'Intro (3 s countdown)',
+    recap: 'Recap (3 s countdown)',
     outro: 'Credits (3 s countdown)',
     events: 'Events',
   },

@@ -130,7 +130,8 @@ export function App() {
             lang={lang}
             extras={
               <>
-                <SkipSegments segments={NO_SEGMENTS} autoSkip={['recap']} onSkip={onSkip} onSegmentEnter={onEnter} />
+                {/* No site auto-skip: the settings default (a 3 s countdown, then the skip) is what the demo shows. */}
+                <SkipSegments segments={NO_SEGMENTS} onSkip={onSkip} onSegmentEnter={onEnter} />
                 <Playlist
                   id="playlist"
                   items={items}
@@ -154,17 +155,17 @@ export function App() {
           <section className="demo-panel">
             <h2 className="caramel-heading">Zaman çizelgesi bantları</h2>
             <p className="demo-muted">
-              Çizgili bantlar otomatik atlanır: intro ve özet anında (site varsayılanı), jenerik 3 sn geri sayımdan
-              sonra (ayar varsayılanı). Önizleme kartı fare bandın üstündeyken türü gösterir.
+              Çizgili bantlar 3 sn geri sayımdan sonra otomatik atlanır (ayar varsayılanı); Ayarlar &gt; Oynatıcı bir
+              türü anında atlamaya çevirir. Önizleme kartı fare bandın üstündeyken türü gösterir.
             </p>
             <ul className="demo-list demo-legend">
               <li>
                 <span className="demo-swatch" data-type="intro" data-auto="" />
-                İntro (anında atlanır)
+                İntro (3 sn geri sayım)
               </li>
               <li>
                 <span className="demo-swatch" data-type="recap" data-auto="" />
-                Özet (anında atlanır)
+                Özet (3 sn geri sayım)
               </li>
               <li>
                 <span className="demo-swatch" data-type="outro" data-auto="" />
