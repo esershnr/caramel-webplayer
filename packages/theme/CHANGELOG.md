@@ -1,5 +1,11 @@
 # @esershnr/caramel-theme
 
+## 0.3.0
+
+### Minor Changes
+
+- 6f68ce5: New caption color tokens `--caramel-caption-white`, `-yellow`, `-cyan`, `-green`, `-magenta`, `-red`, `--caramel-caption-bg` and `--caramel-caption-shadow`, used by the subtitle style settings. They sit on the video, so one value serves both schemes.
+
 ## 0.2.0
 
 ### Minor Changes

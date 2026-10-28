@@ -1,6 +1,6 @@
 {
   "name": "@esershnr/caramel-webplayer",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Caramel Webplayer: a themed Video.js 10 player in one package (skin, skip segments, chapters, playlist, drawer, icons, theme)",
   "keywords": [
     "videojs",

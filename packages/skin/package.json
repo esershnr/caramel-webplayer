@@ -1,6 +1,6 @@
 {
   "name": "@esershnr/caramel-skin",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Video.js 10 video skin with Lucide morphing icons, theme tokens, quality badge, seek indicator and preview card",
   "keywords": [
     "videojs",

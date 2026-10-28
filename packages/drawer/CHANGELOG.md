@@ -1,5 +1,17 @@
 # @esershnr/caramel-drawer
 
+## 0.1.1
+
+### Patch Changes
+
+- 6f68ce5: Opening the drawer now closes an open settings menu as documented; the call targeted a method that Video.js 10 menus do not have.
+- Updated dependencies [6f68ce5]
+- Updated dependencies [6f68ce5]
+  - @esershnr/caramel-icons@0.2.0
+  - @esershnr/caramel-theme@0.3.0
+  - @esershnr/caramel-chapters@0.3.1
+  - @esershnr/caramel-playlist@0.4.1
+
 ## 0.1.0
 
 ### Minor Changes
