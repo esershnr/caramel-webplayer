@@ -23,6 +23,9 @@ interface ResolvedOptions {
   autoSkipDelay: number;
 }
 
+/** Playhead position that counts as "the start" for segments starting within the tolerance of 0. */
+const REARM_AT_START = 0.05;
+
 export interface SkipTick {
   time: number;
   duration: number;
@@ -163,15 +166,24 @@ export class SkipModel {
 
   update(tick: SkipTick): SkipResult {
     const { time, duration } = tick;
+    const previousTime = this.#lastTime;
     this.#lastTime = time;
     const previous = this.#activeIndex;
     const index = findActiveIndex(this.#segments, time);
     this.#activeIndex = index;
 
     // Rewinding before a segment re-arms its auto-skip and un-dismisses it.
+    // The tolerance keeps playback jitter around the start from re-arming. A
+    // segment that starts within the tolerance of 0 has no position before it,
+    // so it re-arms when the playhead moves backward onto the media start (a
+    // seek to 0 reports 0 exactly, with a small margin for engines that land a
+    // hair later); sitting at 0 without moving does not count.
+    const movedBack = previousTime !== null && time < previousTime;
     for (const i of [...this.#autoSkipped, ...this.#dismissed]) {
       const s = this.#segments[i];
-      if (s && time < s.start - this.#options.rearmTolerance) {
+      if (!s) continue;
+      const limit = s.start - this.#options.rearmTolerance;
+      if (limit > 0 ? time < limit : movedBack && time <= REARM_AT_START) {
         this.#autoSkipped.delete(i);
         this.#dismissed.delete(i);
       }

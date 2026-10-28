@@ -115,6 +115,58 @@ describe('SkipModel autoSkipDelay', () => {
     expect(at(m, 65).seekTo).toBe(90);
   });
 
+  it('re-arms a segment that starts at 0 when the playhead returns to the start', () => {
+    const m = new SkipModel({ autoSkip: { intro: true }, autoSkipDelay: 2 });
+    m.setSegments([{ start: 0, end: 9, type: 'intro' }], 50);
+    expect(m.update({ time: 0, duration: 50 })).toMatchObject({ countdown: 2, seekTo: null });
+    expect(m.update({ time: 2, duration: 50 }).seekTo).toBe(9);
+    // Inside the segment again without a seek to the start: no second skip.
+    expect(m.update({ time: 4, duration: 50 })).toMatchObject({ countdown: null, seekTo: null, visible: true });
+    // Seeking back to 0 re-arms it and the countdown runs again.
+    expect(m.update({ time: 0, duration: 50 })).toMatchObject({ countdown: 2, seekTo: null });
+    expect(m.update({ time: 2, duration: 50 }).seekTo).toBe(9);
+    // A landing a hair after 0 counts as the start too; 0.3 does not.
+    m.update({ time: 0.04, duration: 50 });
+    expect(m.update({ time: 1, duration: 50 }).countdown).toBeCloseTo(1.04, 5);
+    m.update({ time: 1.5, duration: 50 });
+    expect(m.update({ time: 2.1, duration: 50 }).seekTo).toBe(9);
+    expect(m.update({ time: 0.3, duration: 50 })).toMatchObject({ countdown: null, seekTo: null });
+  });
+
+  it('does not re-arm while the playhead sits at the start without moving', () => {
+    const m = new SkipModel({ autoSkip: { intro: true }, autoSkipDelay: 2 });
+    m.setSegments([{ start: 0, end: 9, type: 'intro' }], 50);
+    m.update({ time: 0, duration: 50 });
+    expect(m.dismiss()).toBe(true);
+    // Paused at 0: repeated ticks at the same time keep it dismissed.
+    expect(m.update({ time: 0, duration: 50 })).toMatchObject({ countdown: null, visible: false });
+    expect(m.update({ time: 0, duration: 50 })).toMatchObject({ countdown: null, visible: false });
+    // Playing on and seeking back to the start re-arms it.
+    m.update({ time: 3, duration: 50 });
+    expect(m.update({ time: 0, duration: 50 })).toMatchObject({ countdown: 2, visible: true });
+  });
+
+  it('re-arms a segment that starts within the tolerance of 0 at the media start', () => {
+    const m = new SkipModel({ autoSkip: { intro: true } });
+    m.setSegments([{ start: 0.3, end: 9, type: 'intro' }], 50);
+    expect(m.update({ time: 0.3, duration: 50 }).seekTo).toBe(9);
+    expect(m.update({ time: 0.3, duration: 50 }).seekTo).toBeNull();
+    // 0.1 is before the start but not at the media start: still armed off.
+    m.update({ time: 0.1, duration: 50 });
+    expect(m.update({ time: 0.5, duration: 50 }).seekTo).toBeNull();
+    m.update({ time: 0, duration: 50 });
+    expect(m.update({ time: 0.5, duration: 50 }).seekTo).toBe(9);
+  });
+
+  it('keeps the tolerance for segments that start later', () => {
+    const m = model({ autoSkipDelay: 0 });
+    expect(at(m, 60).seekTo).toBe(90);
+    at(m, 59.6);
+    expect(at(m, 61).seekTo).toBeNull();
+    at(m, 59.4);
+    expect(at(m, 61).seekTo).toBe(90);
+  });
+
   it('returns false when dismissing outside a segment', () => {
     const m = model({ autoSkipDelay: 5 });
     at(m, 40);
