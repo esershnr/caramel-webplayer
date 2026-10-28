@@ -1,5 +1,30 @@
 # @esershnr/caramel-webplayer
 
+## 0.4.0
+
+### Minor Changes
+
+- 6f68ce5: Re-exports `@esershnr/caramel-settings`: `/define` registers `<caramel-settings>` and `/react` exports `<Settings>`.
+
+### Patch Changes
+
+- Updated dependencies [6f68ce5]
+- Updated dependencies [6f68ce5]
+- Updated dependencies [6f68ce5]
+- Updated dependencies [6f68ce5]
+- Updated dependencies [6f68ce5]
+- Updated dependencies [6f68ce5]
+- Updated dependencies [6f68ce5]
+- Updated dependencies [6f68ce5]
+  - @esershnr/caramel-drawer@0.1.1
+  - @esershnr/caramel-icons@0.2.0
+  - @esershnr/caramel-settings@0.1.0
+  - @esershnr/caramel-skin@0.4.0
+  - @esershnr/caramel-skip-segments@0.3.0
+  - @esershnr/caramel-theme@0.3.0
+  - @esershnr/caramel-chapters@0.3.1
+  - @esershnr/caramel-playlist@0.4.1
+
 ## 0.3.0
 
 ### Minor Changes

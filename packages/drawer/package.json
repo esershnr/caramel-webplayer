@@ -1,6 +1,6 @@
 {
   "name": "@esershnr/caramel-drawer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Side drawer for Video.js 10 with chapters and playlist tabs inside the player",
   "keywords": [
     "videojs",

@@ -1,5 +1,14 @@
 # @esershnr/caramel-chapters
 
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies [6f68ce5]
+- Updated dependencies [6f68ce5]
+  - @esershnr/caramel-icons@0.2.0
+  - @esershnr/caramel-theme@0.3.0
+
 ## 0.3.0
 
 ### Minor Changes
