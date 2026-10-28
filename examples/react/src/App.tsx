@@ -4,6 +4,7 @@ import { SkipSegments } from '@esershnr/caramel-skip-segments/react';
 import { ChaptersPanel } from '@esershnr/caramel-chapters/react';
 import { Playlist, PlaylistPanel } from '@esershnr/caramel-playlist/react';
 import { Drawer } from '@esershnr/caramel-drawer/react';
+import { Settings } from '@esershnr/caramel-settings/react';
 import type { DrawerTabDetail, DrawerToggleDetail } from '@esershnr/caramel-drawer';
 import type { Segment, SkipEventDetail } from '@esershnr/caramel-skip-segments';
 import type { PlaylistItem } from '@esershnr/caramel-playlist';
@@ -138,6 +139,7 @@ export function App() {
                   onEnded={onPlaylistEnded}
                 />
                 <Drawer onToggle={onDrawerToggle} onTabChange={onDrawerTab} />
+                <Settings />
               </>
             }
           >

@@ -5,6 +5,7 @@ import '@esershnr/caramel-skip-segments/define';
 import '@esershnr/caramel-chapters/define';
 import '@esershnr/caramel-playlist/define';
 import '@esershnr/caramel-drawer/define';
+import '@esershnr/caramel-settings/define';
 import '@videojs/html/media/hls-video';
 import { mountSkin } from '@esershnr/caramel-skin';
 import { watchTheme } from '@esershnr/caramel-theme';
@@ -48,8 +49,10 @@ function applyItems() {
 applyItems();
 
 const drawer = document.createElement('caramel-drawer');
+// Settings pages in the gear menu; choices persist in localStorage under `caramel-settings`.
+const settings = document.createElement('caramel-settings');
 
-mountSkin(player, { media, extras: [skip, playlist, drawer], uid: 'demo' });
+mountSkin(player, { media, extras: [skip, playlist, drawer, settings], uid: 'demo' });
 
 // encode-hls output, when present: `pnpm --filter @esershnr/caramel-encode-hls start -- media/<slug> --base-url ...`
 // The Vite plugin serves repo `out/` under /out/ with Range support.
@@ -96,6 +99,9 @@ document.querySelector('caramel-chapters-panel')?.addEventListener('caramel-chap
 drawer.addEventListener('caramel-drawer-toggle', (e) => {
   const { open } = (e as CustomEvent<DrawerToggleDetail>).detail;
   addLog(`drawer ${open ? 'open' : 'closed'}`);
+});
+settings.addEventListener('caramel-settings-change', (e) => {
+  addLog(`settings ${(e as CustomEvent<{ keys: string[] }>).detail.keys.join(', ')}`);
 });
 drawer.addEventListener('caramel-drawer-tab', (e) => {
   const { tab } = (e as CustomEvent<DrawerTabDetail>).detail;
