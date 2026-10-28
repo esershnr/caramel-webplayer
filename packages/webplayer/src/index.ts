@@ -28,6 +28,9 @@ export {
   SEGMENT_KEYS,
   SEGMENT_DEFAULTS,
   registerSkipSegmentsI18n,
+  autoSkipCountdown,
+  AUTOSKIP_KEYS,
+  AUTOSKIP_DEFAULTS,
   CaramelSkipSegmentsElement,
   defineCaramelSkipSegments,
   type Segment,
@@ -38,6 +41,10 @@ export {
   type SkipTick,
   type SkipResult,
   type SkipEventDetail,
+  type AutoSkipCountdown,
+  type AutoSkipCountdownInput,
+  type SkipCountdownEventDetail,
+  type SkipCancelEventDetail,
 } from '@esershnr/caramel-skip-segments';
 
 export {

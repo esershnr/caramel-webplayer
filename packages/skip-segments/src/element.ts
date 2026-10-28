@@ -9,8 +9,16 @@ import {
   type PropertyValues,
 } from '@videojs/html';
 import { createIconElement, icons } from '@esershnr/caramel-icons';
-import { SEGMENT_DEFAULTS, SEGMENT_KEYS, SKIP_DEFAULTS, SKIP_KEYS, registerSkipSegmentsI18n } from './i18n.js';
-import { SkipModel } from './model.js';
+import {
+  AUTOSKIP_DEFAULTS,
+  AUTOSKIP_KEYS,
+  SEGMENT_DEFAULTS,
+  SEGMENT_KEYS,
+  SKIP_DEFAULTS,
+  SKIP_KEYS,
+  registerSkipSegmentsI18n,
+} from './i18n.js';
+import { SkipModel, type SkipResult } from './model.js';
 import {
   geometryInLane,
   laneRange,
@@ -33,6 +41,20 @@ export interface SkipEventDetail {
   to: number;
 }
 
+/** Detail of `caramel-skip-countdown`, sent once when a delayed auto-skip starts counting. */
+export interface SkipCountdownEventDetail {
+  segment: Segment;
+  /** Whole seconds left when the countdown started. */
+  seconds: number;
+}
+
+/** Detail of `caramel-skip-cancel`, sent when `dismiss()` cancels a running countdown. */
+export interface SkipCancelEventDetail {
+  segment: Segment;
+}
+
+const OPTION_ATTRIBUTES = ['segments', 'auto-skip', 'hide-after', 'auto-skip-delay', 'no-markers'] as const;
+
 /**
  * <caramel-skip-segments>
  *
@@ -47,18 +69,24 @@ export interface SkipEventDetail {
  *
  * Attributes / properties:
  *   segments    JSON array (attribute) or Segment[] (property)
- *   auto-skip   comma separated types, or `all`
- *   hide-after  seconds after which the button hides (0 = never)
- *   no-markers  disable timeline markers
+ *   auto-skip        comma separated types, or `all`
+ *   auto-skip-delay  seconds of media time to count down before an auto-skip (0 = instant)
+ *   hide-after       seconds after which the button hides (0 = never)
+ *   no-markers       disable timeline markers
+ *
+ * An attribute change applies only that attribute, so options set as
+ * properties survive unrelated attribute changes. Removing an attribute
+ * restores its default.
  *
  * Events: `caramel-skip` (detail: SkipEventDetail), `caramel-segment-enter`,
- * `caramel-segment-leave` (detail: { segment }).
+ * `caramel-segment-leave` (detail: { segment }), `caramel-skip-countdown`
+ * (detail: SkipCountdownEventDetail), `caramel-skip-cancel` (detail: { segment }).
  */
 export class CaramelSkipSegmentsElement extends Base {
   static readonly tagName = 'caramel-skip-segments';
 
   static override get observedAttributes(): string[] {
-    return [...(super.observedAttributes ?? []), 'segments', 'auto-skip', 'hide-after', 'no-markers'];
+    return [...(super.observedAttributes ?? []), ...OPTION_ATTRIBUTES];
   }
 
   readonly #time = new PlayerController(this, playerContext, selectTime);
@@ -69,6 +97,11 @@ export class CaramelSkipSegmentsElement extends Base {
   #segmentsInput: unknown = [];
   #button: HTMLButtonElement | null = null;
   #label: HTMLSpanElement | null = null;
+  #countdownText: HTMLSpanElement | null = null;
+  #dismissButton: HTMLButtonElement | null = null;
+  #announcer: HTMLSpanElement | null = null;
+  /** Segment whose countdown is on screen, to announce a start only once. */
+  #countdownSegment: Segment | null = null;
   #markers: HTMLDivElement | null = null;
   #markerDuration = 0;
   /** Chapter ranges the lanes were built for (see readLanes). */
@@ -114,15 +147,29 @@ export class CaramelSkipSegmentsElement extends Base {
     this.requestUpdate();
   }
 
+  /** Seconds of media time to count down before an automatic skip. 0 skips at once. */
+  get autoSkipDelay(): number {
+    return this.#model.options.autoSkipDelay;
+  }
+
+  set autoSkipDelay(value: number) {
+    this.#model.setOptions({ autoSkipDelay: parseDelay(value) });
+    this.requestUpdate();
+  }
+
   override connectedCallback(): void {
     super.connectedCallback();
     registerSkipSegmentsI18n();
     this.#disconnect?.abort();
     this.#disconnect = new AbortController();
     this.#ensureButton();
-    this.#readAttributes();
+    for (const name of OPTION_ATTRIBUTES) {
+      if (this.hasAttribute(name)) this.#applyAttribute(name);
+    }
+    this.requestUpdate();
     this.#upgradeProperty('segments');
     this.#upgradeProperty('autoSkip');
+    this.#upgradeProperty('autoSkipDelay');
     this.#awaitProvider();
   }
 
@@ -156,7 +203,7 @@ export class CaramelSkipSegmentsElement extends Base {
    * setting `segments` on a not yet defined element) lands as an own property
    * that would shadow the accessor. Re-route it through the setter.
    */
-  #upgradeProperty(name: 'segments' | 'autoSkip'): void {
+  #upgradeProperty(name: 'segments' | 'autoSkip' | 'autoSkipDelay'): void {
     if (!Object.hasOwn(this, name)) return;
     const value = (this as unknown as Record<string, unknown>)[name];
     delete (this as unknown as Record<string, unknown>)[name];
@@ -173,7 +220,8 @@ export class CaramelSkipSegmentsElement extends Base {
   override attributeChangedCallback(name: string, old: string | null, value: string | null): void {
     super.attributeChangedCallback?.(name, old, value);
     if (!this.isConnected) return;
-    this.#readAttributes();
+    this.#applyAttribute(name);
+    this.requestUpdate();
   }
 
   /** Forgets active, auto-skipped and dismissed state (a playlist switching items). */
@@ -190,8 +238,25 @@ export class CaramelSkipSegmentsElement extends Base {
     const segment = this.#model.active;
     const to = this.#model.skip(time.duration);
     if (to === null || !segment) return false;
+    this.#endCountdown();
     void time.seek(to);
     this.#emit('caramel-skip', { segment, auto: false, to } satisfies SkipEventDetail);
+    this.requestUpdate();
+    return true;
+  }
+
+  /**
+   * Hides the button for the active segment and cancels a running auto-skip
+   * countdown, without seeking. Rewinding before the segment re-arms it.
+   * Returns false when no segment is active.
+   */
+  dismiss(): boolean {
+    const segment = this.#model.active;
+    if (!segment || !this.#model.dismiss()) return false;
+    if (this.#countdownSegment) {
+      this.#endCountdown();
+      this.#emit('caramel-skip-cancel', { segment } satisfies SkipCancelEventDetail);
+    }
     this.requestUpdate();
     return true;
   }
@@ -223,28 +288,43 @@ export class CaramelSkipSegmentsElement extends Base {
       this.#emit('caramel-skip', { segment: result.active, auto: true, to: result.seekTo } satisfies SkipEventDetail);
     }
 
+    this.#renderCountdown(result);
     this.#renderButton(result.active, result.visible);
     this.#renderMarkers(time.duration, result.active);
   }
 
-  #readAttributes(): void {
-    const raw = this.getAttribute('segments');
-    if (raw !== null) {
-      try {
-        this.#segmentsInput = JSON.parse(raw);
-      } catch {
-        this.#segmentsInput = [];
+  /** Applies one observed attribute. An absent attribute restores the option's default. */
+  #applyAttribute(name: string): void {
+    const value = this.getAttribute(name);
+    switch (name) {
+      case 'segments': {
+        let input: unknown = [];
+        if (value !== null) {
+          try {
+            input = JSON.parse(value);
+          } catch {
+            input = [];
+          }
+        }
+        this.#segmentsInput = input;
+        this.#model.setSegments(input, this.#lastDuration);
+        this.#markerDuration = 0;
+        break;
       }
-      this.#model.setSegments(this.#segmentsInput, this.#lastDuration);
-      this.#markerDuration = 0;
+      case 'auto-skip':
+        this.#model.setOptions({ autoSkip: parseAutoSkip(value) });
+        // Auto-skipped bands are striped.
+        this.#markerDuration = 0;
+        break;
+      case 'hide-after': {
+        const hideAfter = Number(value);
+        this.#model.setOptions({ hideAfter: Number.isFinite(hideAfter) ? hideAfter : 0 });
+        break;
+      }
+      case 'auto-skip-delay':
+        this.#model.setOptions({ autoSkipDelay: parseDelay(value) });
+        break;
     }
-    const hideAfter = Number(this.getAttribute('hide-after'));
-    this.#model.setOptions({
-      autoSkip: parseAutoSkip(this.getAttribute('auto-skip')),
-      hideAfter: Number.isFinite(hideAfter) ? hideAfter : 0,
-    });
-    this.#markerDuration = 0;
-    this.requestUpdate();
   }
 
   #ensureButton(): void {
@@ -258,12 +338,38 @@ export class CaramelSkipSegmentsElement extends Base {
     const icon = document.createElement('span');
     icon.className = 'caramel-skip-button-icon';
     icon.append(createIconElement(icons['skip-forward']));
-    button.append(label, icon);
-    // Own-child listener: lives with the element, survives reconnects.
+    const countdown = document.createElement('span');
+    countdown.className = 'caramel-skip-button-countdown';
+    countdown.setAttribute('aria-hidden', 'true');
+    countdown.hidden = true;
+    button.append(label, countdown, icon);
+
+    const dismiss = document.createElement('button');
+    dismiss.type = 'button';
+    dismiss.className = 'caramel-skip-dismiss';
+    dismiss.append(createIconElement(icons.close));
+
+    const announcer = document.createElement('span');
+    announcer.className = 'caramel-skip-announcer';
+    announcer.setAttribute('role', 'status');
+    announcer.setAttribute('aria-live', 'polite');
+
+    // Own-child listeners: they live with the element and survive reconnects.
+    // Escape dismisses only a running countdown; a plain skip button keeps today's behavior.
+    const onKeydown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && this.#countdownSegment && this.dismiss()) event.preventDefault();
+    };
     button.addEventListener('click', () => this.skip());
-    this.replaceChildren(button);
+    button.addEventListener('keydown', onKeydown);
+    dismiss.addEventListener('click', () => this.dismiss());
+    dismiss.addEventListener('keydown', onKeydown);
+    // The close button joins the DOM only while a countdown runs.
+    this.replaceChildren(button, announcer);
     this.#button = button;
     this.#label = label;
+    this.#countdownText = countdown;
+    this.#dismissButton = dismiss;
+    this.#announcer = announcer;
   }
 
   #renderButton(active: Segment | null, visible: boolean): void {
@@ -278,6 +384,86 @@ export class CaramelSkipSegmentsElement extends Base {
     button.toggleAttribute('data-visible', visible);
     button.tabIndex = visible ? 0 : -1;
     button.setAttribute('aria-hidden', visible ? 'false' : 'true');
+  }
+
+  /**
+   * Countdown digits, progress and close button. The announcement is written
+   * once when a countdown starts and cleared when it ends; it never ticks.
+   */
+  #renderCountdown(result: SkipResult): void {
+    const button = this.#button;
+    const digits = this.#countdownText;
+    if (!button || !digits) return;
+    const segment = result.active;
+    if (!result.autoSkipPending || result.countdown === null || !segment) {
+      this.#endCountdown();
+      return;
+    }
+    const remaining = result.countdown;
+    const delay = this.#model.options.autoSkipDelay;
+    const seconds = Math.ceil(remaining);
+    const text = String(seconds);
+    if (digits.textContent !== text) digits.textContent = text;
+    digits.hidden = false;
+    button.toggleAttribute('data-countdown', true);
+    const progress = delay > 0 ? Math.min(1, Math.max(0, 1 - remaining / delay)) : 1;
+    button.style.setProperty('--caramel-skip-countdown-progress', String(progress));
+
+    const dismiss = this.#dismissButton;
+    if (dismiss) {
+      const name = this.#i18n.value(AUTOSKIP_KEYS.dismiss, { default: AUTOSKIP_DEFAULTS.dismiss });
+      if (dismiss.getAttribute('aria-label') !== name) dismiss.setAttribute('aria-label', name);
+      if (dismiss.parentElement !== this) button.after(dismiss);
+    }
+
+    const previous = this.#countdownSegment;
+    if (previous && previous.start === segment.start && previous.type === segment.type) {
+      this.#countdownSegment = segment;
+      return;
+    }
+    this.#countdownSegment = segment;
+    if (this.#announcer) {
+      const name = this.#i18n.value(SEGMENT_KEYS[segment.type], { default: SEGMENT_DEFAULTS[segment.type] });
+      const key = seconds === 1 ? 'announceOne' : 'announce';
+      this.#announcer.textContent = this.#i18n.value(AUTOSKIP_KEYS[key], {
+        default: AUTOSKIP_DEFAULTS[key],
+        segment: name,
+        seconds,
+      });
+    }
+    this.#emit('caramel-skip-countdown', { segment, seconds } satisfies SkipCountdownEventDetail);
+  }
+
+  /** Clears the countdown UI. Safe to call when none is shown. */
+  #endCountdown(): void {
+    if (!this.#countdownSegment) return;
+    this.#countdownSegment = null;
+    const button = this.#button;
+    if (button) {
+      button.removeAttribute('data-countdown');
+      button.style.removeProperty('--caramel-skip-countdown-progress');
+      if (!button.getAttribute('style')) button.removeAttribute('style');
+    }
+    if (this.#countdownText) {
+      this.#countdownText.hidden = true;
+      this.#countdownText.textContent = '';
+    }
+    this.#keepFocus();
+    this.#dismissButton?.remove();
+    if (this.#announcer) this.#announcer.textContent = '';
+  }
+
+  /**
+   * Moves focus to the player before a focused control disappears (the close
+   * button is removed, the skip button hides), so the hotkeys keep working
+   * instead of focus falling to the document body.
+   */
+  #keepFocus(): void {
+    if (typeof document === 'undefined') return;
+    const active = document.activeElement;
+    if (!active || !this.contains(active)) return;
+    const container = this.closest<HTMLElement>('media-container') ?? this.closest<HTMLElement>('video-player');
+    container?.focus({ preventScroll: true });
   }
 
   /**
@@ -494,6 +680,13 @@ function readLanes(slider: HTMLElement): Lane[] {
     });
   }
   return lanes.length ? lanes : [FULL_LANE];
+}
+
+/** Parses `auto-skip-delay`: seconds, anything invalid or negative means 0. */
+function parseDelay(value: unknown): number {
+  if (value === null || value === undefined || value === '') return 0;
+  const n = Number(value);
+  return Number.isFinite(n) && n > 0 ? n : 0;
 }
 
 /** Local name of the closest ancestor that is a custom element not defined yet. */
