@@ -8,7 +8,7 @@ adding Caramel Webplayer to the esersahiner.com site (Next.js App Router).
 ## 1. Packages
 
 Install the latest release from npm (see the package changelogs for what changed). The shortest path is the umbrella package (it pulls in all
-seven packages; `/react` exposes every wrapper, `/webplayer.css` provides the tokens
+eight packages; `/react` exposes every wrapper, `/webplayer.css` provides the tokens
 plus the skin CSS):
 
 ```sh
@@ -20,7 +20,7 @@ Modular install, if you only want what you need:
 ```sh
 npm install @esershnr/caramel-theme @esershnr/caramel-skin \
   @esershnr/caramel-skip-segments @esershnr/caramel-chapters \
-  @esershnr/caramel-playlist @esershnr/caramel-drawer @videojs/html@10.0.1
+  @esershnr/caramel-playlist @esershnr/caramel-drawer @esershnr/caramel-settings @videojs/html@10.0.1
 ```
 
 `@videojs/html` (10.0.x) is a peer dependency, so it is installed explicitly.
@@ -70,6 +70,7 @@ import { SkipSegments } from '@esershnr/caramel-skip-segments/react';
 import { ChaptersPanel } from '@esershnr/caramel-chapters/react';
 import { Playlist, PlaylistPanel } from '@esershnr/caramel-playlist/react';
 import { Drawer } from '@esershnr/caramel-drawer/react';
+import { Settings } from '@esershnr/caramel-settings/react';
 import type { PlaylistItem } from '@esershnr/caramel-playlist';
 import '@esershnr/caramel-skin/skin.css';
 
@@ -82,7 +83,7 @@ export function VideoPage({ lang }: { lang: 'tr' | 'en' }) {
   }, []);
   return (
     <div className="caramel-theme" lang={lang}>
-      <CaramelVideoSkin id="player" lang={lang} extras={<><SkipSegments segments={[]} autoSkip={['recap']} /><Playlist id="playlist" items={items} listId="site" /><Drawer /></>}>
+      <CaramelVideoSkin id="player" lang={lang} extras={<><SkipSegments segments={[]} autoSkip={['recap']} /><Playlist id="playlist" items={items} listId="site" /><Drawer /><Settings /></>}>
         <hls-video playsinline="" crossorigin="anonymous" preload="metadata" />
       </CaramelVideoSkin>
       <ChaptersPanel playerId="player" />
@@ -104,6 +105,7 @@ page (client side). The `declare module 'react'` block in
   renders the player skeleton during SSR and attaches the media element once the
   elements are registered.
 - The drawer is optional. Without `<Drawer />` the player is unchanged. It shows a list button in the control bar when the item has chapters or the playlist has at least two items.
+- The settings panel is optional too. `<Settings />` adds the Subtitles, Player and Display pages to the gear menu and remembers the viewer's choices in `localStorage` (key `caramel-settings`, shared by every player on the origin; `storageKey` separates them). Site defaults go in `defaults` (for example `defaults={{ 'player.autoSkipDelay': 5 }}`); the viewer's stored choices win over them and Reset returns to them. Without `<Settings />` nothing changes.
 
 ## 4. Checklist
 

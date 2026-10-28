@@ -13,6 +13,8 @@
 - [ ] `@esershnr/caramel-skip-segments`
 - [ ] `@esershnr/caramel-chapters`
 - [ ] `@esershnr/caramel-playlist`
+- [ ] `@esershnr/caramel-drawer`
+- [ ] `@esershnr/caramel-settings`
 - [ ] scripts, examples, docs or tooling only
 
 ## Checklist
