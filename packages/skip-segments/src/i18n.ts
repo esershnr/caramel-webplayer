@@ -46,6 +46,25 @@ const SEGMENT_TR: Record<SegmentType, string> = {
   sponsor: 'Sponsor',
 };
 
+/** Keys for the delayed auto-skip countdown. `announce` takes `{segment}` and `{seconds}`. */
+export const AUTOSKIP_KEYS = {
+  announce: 'caramel.autoskip.announce',
+  announceOne: 'caramel.autoskip.announceOne',
+  dismiss: 'caramel.autoskip.dismiss',
+} as const;
+
+export const AUTOSKIP_DEFAULTS: Record<keyof typeof AUTOSKIP_KEYS, string> = {
+  announce: '{segment} skips in {seconds} seconds',
+  announceOne: '{segment} skips in 1 second',
+  dismiss: 'Cancel auto-skip',
+};
+
+const AUTOSKIP_TR: Record<keyof typeof AUTOSKIP_KEYS, string> = {
+  announce: '{segment} {seconds} saniye sonra atlanacak',
+  announceOne: '{segment} 1 saniye sonra atlanacak',
+  dismiss: 'Otomatik atlamayı iptal et',
+};
+
 let registered = false;
 
 /**
@@ -57,6 +76,6 @@ export function registerSkipSegmentsI18n(): void {
   if (registered) return;
   registered = true;
   const register = registerI18n as unknown as (locale: string, translations: Record<string, unknown>) => void;
-  register('tr', { caramel: { skip: TR, segment: SEGMENT_TR } });
-  register('en', { caramel: { skip: SKIP_DEFAULTS, segment: SEGMENT_DEFAULTS } });
+  register('tr', { caramel: { skip: TR, segment: SEGMENT_TR, autoskip: AUTOSKIP_TR } });
+  register('en', { caramel: { skip: SKIP_DEFAULTS, segment: SEGMENT_DEFAULTS, autoskip: AUTOSKIP_DEFAULTS } });
 }

@@ -75,6 +75,7 @@
     "@esershnr/caramel-drawer": "workspace:*",
     "@esershnr/caramel-icons": "workspace:*",
     "@esershnr/caramel-playlist": "workspace:*",
+    "@esershnr/caramel-settings": "workspace:*",
     "@esershnr/caramel-skin": "workspace:*",
     "@esershnr/caramel-skip-segments": "workspace:*",
     "@esershnr/caramel-theme": "workspace:*"

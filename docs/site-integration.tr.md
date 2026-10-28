@@ -7,7 +7,7 @@ sitesine (Next.js App Router) eklerken yapılacaklar.
 
 ## 1. Paketler
 
-npm'den son sürüm (değişiklikler için paketlerin CHANGELOG'larına bakın). En kısa yol şemsiye paket (yedi paketi de getirir;
+npm'den son sürüm (değişiklikler için paketlerin CHANGELOG'larına bakın). En kısa yol şemsiye paket (sekiz paketi de getirir;
 `/react` tüm sarmalayıcıları, `/webplayer.css` token'lar + skin CSS'ini verir):
 
 ```sh
@@ -19,7 +19,7 @@ Yalnız gerekenleri kurmak için modüler kurulum:
 ```sh
 npm install @esershnr/caramel-theme @esershnr/caramel-skin \
   @esershnr/caramel-skip-segments @esershnr/caramel-chapters \
-  @esershnr/caramel-playlist @esershnr/caramel-drawer @videojs/html@10.0.1
+  @esershnr/caramel-playlist @esershnr/caramel-drawer @esershnr/caramel-settings @videojs/html@10.0.1
 ```
 
 `@videojs/html` (10.0.x) peer dependency'dir, bu yüzden açıkça kurulur. `react` ve
@@ -69,6 +69,7 @@ import { SkipSegments } from '@esershnr/caramel-skip-segments/react';
 import { ChaptersPanel } from '@esershnr/caramel-chapters/react';
 import { Playlist, PlaylistPanel } from '@esershnr/caramel-playlist/react';
 import { Drawer } from '@esershnr/caramel-drawer/react';
+import { Settings } from '@esershnr/caramel-settings/react';
 import type { PlaylistItem } from '@esershnr/caramel-playlist';
 import '@esershnr/caramel-skin/skin.css';
 
@@ -81,7 +82,7 @@ export function VideoPage({ lang }: { lang: 'tr' | 'en' }) {
   }, []);
   return (
     <div className="caramel-theme" lang={lang}>
-      <CaramelVideoSkin id="player" lang={lang} extras={<><SkipSegments segments={[]} autoSkip={['recap']} /><Playlist id="playlist" items={items} listId="site" /><Drawer /></>}>
+      <CaramelVideoSkin id="player" lang={lang} extras={<><SkipSegments segments={[]} autoSkip={['recap']} /><Playlist id="playlist" items={items} listId="site" /><Drawer /><Settings /></>}>
         <hls-video playsinline="" crossorigin="anonymous" preload="metadata" />
       </CaramelVideoSkin>
       <ChaptersPanel playerId="player" />
@@ -102,6 +103,7 @@ export function VideoPage({ lang }: { lang: 'tr' | 'en' }) {
 - Manifest'i sunucuda da çekip `items` olarak verebilirsin; bileşen SSR'da
   player iskeletini üretir, media elementini elementler kaydolunca bağlar.
 - Çekmece isteğe bağlıdır. `<Drawer />` yoksa oynatıcı değişmez. Öğenin bölümleri varsa ya da oynatma listesinde en az iki öğe varsa kontrol çubuğunda bir liste düğmesi gösterir.
+- Ayarlar paneli de isteğe bağlıdır. `<Settings />` dişli menüsüne Altyazı görünümü, Oynatıcı ve Görüntü sayfalarını ekler ve izleyicinin seçimlerini `localStorage`'da saklar (anahtar `caramel-settings`, aynı origin'deki her oynatıcı paylaşır; `storageKey` ayırır). Site varsayılanları `defaults` ile verilir (örnek: `defaults={{ 'player.autoSkipDelay': 5 }}`); izleyicinin kayıtlı seçimleri bunların üstüne gelir, Sıfırla bunlara döner. `<Settings />` yoksa hiçbir şey değişmez.
 
 ## 4. Kontrol listesi
 

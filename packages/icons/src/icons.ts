@@ -6,12 +6,14 @@ import {
   Check,
   ChevronRight,
   Gauge,
+  Keyboard,
   Languages,
   ListVideo,
   LoaderCircle,
   Maximize,
   Menu,
   Minimize,
+  Monitor,
   Pause,
   PictureInPicture2,
   Play,
@@ -21,6 +23,7 @@ import {
   SkipBack,
   SkipForward,
   SlidersHorizontal,
+  Subtitles,
   Volume1,
   Volume2,
   VolumeX,
@@ -63,6 +66,9 @@ export const icons = {
   menu: Menu,
   close: X,
   playlist: ListVideo,
+  subtitles: Subtitles,
+  keyboard: Keyboard,
+  display: Monitor,
 } as const satisfies Record<string, IconNode>;
 
 export type IconName = keyof typeof icons;

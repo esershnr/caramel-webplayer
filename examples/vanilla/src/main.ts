@@ -5,6 +5,7 @@ import '@esershnr/caramel-skip-segments/define';
 import '@esershnr/caramel-chapters/define';
 import '@esershnr/caramel-playlist/define';
 import '@esershnr/caramel-drawer/define';
+import '@esershnr/caramel-settings/define';
 import '@videojs/html/media/hls-video';
 import { mountSkin } from '@esershnr/caramel-skin';
 import { watchTheme } from '@esershnr/caramel-theme';
@@ -25,8 +26,8 @@ media.setAttribute('playsinline', '');
 media.setAttribute('crossorigin', 'anonymous');
 media.setAttribute('preload', 'metadata');
 
+// No site auto-skip: the settings default (a 3 s countdown, then the skip) is what the demo shows.
 const skip = document.createElement('caramel-skip-segments');
-skip.setAttribute('auto-skip', 'recap');
 
 const playlist = document.createElement('caramel-playlist');
 playlist.id = 'playlist';
@@ -48,8 +49,10 @@ function applyItems() {
 applyItems();
 
 const drawer = document.createElement('caramel-drawer');
+// Settings pages in the gear menu; choices persist in localStorage under `caramel-settings`.
+const settings = document.createElement('caramel-settings');
 
-mountSkin(player, { media, extras: [skip, playlist, drawer], uid: 'demo' });
+mountSkin(player, { media, extras: [skip, playlist, drawer, settings], uid: 'demo' });
 
 // encode-hls output, when present: `pnpm --filter @esershnr/caramel-encode-hls start -- media/<slug> --base-url ...`
 // The Vite plugin serves repo `out/` under /out/ with Range support.
@@ -97,6 +100,9 @@ drawer.addEventListener('caramel-drawer-toggle', (e) => {
   const { open } = (e as CustomEvent<DrawerToggleDetail>).detail;
   addLog(`drawer ${open ? 'open' : 'closed'}`);
 });
+settings.addEventListener('caramel-settings-change', (e) => {
+  addLog(`settings ${(e as CustomEvent<{ keys: string[] }>).detail.keys.join(', ')}`);
+});
 drawer.addEventListener('caramel-drawer-tab', (e) => {
   const { tab } = (e as CustomEvent<DrawerTabDetail>).detail;
   addLog(`drawer tab ${tab}`);
@@ -122,10 +128,11 @@ const STRINGS = {
     system: 'Sistem',
     resolved: 'çözülen',
     bands: 'Zaman çizelgesi bantları',
-    bandsHint: 'Çizgili bant otomatik atlanır (demo: özet). Önizleme kartı fare bandın üstündeyken türü gösterir.',
-    intro: 'İntro',
-    recap: 'Özet (otomatik atlanır)',
-    outro: 'Jenerik',
+    bandsHint:
+      'Çizgili bantlar 3 sn geri sayımdan sonra otomatik atlanır (ayar varsayılanı); Ayarlar > Oynatıcı bir türü anında atlamaya çevirir. Önizleme kartı fare bandın üstündeyken türü gösterir.',
+    intro: 'İntro (3 sn geri sayım)',
+    recap: 'Özet (3 sn geri sayım)',
+    outro: 'Jenerik (3 sn geri sayım)',
     events: 'Olaylar',
   },
   en: {
@@ -137,10 +144,10 @@ const STRINGS = {
     resolved: 'resolved',
     bands: 'Timeline segment bands',
     bandsHint:
-      'The striped band is skipped automatically (demo: recap). The preview card shows the type while hovering a band.',
-    intro: 'Intro',
-    recap: 'Recap (auto-skipped)',
-    outro: 'Credits',
+      'Striped bands are skipped automatically after a 3 s countdown (settings default); Settings > Player switches a type to an instant skip. The preview card shows the type while hovering a band.',
+    intro: 'Intro (3 s countdown)',
+    recap: 'Recap (3 s countdown)',
+    outro: 'Credits (3 s countdown)',
     events: 'Events',
   },
 };

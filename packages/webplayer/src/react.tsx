@@ -6,3 +6,4 @@ export * from '@esershnr/caramel-skip-segments/react';
 export * from '@esershnr/caramel-chapters/react';
 export * from '@esershnr/caramel-playlist/react';
 export * from '@esershnr/caramel-drawer/react';
+export * from '@esershnr/caramel-settings/react';

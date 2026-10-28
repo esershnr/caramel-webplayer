@@ -59,7 +59,17 @@ export function tosPlaylist(lang: 'tr' | 'en'): PlaylistItem[] {
       group: season1,
       chapters: false,
     }),
-    clip('finale', 'Tears of Steel: finale', 50, [{ start: 36, end: 50, type: 'outro' }], { group: season2 }),
+    // Intro and outro in one clip: exercises the auto-skip delay at both ends.
+    clip(
+      'finale',
+      'Tears of Steel: finale',
+      50,
+      [
+        { start: 0, end: 8, type: 'intro' },
+        { start: 36, end: 50, type: 'outro' },
+      ],
+      { group: season2 },
+    ),
   ];
 }
 

@@ -13,6 +13,9 @@ export interface Segment {
 
 export type AutoSkipConfig = Partial<Record<SegmentType, boolean>>;
 
+/** Seconds to count down before an automatic skip: one value for every type, or per type (missing types: 0). */
+export type AutoSkipDelayConfig = number | Partial<Record<SegmentType, number>>;
+
 export function isSegmentType(value: unknown): value is SegmentType {
   return typeof value === 'string' && (SEGMENT_TYPES as readonly string[]).includes(value);
 }
@@ -65,6 +68,44 @@ export function parseAutoSkip(value: string | null | undefined): AutoSkipConfig 
     }
   }
   return config;
+}
+
+function toDelay(value: unknown): number {
+  const n = typeof value === 'string' && value.trim() === '' ? NaN : Number(value);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+
+/**
+ * Parses `auto-skip-delay`: `"3"` (every type), `"intro:0,outro:3"` (per type,
+ * types not listed get 0), a number, or an object keyed by type. Anything
+ * invalid or negative means 0.
+ */
+export function parseAutoSkipDelay(value: unknown): AutoSkipDelayConfig {
+  if (value === null || value === undefined || value === '') return 0;
+  if (typeof value === 'number') return toDelay(value);
+  if (typeof value === 'string') {
+    if (!value.includes(':')) return toDelay(value);
+    const config: Partial<Record<SegmentType, number>> = {};
+    for (const part of value.split(',')) {
+      const [type = '', seconds = ''] = part.split(':').map((s) => s.trim());
+      if (isSegmentType(type)) config[type] = toDelay(seconds);
+    }
+    return config;
+  }
+  if (typeof value === 'object') {
+    const config: Partial<Record<SegmentType, number>> = {};
+    for (const type of SEGMENT_TYPES) {
+      const seconds = (value as Record<string, unknown>)[type];
+      if (seconds !== undefined) config[type] = toDelay(seconds);
+    }
+    return config;
+  }
+  return 0;
+}
+
+/** Seconds of countdown for one segment type. */
+export function autoSkipDelayFor(config: AutoSkipDelayConfig, type: SegmentType): number {
+  return typeof config === 'number' ? config : (config[type] ?? 0);
 }
 
 /** Index of the segment containing `time`, or -1. */

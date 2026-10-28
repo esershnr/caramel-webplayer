@@ -4,13 +4,13 @@ import type { CaramelPlaylistElement } from '@esershnr/caramel-playlist';
 import type { CaramelDrawerElement } from '../src/element.js';
 import type { CaramelDrawerToggleElement } from '../src/toggle.js';
 
-/** A stand-in for Video.js's `<media-menu>`: `closeMenu()` drops `data-open` like the real one. */
+/** A stand-in for Video.js's `<media-menu>`: `close()` drops `data-open` like the real one. */
 const closeMenu = vi.fn(function (this: HTMLElement) {
   this.removeAttribute('data-open');
 });
 
 class FakeMenu extends HTMLElement {
-  closeMenu = closeMenu;
+  close = closeMenu;
 }
 
 const ITEMS = [

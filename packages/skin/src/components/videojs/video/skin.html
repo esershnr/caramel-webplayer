@@ -138,7 +138,7 @@
 <media-tooltip trigger="vjs-6EpYm0RN-0-4-trigger" side="top" class="media-popup media-popup-safe-area media-popup-transition media-popup-surface media-tooltip">
 <media-text token="menu.settings">Settings</media-text>
 </media-tooltip>
-<media-menu side="top" align="center" class="media-popup media-popup-surface media-menu-popup media-menu-resizable-popup caramel-theme" id="vjs-Keqr6Ase-0-popup">
+<media-menu side="top" align="center" data-interactive class="media-popup media-popup-surface media-menu-popup media-menu-resizable-popup caramel-theme" id="vjs-Keqr6Ase-0-popup">
 <media-menu-content class="media-menu-content">
 <media-menu-item commandfor="vjs-tLacI0er-0-content" class="media-menu-trigger-item">
 <media-icon name="switches" class="media-menu-trigger-item-icon">
@@ -229,7 +229,7 @@
 </media-menu-item>
 <media-menu-separator class="media-menu-separator">
 </media-menu-separator>
-<media-playback-rate-radio-group class="media-menu-radio-group">
+<caramel-playback-rate-radio-group class="media-menu-radio-group">
 <template>
 <media-menu-radio-item class="media-menu-radio-item">
 <span data-part="label">
@@ -240,7 +240,7 @@
 </media-menu-item-indicator>
 </media-menu-radio-item>
 </template>
-</media-playback-rate-radio-group>
+</caramel-playback-rate-radio-group>
 </media-menu-content>
 <media-menu-item commandfor="vjs-rIQzx-29-0-content" class="media-menu-trigger-item">
 <media-icon name="captions-off" class="media-menu-trigger-item-icon">
@@ -274,6 +274,8 @@
 </template>
 </media-captions-radio-group>
 </media-menu-content>
+<caramel-settings-menu class="caramel-settings-menu" hidden>
+</caramel-settings-menu>
 </media-menu-content>
 </media-menu>
 </media-controls-group>
@@ -332,13 +334,13 @@
 </media-hotkey>
 <media-hotkey keys="m" action="toggleMuted">
 </media-hotkey>
-<media-hotkey keys="ArrowRight" action="seekStep">
+<media-hotkey keys="ArrowRight" action="seekStep" value="5">
 </media-hotkey>
-<media-hotkey keys="ArrowLeft" action="seekStep">
+<media-hotkey keys="ArrowLeft" action="seekStep" value="-5">
 </media-hotkey>
-<media-hotkey keys="l" action="seekStep">
+<media-hotkey keys="l" action="seekStep" value="5">
 </media-hotkey>
-<media-hotkey keys="j" action="seekStep">
+<media-hotkey keys="j" action="seekStep" value="-5">
 </media-hotkey>
 <media-hotkey keys="ArrowUp" action="volumeStep">
 </media-hotkey>
@@ -364,11 +366,11 @@
 </media-gesture>
 <media-gesture type="tap" action="toggleControls" pointer="touch">
 </media-gesture>
-<media-gesture type="doubletap" action="seekStep" region="left">
+<media-gesture type="doubletap" action="seekStep" region="left" value="-5">
 </media-gesture>
 <media-gesture type="doubletap" action="toggleFullscreen" region="center">
 </media-gesture>
-<media-gesture type="doubletap" action="seekStep" region="right">
+<media-gesture type="doubletap" action="seekStep" region="right" value="5">
 </media-gesture>
 <media-status-announcer class="media-status-announcer">
 </media-status-announcer>

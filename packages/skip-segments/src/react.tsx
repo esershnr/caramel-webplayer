@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, type CSSProperties } from 'react';
 import type { Segment, SegmentType } from './segments.js';
-import type { SkipEventDetail } from './element.js';
+import type { SkipCancelEventDetail, SkipCountdownEventDetail, SkipEventDetail } from './element.js';
 
 export interface SkipSegmentsProps {
   segments: readonly Segment[];
@@ -10,11 +10,21 @@ export interface SkipSegmentsProps {
   autoSkip?: readonly SegmentType[] | 'all' | undefined;
   /** Seconds after which the button hides. 0 keeps it for the whole segment. */
   hideAfter?: number | undefined;
+  /**
+   * Seconds of media time the button counts down before an automatic skip.
+   * 0 (the default) skips at once.
+   */
+  /** Seconds before an automatic skip, for every type or per type (`{ intro: 0, outro: 3 }`). */
+  autoSkipDelay?: number | Partial<Record<SegmentType, number>> | undefined;
   /** Disable timeline markers. */
   noMarkers?: boolean | undefined;
   onSkip?: ((detail: SkipEventDetail) => void) | undefined;
   onSegmentEnter?: ((segment: Segment) => void) | undefined;
   onSegmentLeave?: ((segment: Segment) => void) | undefined;
+  /** A delayed auto-skip started counting down. */
+  onSkipCountdown?: ((detail: SkipCountdownEventDetail) => void) | undefined;
+  /** A running countdown was cancelled with the close button, Escape or `dismiss()`. */
+  onSkipCancel?: ((detail: SkipCancelEventDetail) => void) | undefined;
   className?: string | undefined;
   style?: CSSProperties | undefined;
 }
@@ -29,10 +39,13 @@ export function SkipSegments({
   segments,
   autoSkip,
   hideAfter,
+  autoSkipDelay,
   noMarkers,
   onSkip,
   onSegmentEnter,
   onSegmentLeave,
+  onSkipCountdown,
+  onSkipCancel,
   className,
   style,
 }: SkipSegmentsProps) {
@@ -60,8 +73,20 @@ export function SkipSegments({
       (e) => onSegmentLeave?.((e as CustomEvent<{ segment: Segment }>).detail.segment),
       { signal },
     );
+    el.addEventListener(
+      'caramel-skip-countdown',
+      (e) => onSkipCountdown?.((e as CustomEvent<SkipCountdownEventDetail>).detail),
+      { signal },
+    );
+    el.addEventListener(
+      'caramel-skip-cancel',
+      (e) => onSkipCancel?.((e as CustomEvent<SkipCancelEventDetail>).detail),
+      {
+        signal,
+      },
+    );
     return () => controller.abort();
-  }, [onSkip, onSegmentEnter, onSegmentLeave]);
+  }, [onSkip, onSegmentEnter, onSegmentLeave, onSkipCountdown, onSkipCancel]);
 
   return (
     <caramel-skip-segments
@@ -71,9 +96,18 @@ export function SkipSegments({
       segments={json}
       auto-skip={auto}
       hide-after={hideAfter === undefined ? undefined : String(hideAfter)}
+      auto-skip-delay={formatDelay(autoSkipDelay)}
       no-markers={noMarkers ? '' : undefined}
     />
   );
+}
+
+function formatDelay(delay: SkipSegmentsProps['autoSkipDelay']): string | undefined {
+  if (delay === undefined) return undefined;
+  if (typeof delay === 'number') return String(delay);
+  return Object.entries(delay)
+    .map(([type, seconds]) => `${type}:${seconds}`)
+    .join(',');
 }
 
 declare module 'react' {
@@ -87,6 +121,7 @@ declare module 'react' {
         segments?: string | undefined;
         'auto-skip'?: string | undefined;
         'hide-after'?: string | undefined;
+        'auto-skip-delay'?: string | undefined;
         'no-markers'?: string | undefined;
       };
     }

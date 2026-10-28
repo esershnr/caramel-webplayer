@@ -4,6 +4,7 @@ import { SkipSegments } from '@esershnr/caramel-skip-segments/react';
 import { ChaptersPanel } from '@esershnr/caramel-chapters/react';
 import { Playlist, PlaylistPanel } from '@esershnr/caramel-playlist/react';
 import { Drawer } from '@esershnr/caramel-drawer/react';
+import { Settings } from '@esershnr/caramel-settings/react';
 import type { DrawerTabDetail, DrawerToggleDetail } from '@esershnr/caramel-drawer';
 import type { Segment, SkipEventDetail } from '@esershnr/caramel-skip-segments';
 import type { PlaylistItem } from '@esershnr/caramel-playlist';
@@ -129,7 +130,8 @@ export function App() {
             lang={lang}
             extras={
               <>
-                <SkipSegments segments={NO_SEGMENTS} autoSkip={['recap']} onSkip={onSkip} onSegmentEnter={onEnter} />
+                {/* No site auto-skip: the settings default (a 3 s countdown, then the skip) is what the demo shows. */}
+                <SkipSegments segments={NO_SEGMENTS} onSkip={onSkip} onSegmentEnter={onEnter} />
                 <Playlist
                   id="playlist"
                   items={items}
@@ -138,6 +140,7 @@ export function App() {
                   onEnded={onPlaylistEnded}
                 />
                 <Drawer onToggle={onDrawerToggle} onTabChange={onDrawerTab} />
+                <Settings />
               </>
             }
           >
@@ -152,20 +155,21 @@ export function App() {
           <section className="demo-panel">
             <h2 className="caramel-heading">Zaman çizelgesi bantları</h2>
             <p className="demo-muted">
-              Çizgili bant otomatik atlanır (demo: özet). Önizleme kartı fare bandın üstündeyken türü gösterir.
+              Çizgili bantlar 3 sn geri sayımdan sonra otomatik atlanır (ayar varsayılanı); Ayarlar &gt; Oynatıcı bir
+              türü anında atlamaya çevirir. Önizleme kartı fare bandın üstündeyken türü gösterir.
             </p>
             <ul className="demo-list demo-legend">
               <li>
-                <span className="demo-swatch" data-type="intro" />
-                İntro
+                <span className="demo-swatch" data-type="intro" data-auto="" />
+                İntro (3 sn geri sayım)
               </li>
               <li>
                 <span className="demo-swatch" data-type="recap" data-auto="" />
-                Özet (otomatik atlanır)
+                Özet (3 sn geri sayım)
               </li>
               <li>
-                <span className="demo-swatch" data-type="outro" />
-                Jenerik
+                <span className="demo-swatch" data-type="outro" data-auto="" />
+                Jenerik (3 sn geri sayım)
               </li>
               <li>
                 <span className="demo-swatch" data-type="sponsor" />
