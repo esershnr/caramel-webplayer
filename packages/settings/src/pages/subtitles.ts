@@ -13,7 +13,7 @@ function swatch(color: CaptionColor): HTMLElement {
   return element;
 }
 
-/** Subtitles: size, position, color, background, font, shadow, bold. */
+/** Caption style: size, position, color, background, font, shadow, bold. */
 export function buildSubtitlesPage(host: SettingsHost, id: string): SettingsPageView {
   const page = new PageBuilder(host, 'captions', id, 'pageCaptions');
 

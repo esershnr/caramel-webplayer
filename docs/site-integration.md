@@ -105,7 +105,7 @@ page (client side). The `declare module 'react'` block in
   renders the player skeleton during SSR and attaches the media element once the
   elements are registered.
 - The drawer is optional. Without `<Drawer />` the player is unchanged. It shows a list button in the control bar when the item has chapters or the playlist has at least two items.
-- The settings panel is optional too. `<Settings />` adds the Subtitles, Player and Display pages to the gear menu and remembers the viewer's choices in `localStorage` (key `caramel-settings`, shared by every player on the origin; `storageKey` separates them). Site defaults go in `defaults` (for example `defaults={{ 'player.autoSkipDelay': 5 }}`); the viewer's stored choices win over them and Reset returns to them. Without `<Settings />` nothing changes.
+- The settings panel is optional too. `<Settings />` adds the Caption style, Player and Display pages to the gear menu and remembers the viewer's choices in `localStorage` (key `caramel-settings`, shared by every player on the origin; `storageKey` separates them). Site defaults go in `defaults` (for example `defaults={{ 'player.autoSkipDelay': 5 }}`); the viewer's stored choices win over them and Reset returns to them. Without `<Settings />` nothing changes.
 
 ## 4. Checklist
 

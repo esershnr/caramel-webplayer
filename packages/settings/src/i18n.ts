@@ -51,7 +51,7 @@ export type SettingsI18nName = keyof typeof SETTINGS_KEYS_I18N;
 
 /** English defaults, used when no translation is registered. */
 export const SETTINGS_DEFAULTS_I18N: Readonly<Record<SettingsI18nName, string>> = {
-  pageCaptions: 'Subtitles',
+  pageCaptions: 'Caption style',
   pagePlayer: 'Player',
   pageDisplay: 'Display',
   size: 'Size',
@@ -89,7 +89,7 @@ export const SETTINGS_DEFAULTS_I18N: Readonly<Record<SettingsI18nName, string>> 
 };
 
 const TR: Readonly<Record<SettingsI18nName, string>> = {
-  pageCaptions: 'Altyazı',
+  pageCaptions: 'Altyazı görünümü',
   pagePlayer: 'Oynatıcı',
   pageDisplay: 'Görüntü',
   size: 'Boyut',

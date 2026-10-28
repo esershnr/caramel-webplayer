@@ -27,7 +27,7 @@ interface Rendered {
  *
  * Placeholder inside the root page of the skin's settings menu. Once a
  * `<caramel-settings>` controller sits in the same `<video-player>`, it shows
- * three rows (Subtitles, Player, Display) and appends their pages to the
+ * three rows (Caption style, Player, Display) and appends their pages to the
  * enclosing `<media-menu>` (Video.js keeps every page as a direct child of the
  * menu). Without a controller it stays `hidden` and renders nothing, so the
  * menu looks exactly as before. Every control writes through

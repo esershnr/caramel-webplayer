@@ -10,7 +10,7 @@ describe('settings i18n', () => {
     const t = (translate: typeof tr, name: keyof typeof SETTINGS_KEYS_I18N, params = {}) =>
       translate(SETTINGS_KEYS_I18N[name], { default: SETTINGS_DEFAULTS_I18N[name], ...params });
 
-    expect(t(tr, 'pageCaptions')).toBe('Altyazı');
+    expect(t(tr, 'pageCaptions')).toBe('Altyazı görünümü');
     expect(t(tr, 'pagePlayer')).toBe('Oynatıcı');
     expect(t(tr, 'pageDisplay')).toBe('Görüntü');
     expect(t(tr, 'seekStep')).toBe('İleri sarma adımı');
@@ -21,7 +21,7 @@ describe('settings i18n', () => {
     expect(t(tr, 'percent', { value: 120 })).toBe('%120');
     expect(t(tr, 'seconds', { value: 10 })).toBe('10 sn');
 
-    expect(t(en, 'pageCaptions')).toBe('Subtitles');
+    expect(t(en, 'pageCaptions')).toBe('Caption style');
     expect(t(en, 'numberKeys')).toBe('Number key seeking');
     expect(t(en, 'colorMagenta')).toBe('Magenta');
     expect(t(en, 'percent', { value: 120 })).toBe('120%');

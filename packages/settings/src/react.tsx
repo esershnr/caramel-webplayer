@@ -17,7 +17,7 @@ export interface SettingsProps {
 
 /**
  * React wrapper for <caramel-settings>. Place it inside `<CaramelVideoSkin extras>`
- * so the skin's settings menu shows the Subtitles, Player and Display pages.
+ * so the skin's settings menu shows the Caption style, Player and Display pages.
  * Registers the element in the browser only (Next.js App Router safe); the
  * defaults travel as a JSON attribute so the server markup matches the client.
  */

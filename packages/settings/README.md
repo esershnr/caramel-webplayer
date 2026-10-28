@@ -1,7 +1,7 @@
 # @esershnr/caramel-settings
 
 Settings pages for the Video.js 10 player's gear menu, the way streaming sites
-have them: Subtitles (size, position, color, background, font, shadow, bold),
+have them: Caption style (size, position, color, background, font, shadow, bold),
 Player (seek step, number key seeking, auto-skip intro and outro, auto-skip
 delay, autoplay next, fullscreen on play) and Display (aspect ratio, video
 filter). Choices are remembered in `localStorage` and applied on the next

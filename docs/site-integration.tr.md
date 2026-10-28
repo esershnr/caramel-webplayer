@@ -103,7 +103,7 @@ export function VideoPage({ lang }: { lang: 'tr' | 'en' }) {
 - Manifest'i sunucuda da çekip `items` olarak verebilirsin; bileşen SSR'da
   player iskeletini üretir, media elementini elementler kaydolunca bağlar.
 - Çekmece isteğe bağlıdır. `<Drawer />` yoksa oynatıcı değişmez. Öğenin bölümleri varsa ya da oynatma listesinde en az iki öğe varsa kontrol çubuğunda bir liste düğmesi gösterir.
-- Ayarlar paneli de isteğe bağlıdır. `<Settings />` dişli menüsüne Altyazı, Oynatıcı ve Görüntü sayfalarını ekler ve izleyicinin seçimlerini `localStorage`'da saklar (anahtar `caramel-settings`, aynı origin'deki her oynatıcı paylaşır; `storageKey` ayırır). Site varsayılanları `defaults` ile verilir (örnek: `defaults={{ 'player.autoSkipDelay': 5 }}`); izleyicinin kayıtlı seçimleri bunların üstüne gelir, Sıfırla bunlara döner. `<Settings />` yoksa hiçbir şey değişmez.
+- Ayarlar paneli de isteğe bağlıdır. `<Settings />` dişli menüsüne Altyazı görünümü, Oynatıcı ve Görüntü sayfalarını ekler ve izleyicinin seçimlerini `localStorage`'da saklar (anahtar `caramel-settings`, aynı origin'deki her oynatıcı paylaşır; `storageKey` ayırır). Site varsayılanları `defaults` ile verilir (örnek: `defaults={{ 'player.autoSkipDelay': 5 }}`); izleyicinin kayıtlı seçimleri bunların üstüne gelir, Sıfırla bunlara döner. `<Settings />` yoksa hiçbir şey değişmez.
 
 ## 4. Kontrol listesi
 
