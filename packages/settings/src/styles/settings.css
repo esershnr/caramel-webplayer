@@ -13,9 +13,19 @@ caramel-settings {
   display: none;
 }
 
-/* The root page is a flex column: the rows must be its flex children. */
+/* Layout contract with the Video.js menu popup: when the menu opens (and on
+ * every mutation of the page), the popup measures the root page's direct
+ * children by their boxes and offsets and sets --media-menu-height from the
+ * result; the popup clips to that height. The placeholder is one of those
+ * children, so it needs a real box that is as tall as the rows it holds.
+ * `display: contents` would measure as 0px and the rows would be clipped away
+ * while still being in the DOM. A flex column with the root page's row gap
+ * keeps the rows looking like the native ones. */
 caramel-settings-menu:not([hidden]) {
-  display: contents;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--media-spacing) * 0.5);
+  min-width: 0;
 }
 
 /* A hidden row stays out of the layout (the item classes set display: flex). */
