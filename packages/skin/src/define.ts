@@ -13,6 +13,7 @@ import { CaramelTimeDisplayElement } from './time-display.js';
 import { CaramelQualityBadgeElement } from './quality-badge.js';
 import { CaramelPreviewSizeElement } from './preview-size.js';
 import { CaramelQualityRadioGroupElement } from './quality-order.js';
+import { CaramelPlaybackRateRadioGroupElement } from './playback-rate-group.js';
 import { CaramelSeekIndicatorElement } from './seek-indicator.js';
 
 if (typeof document !== 'undefined') {
@@ -22,7 +23,11 @@ if (typeof document !== 'undefined') {
   for (const Element of [CaramelTimeDisplayElement, CaramelQualityBadgeElement, CaramelPreviewSizeElement]) {
     if (!customElements.get(Element.tagName)) customElements.define(Element.tagName, Element);
   }
-  for (const Element of [CaramelQualityRadioGroupElement, CaramelSeekIndicatorElement]) {
+  for (const Element of [
+    CaramelQualityRadioGroupElement,
+    CaramelPlaybackRateRadioGroupElement,
+    CaramelSeekIndicatorElement,
+  ]) {
     if (!customElements.get(Element.caramelTagName)) customElements.define(Element.caramelTagName, Element);
   }
 }

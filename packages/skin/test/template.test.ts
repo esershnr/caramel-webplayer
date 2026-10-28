@@ -43,6 +43,33 @@ describe('skin template', () => {
     expect(SKIN_TEMPLATE.slice(0, settingsStart).endsWith('</caramel-drawer-toggle>')).toBe(true);
   });
 
+  it('steps 5 seconds on the seek hotkeys and double taps', () => {
+    for (const [keys, value] of [
+      ['ArrowRight', '5'],
+      ['l', '5'],
+      ['ArrowLeft', '-5'],
+      ['j', '-5'],
+    ]) {
+      expect(SKIN_TEMPLATE).toContain(`<media-hotkey keys="${keys}" action="seekStep" value="${value}">`);
+    }
+    expect(SKIN_TEMPLATE).toContain('<media-gesture type="doubletap" action="seekStep" region="left" value="-5">');
+    expect(SKIN_TEMPLATE).toContain('<media-gesture type="doubletap" action="seekStep" region="right" value="5">');
+    expect(SKIN_TEMPLATE).not.toMatch(/action="seekStep"(?! value=| region=)/);
+  });
+
+  it('places the settings pages placeholder last in the root menu content', () => {
+    const placeholder = '<caramel-settings-menu class="caramel-settings-menu" hidden></caramel-settings-menu>';
+    expect(SKIN_TEMPLATE).toContain(
+      `</media-captions-radio-group></media-menu-content>${placeholder}</media-menu-content></media-menu>`,
+    );
+    expect(SKIN_TEMPLATE).toMatch(/<media-menu [^>]*data-interactive/);
+  });
+
+  it('uses the caramel speed list', () => {
+    expect(SKIN_TEMPLATE).toContain('<caramel-playback-rate-radio-group class="media-menu-radio-group">');
+    expect(SKIN_TEMPLATE).not.toContain('<media-playback-rate-radio-group');
+  });
+
   it('keeps every id reference resolvable after applying a uid', () => {
     const html = applyUid(SKIN_TEMPLATE, 'caramel-x');
     const ids = new Set([...html.matchAll(/ id="([^"]+)"/g)].map((m) => m[1]));
