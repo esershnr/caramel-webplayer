@@ -1,0 +1,258 @@
+/* @esershnr/caramel-settings
+ *
+ * Rows reuse the skin's menu classes (.media-menu-trigger-item,
+ * .media-menu-radio-item, .media-menu-back-item, .media-menu-separator), so
+ * sizing, highlight and focus ring come from the skin. Only the pieces the
+ * skin has no class for are styled here: the placeholder, the group labels,
+ * the slider, the switch, the color swatches and the reset row. Inside the
+ * menu the --media-* menu tokens are mapped to --caramel-* by the skin
+ * (.media-menu-popup.caramel-theme). Unlayered and scoped by our own classes.
+ */
+
+caramel-settings {
+  display: none;
+}
+
+/* The root page is a flex column: the rows must be its flex children. */
+caramel-settings-menu:not([hidden]) {
+  display: contents;
+}
+
+/* A hidden row stays out of the layout (the item classes set display: flex). */
+.caramel-settings-page > [hidden],
+.caramel-settings-page .media-menu-radio-group > [hidden] {
+  display: none;
+}
+
+.caramel-settings-page {
+  font-variant-numeric: tabular-nums;
+}
+
+.caramel-settings-label {
+  padding-inline: calc(var(--media-spacing, 4px) * 2);
+  padding-block: calc(var(--media-spacing, 4px) * 1.5) calc(var(--media-spacing, 4px) * 0.5);
+  color: var(--media-muted-foreground);
+  font-size: 0.85em;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.caramel-settings-option {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--media-spacing, 4px) * 2);
+  min-width: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Color swatches                                                       */
+/* ------------------------------------------------------------------ */
+
+.caramel-settings-swatch {
+  flex-shrink: 0;
+  width: 0.875em;
+  height: 0.875em;
+  border-radius: var(--caramel-radius-chip, 999px);
+  background: var(--caramel-settings-swatch-color);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--media-popover-foreground) 35%, transparent);
+}
+
+.caramel-settings-swatch[data-color='white'] {
+  --caramel-settings-swatch-color: var(--caramel-caption-white);
+}
+
+.caramel-settings-swatch[data-color='yellow'] {
+  --caramel-settings-swatch-color: var(--caramel-caption-yellow);
+}
+
+.caramel-settings-swatch[data-color='cyan'] {
+  --caramel-settings-swatch-color: var(--caramel-caption-cyan);
+}
+
+.caramel-settings-swatch[data-color='green'] {
+  --caramel-settings-swatch-color: var(--caramel-caption-green);
+}
+
+.caramel-settings-swatch[data-color='magenta'] {
+  --caramel-settings-swatch-color: var(--caramel-caption-magenta);
+}
+
+.caramel-settings-swatch[data-color='red'] {
+  --caramel-settings-swatch-color: var(--caramel-caption-red);
+}
+
+/* ------------------------------------------------------------------ */
+/* Slider: label and value on top, the track below                     */
+/* ------------------------------------------------------------------ */
+
+.caramel-settings-slider {
+  flex-wrap: wrap;
+  row-gap: var(--media-spacing, 4px);
+  cursor: default;
+}
+
+.caramel-settings-slider-head {
+  display: flex;
+  flex: 1 1 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--media-spacing, 4px) * 2);
+  min-width: 0;
+}
+
+.caramel-settings-slider-value {
+  opacity: 0.65;
+  font-variant-numeric: tabular-nums;
+}
+
+.caramel-settings-slider-track {
+  position: relative;
+  flex: 1 1 100%;
+  height: 20px;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.caramel-settings-slider-track::before,
+.caramel-settings-slider-fill {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: var(--caramel-radius-chip, 999px);
+}
+
+.caramel-settings-slider-track::before {
+  background: color-mix(in srgb, var(--media-popover-foreground) 22%, transparent);
+}
+
+.caramel-settings-slider-fill {
+  background: var(--media-primary);
+  transform: scaleX(var(--caramel-settings-slider-progress, 0));
+  transform-origin: left center;
+}
+
+.caramel-settings-slider-fill:dir(rtl) {
+  transform-origin: right center;
+}
+
+.caramel-settings-slider-thumb {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: calc(var(--caramel-settings-slider-progress, 0) * 100%);
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  margin-inline-start: -7px;
+  border-radius: 50%;
+  background: var(--media-primary);
+  box-shadow: 0 0 0 2px var(--media-popover);
+  transition: transform var(--caramel-duration-fast, 150ms) var(--caramel-ease-fill, ease);
+}
+
+.caramel-settings-slider:is([data-highlighted], :focus-visible, [data-dragging]) .caramel-settings-slider-thumb {
+  transform: scale(1.2);
+}
+
+/* ------------------------------------------------------------------ */
+/* Switch                                                               */
+/* ------------------------------------------------------------------ */
+
+.caramel-settings-switch-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.caramel-settings-switch-track {
+  position: relative;
+  flex-shrink: 0;
+  width: 32px;
+  height: 18px;
+  margin-inline-start: auto;
+  border-radius: var(--caramel-radius-chip, 999px);
+  background: color-mix(in srgb, var(--media-popover-foreground) 30%, transparent);
+}
+
+.caramel-settings-switch-thumb {
+  position: absolute;
+  top: 2px;
+  inset-inline-start: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--media-popover);
+  transition: transform var(--caramel-duration-fast, 150ms) var(--caramel-ease-fill, ease);
+}
+
+.caramel-settings-switch[aria-checked='true'] .caramel-settings-switch-track {
+  background: var(--media-primary);
+}
+
+.caramel-settings-switch[aria-checked='true'] .caramel-settings-switch-thumb {
+  background: var(--media-primary-foreground);
+  transform: translateX(14px);
+}
+
+.caramel-settings-switch[aria-checked='true']:dir(rtl) .caramel-settings-switch-thumb {
+  transform: translateX(-14px);
+}
+
+/* ------------------------------------------------------------------ */
+/* Reset                                                                */
+/* ------------------------------------------------------------------ */
+
+.caramel-settings-reset {
+  justify-content: flex-start;
+}
+
+.caramel-settings-reset-icon {
+  flex-shrink: 0;
+  width: var(--media-icon-size, calc(var(--media-spacing, 4px) * 4.5));
+  height: var(--media-icon-size, calc(var(--media-spacing, 4px) * 4.5));
+  color: var(--media-muted-foreground);
+}
+
+.caramel-settings-reset[data-highlighted] .caramel-settings-reset-icon {
+  color: inherit;
+}
+
+@media (forced-colors: active) {
+  .caramel-settings-slider-track::before {
+    background: CanvasText;
+  }
+
+  .caramel-settings-slider-fill,
+  .caramel-settings-slider-thumb {
+    background: Highlight;
+  }
+
+  .caramel-settings-slider-thumb {
+    box-shadow: none;
+    outline: 2px solid ButtonText;
+  }
+
+  .caramel-settings-switch-track {
+    background: Canvas;
+    outline: 1px solid ButtonText;
+  }
+
+  .caramel-settings-switch-thumb {
+    background: ButtonText;
+  }
+
+  .caramel-settings-switch[aria-checked='true'] .caramel-settings-switch-track {
+    background: Highlight;
+  }
+
+  .caramel-settings-switch[aria-checked='true'] .caramel-settings-switch-thumb {
+    background: HighlightText;
+  }
+
+  .caramel-settings-swatch {
+    forced-color-adjust: none;
+    box-shadow: inset 0 0 0 1px CanvasText;
+  }
+}
